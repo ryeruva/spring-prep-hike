@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Prep Hike — Itinerary</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1410;--stone:#3D332A;--bark:#6B5040;--sand:#C4A882;--cream:#F5EDD8;
+  --sage:#4A6741;--sky:#1F4E79;--gold:#C8A028;--ember:#C84820;--bg:#F0E8D5;
+  --d1:#4A6741;--d2:#1F4E79;--d3:#7B3F00;
+}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(100,80,50,.05) 40px),
+  repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(100,80,50,.03) 40px);
+  background-size:40px 40px}
+.page{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 1.5rem 5rem}
+
+nav{background:#1A1410;padding:.55rem 1.5rem;font-family:'DM Mono',monospace;font-size:.68rem;
+  letter-spacing:.1em;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:100;margin:0 -1.5rem}
+nav a{color:#C4A882;text-decoration:none;text-transform:uppercase;transition:color .15s}
+nav a:hover{color:#C8A028}
+nav a.home{color:#C8A028;font-weight:500}
+nav .sep{color:#3D332A;font-size:.5rem}
+nav .current{color:#6B5040;text-transform:uppercase}
+
+/* header */
+.header{padding:3rem 0 2rem;border-bottom:2px solid var(--gold);margin-bottom:2rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bark);margin-bottom:.5rem}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,7vw,4.8rem);color:var(--stone);line-height:.92;margin-bottom:.4rem}
+.tagline{font-size:.9rem;color:var(--bark);font-style:italic;max-width:540px;line-height:1.7;margin-bottom:1.4rem}
+
+/* stat strip */
+.stats{display:flex;flex-wrap:wrap;gap:0;border:1px solid #D0C8BC;border-radius:5px;overflow:hidden;margin-bottom:2rem;background:#fff}
+.stat{flex:1 1 100px;padding:.7rem 1rem;border-right:1px solid #D0C8BC;text-align:center}
+.stat:last-child{border-right:none}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--stone);line-height:1}
+.stat-lbl{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark);margin-top:.15rem}
+@media(max-width:500px){.stat{border-right:none;border-bottom:1px solid #D0C8BC}.stat:last-child{border-bottom:none}}
+
+/* map link */
+.map-link{display:inline-flex;align-items:center;gap:.55rem;background:var(--stone);color:var(--cream);padding:.65rem 1.3rem;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:3px;margin-bottom:2rem;transition:background .15s}
+.map-link:hover{background:var(--bark)}
+
+/* overview paragraph */
+.overview{background:#fff;border:1px solid #D0C8BC;border-radius:5px;padding:1.1rem 1.4rem;font-size:.84rem;line-height:1.8;color:var(--stone);margin-bottom:2rem}
+.overview strong{color:var(--ink)}
+
+/* day sections */
+.day-section{margin-bottom:2.5rem}
+.day-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;border-radius:5px 5px 0 0;color:#fff}
+.day-header.d1{background:var(--d1)}
+.day-header.d2{background:var(--d2)}
+.day-header.d3{background:var(--d3)}
+.day-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1;opacity:.6;flex-shrink:0}
+.day-meta{}
+.day-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;line-height:1;margin-bottom:.2rem}
+.day-sub{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.08em;opacity:.8}
+
+.day-body{background:#fff;border:1px solid #D0C8BC;border-top:none;border-radius:0 0 5px 5px;overflow:hidden}
+
+/* stats row inside day */
+.day-stats{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #EEE8E0;background:#F5F0E8}
+.ds{flex:1 1 80px;padding:.6rem .9rem;border-right:1px solid #EEE8E0;text-align:center}
+.ds:last-child{border-right:none}
+.ds-val{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--stone);line-height:1}
+.ds-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark);margin-top:.1rem}
+
+/* elevation profile placeholder */
+.elev-bar{height:6px;background:linear-gradient(90deg,#7C9070 0%,#C8A028 40%,#C84820 70%,#7B3F00 100%);opacity:.6;margin-bottom:0}
+
+/* content blocks */
+.day-content{padding:1.1rem 1.3rem;font-size:.82rem;line-height:1.8;color:var(--stone);border-bottom:1px solid #EEE8E0}
+.day-content:last-child{border-bottom:none}
+.day-content p{margin-bottom:.7rem}
+.day-content p:last-child{margin-bottom:0}
+
+/* camp block */
+.camp-block{padding:1rem 1.3rem;background:#FAFAF7;border-bottom:1px solid #EEE8E0}
+.camp-title{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bark);margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.camp-name{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--stone);margin-bottom:.6rem}
+.camp-features{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem}
+.feat{font-family:'DM Mono',monospace;font-size:.66rem;padding:.2rem .55rem;border-radius:3px;background:var(--cream);color:var(--bark);border:1px solid rgba(100,80,50,.15)}
+.feat.water{background:#E8F0F5;color:var(--sky);border-color:#B5D4F4}
+.feat.warn{background:#FDE8D8;color:#8C2A00;border-color:#F5C4B3}
+.camp-note{font-size:.76rem;color:var(--bark);font-style:italic;line-height:1.6}
+
+/* water notes */
+.water-note{padding:.75rem 1.3rem;background:#E8F0F5;border-left:3px solid var(--sky);font-size:.76rem;color:#1A3A5A;line-height:1.7}
+.water-note strong{display:block;margin-bottom:.2rem;font-size:.78rem}
+
+/* route summary table */
+.route-table{width:100%;border-collapse:collapse}
+.route-table th{padding:.5rem .9rem;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark);text-align:left;border-bottom:1px solid #D0C8BC;background:#F5F0E8}
+.route-table td{padding:.6rem .9rem;font-size:.78rem;border-bottom:1px solid #EEE8E0;color:var(--stone)}
+.route-table tr:last-child td{border-bottom:none;font-weight:600;background:#F5F0E8}
+.rt-d1{color:var(--d1);font-family:'DM Mono',monospace;font-weight:500}
+.rt-d2{color:var(--d2);font-family:'DM Mono',monospace;font-weight:500}
+.rt-d3{color:var(--d3);font-family:'DM Mono',monospace;font-weight:500}
+
+/* safety section */
+.safety-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.safety-card{background:#fff;border:1px solid #D0C8BC;border-radius:5px;padding:.85rem 1rem}
+.safety-icon{font-size:1.1rem;margin-bottom:.3rem}
+.safety-title{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);font-weight:500;margin-bottom:.3rem}
+.safety-desc{font-size:.76rem;color:var(--bark);line-height:1.65}
+
+/* emergency contacts */
+.contacts{background:var(--stone);color:#fff;border-radius:5px;padding:1.1rem 1.3rem}
+.contacts h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;margin-bottom:.8rem;color:var(--gold)}
+.contact-row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.78rem}
+.contact-row:last-child{border-bottom:none}
+.contact-name{opacity:.75}
+.contact-num{font-family:'DM Mono',monospace;font-weight:500;color:var(--gold)}
+
+/* section headers */
+.section-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bark);margin-bottom:.4rem;display:flex;align-items:center;gap:.6rem}
+.section-label::before{content:'';width:24px;height:1px;background:var(--bark)}
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.3rem);color:var(--stone);line-height:1;margin-bottom:1rem}
+
+.section{margin:2.5rem 0}
+
+footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--bark)}
+.footer-note{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--bark);opacity:.55}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="home">&#8962; Troop 222</a>
+  <span class="sep">&#9679;</span>
+  <a href="Spring_Prep_Hike_Menu.html">Crew Menu</a>
+  <a href="Spring_Prep_Hike_Menu_Allergy_Scout.html">Allergy Scout</a>
+  <a href="Spring_Prep_Hike_Bear_Can_Packing.html">Packing Guide</a>
+  <a href="Spring_Prep_Hike_Expenses.html">Expenses</a>
+  <span class="sep">&#9679;</span>
+  <span class="current">Itinerary</span>
+</nav>
+
+<div class="page">
+
+<div class="header">
+  <p class="eyebrow">Hike 2 · 50-Miler Prep Series · April 4–6, 2026</p>
+  <h1>Ohlone<br>Wilderness Trail</h1>
+  <p class="tagline">Fremont to Lake Del Valle — three days across the Diablo Range through Mission Peak, Sunol Regional Wilderness, and Del Valle Regional Park.</p>
+  <a href="https://caltopo.com/m/59QR01M#" target="_blank" class="map-link">&#128205; CalTopo Route Map &#8599;</a>
+</div>
+
+<!-- stat strip -->
+<div class="stats">
+  <div class="stat"><div class="stat-val">26.4</div><div class="stat-lbl">Total miles</div></div>
+  <div class="stat"><div class="stat-val">+7,304</div><div class="stat-lbl">Gain (ft)</div></div>
+  <div class="stat"><div class="stat-val">−6,931</div><div class="stat-lbl">Loss (ft)</div></div>
+  <div class="stat"><div class="stat-val">3</div><div class="stat-lbl">Days</div></div>
+  <div class="stat"><div class="stat-val">2</div><div class="stat-lbl">Nights</div></div>
+  <div class="stat"><div class="stat-val">20</div><div class="stat-lbl">Participants</div></div>
+</div>
+
+<!-- overview -->
+<div class="overview">
+  The <strong>Ohlone Wilderness Trail</strong> is one of the classic backpacking routes in the East Bay, linking ridges and valleys of the Diablo Range across Mission Peak Regional Preserve, Sunol Regional Wilderness, and Del Valle Regional Park. This trek travels <strong>west to east</strong> — starting in the hills above Fremont and crossing open ranchland, oak woodland, and rolling ridgelines before descending to Lake Del Valle.<br><br>
+  Terrain is typical of the Diablo Range: <strong>long climbs along grassy ridges, shaded oak canyons, and wide open hillsides used for grazing livestock.</strong> Expect changing weather with warm afternoons and cooler evenings, especially along the ridges.
+</div>
+
+<!-- route summary -->
+<section class="section">
+  <p class="section-label">Route Summary</p>
+  <h2>Day by Day</h2>
+  <div style="background:#fff;border:1px solid #D0C8BC;border-radius:5px;overflow:hidden;margin-bottom:2rem">
+    <table class="route-table">
+      <thead><tr><th>Day</th><th>Segment</th><th>Miles</th><th>Gain</th><th>Loss</th><th>Camp</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="rt-d1">Day 1 · Sat Apr 4</span></td>
+          <td>Ohlone Trailhead (Fremont) → Star's Rest Camp</td>
+          <td><span class="rt-d1">10.92 mi</span></td>
+          <td>+3,474 ft</td>
+          <td>−2,272 ft</td>
+          <td>Star's Rest Camp</td>
+        </tr>
+        <tr>
+          <td><span class="rt-d2">Day 2 · Sun Apr 5</span></td>
+          <td>Star's Rest Camp → Maggie's Half Acre Camp</td>
+          <td><span class="rt-d2">5.82 mi</span></td>
+          <td>+2,316 ft</td>
+          <td>−410 ft</td>
+          <td>Maggie's Half Acre</td>
+        </tr>
+        <tr>
+          <td><span class="rt-d3">Day 3 · Mon Apr 6</span></td>
+          <td>Maggie's Half Acre → Del Valle Exit (Ardilla Area)</td>
+          <td><span class="rt-d3">9.69 mi</span></td>
+          <td>+1,514 ft</td>
+          <td>−4,249 ft</td>
+          <td>Exit at Lake Del Valle</td>
+        </tr>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td></td>
+          <td><strong>26.43 mi</strong></td>
+          <td><strong>+7,304 ft</strong></td>
+          <td><strong>−6,931 ft</strong></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- DAY 1 -->
+<div class="day-section">
+  <div class="day-header d1">
+    <div class="day-num">1</div>
+    <div class="day-meta">
+      <div class="day-title">Ohlone Trailhead → Star's Rest Camp</div>
+      <div class="day-sub">Saturday, April 4 &nbsp;·&nbsp; 10.92 mi &nbsp;·&nbsp; 381 ft → 2,103 ft &nbsp;·&nbsp; +3,474 ft gain</div>
+    </div>
+  </div>
+  <div class="day-body">
+    <div class="elev-bar" style="background:linear-gradient(90deg,#7C9070 0%,#C8A028 55%,#C84820 75%,#7C9070 100%)"></div>
+    <div class="day-stats">
+      <div class="ds"><div class="ds-val">10.92</div><div class="ds-lbl">Miles</div></div>
+      <div class="ds"><div class="ds-val">+3,474</div><div class="ds-lbl">Gain (ft)</div></div>
+      <div class="ds"><div class="ds-val">−2,272</div><div class="ds-lbl">Loss (ft)</div></div>
+      <div class="ds"><div class="ds-val">381→2,103</div><div class="ds-lbl">Elev range (ft)</div></div>
+    </div>
+    <div class="day-content">
+      <p>The trip begins at the <strong>Ohlone Wilderness Trailhead near Fremont</strong>, climbing steadily away from the city into the open hills of Mission Peak Regional Preserve. The first several miles are the most sustained climb of the entire trek — gaining elevation steadily through grasslands and scattered oak groves.</p>
+      <p>As the group climbs higher, views open dramatically across the <strong>Santa Clara Valley and San Francisco Bay</strong>, often with hawks and vultures riding thermals overhead. After cresting the high ridgeline, the trail rolls through several smaller climbs before descending into the wooded valley where Star's Rest Camp is located.</p>
+      <p style="font-size:.76rem;color:var(--bark);font-style:italic">&#9888; Saturday snacks and lunch are carried in individual backpacks. Bear cans are needed for overnight storage only (dinner + dessert in the SAT layer).</p>
+    </div>
+
+    <div class="camp-block">
+      <p class="camp-title">&#127956; Night 1 Camp</p>
+      <p class="camp-name">Star's Rest Camp</p>
+      <div class="camp-features">
+        <span class="feat">Picnic tables</span>
+        <span class="feat">Primitive sites</span>
+        <span class="feat">Pit toilet</span>
+        <span class="feat water">&#128167; Seasonal creek (filter)</span>
+        <span class="feat">Shaded canyon</span>
+      </div>
+      <p class="camp-note">Tucked away in a shaded canyon with large oak trees. Quieter and more sheltered than the exposed ridges earlier in the day.</p>
+    </div>
+
+    <div class="water-note">
+      <strong>&#128167; Water note — Day 1</strong>
+      Reliable water is <strong>not guaranteed along the ridge sections</strong>. Fill all bottles at the trailhead and carry 2–3 L per person. Seasonal creek water is usually available at Star's Rest — filter or treat before drinking.
+    </div>
+  </div>
+</div>
+
+<!-- DAY 2 -->
+<div class="day-section">
+  <div class="day-header d2">
+    <div class="day-num">2</div>
+    <div class="day-meta">
+      <div class="day-title">Star's Rest Camp → Maggie's Half Acre</div>
+      <div class="day-sub">Sunday, April 5 &nbsp;·&nbsp; 5.82 mi &nbsp;·&nbsp; 1,584 ft → 3,590 ft &nbsp;·&nbsp; +2,316 ft gain · Hardest climb per mile</div>
+    </div>
+  </div>
+  <div class="day-body">
+    <div class="elev-bar" style="background:linear-gradient(90deg,#7C9070 0%,#C84820 30%,#C84820 80%,#C8A028 100%)"></div>
+    <div class="day-stats">
+      <div class="ds"><div class="ds-val">5.82</div><div class="ds-lbl">Miles</div></div>
+      <div class="ds"><div class="ds-val">+2,316</div><div class="ds-lbl">Gain (ft)</div></div>
+      <div class="ds"><div class="ds-val">−410</div><div class="ds-lbl">Loss (ft)</div></div>
+      <div class="ds"><div class="ds-val">1,584→3,590</div><div class="ds-lbl">Elev range (ft)</div></div>
+    </div>
+    <div class="day-content">
+      <p>Day two is shorter in distance but involves <strong>steady climbing eastward along the Diablo Range ridges</strong>. Rolling terrain with a few steeper segments — overall pace is moderate compared to Day 1, but gain-per-mile is the highest of the trip.</p>
+      <p>This stretch passes through <strong>open ranchland</strong>. Hikers will likely encounter <strong>grazing cattle</strong> along the trail. Stay calm, walk slowly around herds, give wide berth.</p>
+      <p>Views are expansive — wide panoramas of the East Bay hills and the distant Central Valley on clear days.</p>
+      <p style="font-size:.76rem;color:var(--bark);font-style:italic">&#9888; Distribute all snacks before leaving camp. Double Gatorade day — hydration is critical on the highest elevation gain section.</p>
+    </div>
+
+    <div class="camp-block">
+      <p class="camp-title">&#127956; Night 2 Camp</p>
+      <p class="camp-name">Maggie's Half Acre Camp</p>
+      <div class="camp-features">
+        <span class="feat">Picnic tables</span>
+        <span class="feat">Primitive sites</span>
+        <span class="feat">Pit toilet</span>
+        <span class="feat water">&#128167; Seasonal water source (filter)</span>
+        <span class="feat">Open meadow</span>
+        <span class="feat">Excellent stargazing</span>
+      </div>
+      <p class="camp-note">One of the more popular backcountry camps on the trail. Sits in a relatively open meadow surrounded by low hills — can be breezy but offers outstanding stargazing on clear nights.</p>
+    </div>
+
+    <div class="water-note">
+      <strong>&#128167; Water note — Day 2</strong>
+      Fill all water bottles at Star's Rest <strong>before departing</strong> — dry ridgeline ahead. Seasonal creeks may be present near Maggie's Half Acre. Confirm conditions before the trip. <strong>Fill bottles before bed</strong> — dry ridgeline again on Monday morning.
+    </div>
+  </div>
+</div>
+
+<!-- DAY 3 -->
+<div class="day-section">
+  <div class="day-header d3">
+    <div class="day-num">3</div>
+    <div class="day-meta">
+      <div class="day-title">Maggie's Half Acre → Lake Del Valle Exit</div>
+      <div class="day-sub">Monday, April 6 &nbsp;·&nbsp; 9.69 mi &nbsp;·&nbsp; 751 ft → 3,651 ft &nbsp;·&nbsp; −4,249 ft net loss · Exit day</div>
+    </div>
+  </div>
+  <div class="day-body">
+    <div class="elev-bar" style="background:linear-gradient(90deg,#C8A028 0%,#C84820 25%,#7C9070 60%,#4A6741 100%)"></div>
+    <div class="day-stats">
+      <div class="ds"><div class="ds-val">9.69</div><div class="ds-lbl">Miles</div></div>
+      <div class="ds"><div class="ds-val">+1,514</div><div class="ds-lbl">Gain (ft)</div></div>
+      <div class="ds"><div class="ds-val">−4,249</div><div class="ds-lbl">Loss (ft)</div></div>
+      <div class="ds"><div class="ds-val">751→3,651</div><div class="ds-lbl">Elev range (ft)</div></div>
+    </div>
+    <div class="day-content">
+      <p>The final day begins with <strong>gentle ridgeline travel</strong> before the trail gradually turns downhill toward Lake Del Valle. A series of rolling hills then commits to a longer descent into the lake basin.</p>
+      <p>This stretch provides <strong>some of the best views of the trip</strong> as hikers approach the lake, with sweeping vistas of the reservoir and surrounding hills.</p>
+      <p>The trail exits near the <strong>Ardilla Group Camp area along the shore of Lake Del Valle</strong>, where the landscape transitions from backcountry wilderness to developed park facilities.</p>
+      <p style="font-size:.76rem;color:var(--bark);font-style:italic">&#128205; Drinking water, bathrooms, and picnic areas at Lake Del Valle on exit. Celebrate with a meal in Livermore or Pleasanton!</p>
+    </div>
+
+    <div class="camp-block" style="background:#EDF5E8">
+      <p class="camp-title" style="color:var(--sage)">&#127937; Exit Point</p>
+      <p class="camp-name">Lake Del Valle &nbsp;·&nbsp; Ardilla Group Camp Area</p>
+      <div class="camp-features">
+        <span class="feat">Bathrooms</span>
+        <span class="feat water">&#128167; Drinking water (tap)</span>
+        <span class="feat">Picnic areas</span>
+        <span class="feat">Ranger station</span>
+        <span class="feat">Parking</span>
+      </div>
+      <p class="camp-note">Del Valle Regional Park — reliable tap water, bathrooms, and parking. Shuttle car or pickup point.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SAFETY -->
+<section class="section">
+  <p class="section-label">Trail Safety</p>
+  <h2>Conditions & Hazards</h2>
+  <div class="safety-grid">
+    <div class="safety-card">
+      <div class="safety-icon">&#128090;</div>
+      <p class="safety-title">Permits required</p>
+      <p class="safety-desc">Required for ALL campsites in the Ohlone Wilderness. Carry confirmation — rangers check.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#127807;</div>
+      <p class="safety-title">Poison oak</p>
+      <p class="safety-desc">Common throughout East Bay hills. "Leaves of three, let it be." Wear long sleeves on brushy sections.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#129412;</div>
+      <p class="safety-title">Ticks</p>
+      <p class="safety-desc">Common in grassy areas in spring. Tuck pants into socks. Full-body tick check every evening before bed.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#128004;</div>
+      <p class="safety-title">Livestock</p>
+      <p class="safety-desc">Active grazing on Day 2 ranchland. Stay calm, walk slowly around herds, give wide berth.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#9728;</div>
+      <p class="safety-title">Sun exposure</p>
+      <p class="safety-desc">Long exposed ridgelines all 3 days. Hats, sunscreen, sun shirts mandatory.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#128167;</div>
+      <p class="safety-title">Water sources</p>
+      <p class="safety-desc">All natural sources must be filtered or treated. Seasonal only — no guarantee. Carry 2–3 L leaving trailhead.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#128246;</div>
+      <p class="safety-title">Cell coverage</p>
+      <p class="safety-desc">Intermittent on trail. Move to higher ridgeline to improve signal. Note GPS coords at each camp.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#127981;</div>
+      <p class="safety-title">Bear canisters</p>
+      <p class="safety-desc">Required for all food storage overnight. Pack bear cans as soon as you arrive at camp.</p>
+    </div>
+  </div>
+
+  <div class="contacts">
+    <h3>Emergency Contacts</h3>
+    <div class="contact-row">
+      <span class="contact-name">East Bay Regional Parks Dispatch &nbsp;·&nbsp; 24/7 primary</span>
+      <span class="contact-num">510-881-1121</span>
+    </div>
+    <div class="contact-row">
+      <span class="contact-name">Alameda County Sheriff SAR</span>
+      <span class="contact-num">510-667-7721</span>
+    </div>
+    <div style="font-size:.72rem;opacity:.55;margin-top:.7rem;line-height:1.7">
+      When calling: provide trail name, nearest camp or landmark, GPS coordinates, group size, and nature of emergency.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-brand">Troop 222</span>
+  <span class="footer-note">Spring Prep Hike · Ohlone Wilderness · April 4–6, 2026 · Itinerary</span>
+</footer>
+
+</div>
+</body>
+</html>
