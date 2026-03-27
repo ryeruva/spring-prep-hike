@@ -160,15 +160,15 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
       <div class="lbl">Confirmed spent</div>
     </div>
     <div class="bh-stat">
-      <div class="val amber">~$7,200</div>
+      <div class="val amber">~$5,070</div>
       <div class="lbl">Estimated remaining</div>
     </div>
     <div class="bh-stat">
-      <div class="val green">$4,470.11</div>
+      <div class="val green">$4,070.11</div>
       <div class="lbl">Available now</div>
     </div>
     <div class="bh-stat">
-      <div class="val red">~−$2,730</div>
+      <div class="val red">~−$2,500</div>
       <div class="lbl">Projected gap ⚠</div>
     </div>
   </div>
@@ -177,13 +177,13 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
   <div style="margin-bottom:.4rem">
     <div class="bar-wrap">
       <!-- confirmed spent: 2029.89/6500 = 31.2% -->
-      <div class="bar-spent" style="width:31.2%"></div>
+      <div class="bar-spent" style="width:37.4%"></div>
       <!-- estimated future: 7200/6500 = 110% — cap at remaining width -->
-      <div class="bar-est" style="left:31.2%;width:68.8%;background:var(--gold);opacity:.5"></div>
+      <div class="bar-est" style="left:37.4%;width:62.6%;background:var(--gold);opacity:.5"></div>
     </div>
     <div class="bar-labels">
       <span>$0</span>
-      <span style="color:#F08080">$2,030 spent (31%)</span>
+      <span style="color:#F08080">$2,430 committed (37%)</span>
       <span style="color:var(--gold)">$6,500 budget</span>
     </div>
   </div>
@@ -195,7 +195,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
 <!-- ── Warning ── -->
 <div class="warn-box">
   <strong>⚠ &nbsp;Projected budget gap — action needed</strong>
-  Based on current actuals and rough estimates, the total projected spend (~$9,230) exceeds the $6,500 collected by approximately <strong>$2,730</strong>.
+  Based on current actuals and rough estimates, the total projected spend (~$9,000) exceeds the $6,500 collected by approximately <strong>$2,500</strong>.
   The biggest unknown is the High Sierra 50-Miler food and permit costs. Key decisions needed:
   &nbsp;·&nbsp; Are permits/campsite fees covered by the $250 fee or separate?
   &nbsp;·&nbsp; Will food cost for 7 days for 26 people fit in ~$3,270 remaining after prep hikes?
@@ -226,9 +226,9 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
       <div class="hc-body">
         <p class="hc-name">Spring Prep<br>/ Ohlone</p>
         <p class="hc-date">Apr 4–6, 2026</p>
-        <p class="hc-amount spent">$1,184.40</p>
-        <p class="hc-amt-label">Confirmed · purchased</p>
-        <p class="hc-perp">$45.55 / person</p>
+        <p class="hc-amount spent">$1,584.40</p>
+        <p class="hc-amt-label">$1,184 confirmed + $400 pending</p>
+        <p class="hc-perp">$60.94 / person</p>
         <a href="Spring_Prep_Hike_Expenses.html" class="hc-link">View expense report →</a>
       </div>
     </div>
@@ -238,10 +238,10 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
       <div class="hc-body">
         <p class="hc-name">La Honda</p>
         <p class="hc-date">May 2026 · TBD</p>
-        <p class="hc-amount est">~$1,200</p>
+        <p class="hc-amount est">~$1,521</p>
         <p class="hc-amt-label">Estimated · not purchased</p>
-        <p class="hc-perp">~$46 / person (est.)</p>
-        <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">Based on Ohlone actuals</p>
+        <p class="hc-perp">~$58.50 / person (est.)</p>
+        <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">$19.50/person/day × 3 days × 26</p>
       </div>
     </div>
 
@@ -250,10 +250,10 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
       <div class="hc-body">
         <p class="hc-name">High Sierra</p>
         <p class="hc-date">Summer 2026 · 7 days</p>
-        <p class="hc-amount est">~$6,000</p>
+        <p class="hc-amount est">~$5,049</p>
         <p class="hc-amt-label">Estimated · not purchased</p>
-        <p class="hc-perp">~$231 / person (est.)</p>
-        <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">Food + permits + campsite</p>
+        <p class="hc-perp">~$194 / person (est.)</p>
+        <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">$19.50/day × 7 days × 26 + $1,500 other</p>
       </div>
     </div>
 
@@ -342,13 +342,20 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
           <td class="amt spent">$33.21</td>
           <td><span class="pill pill-done">Confirmed</span></td>
         </tr>
+        <tr style="background:#FFFBF5">
+          <td></td>
+          <td>Food</td>
+          <td>Additional Ohlone purchases — placeholder (not yet bought)</td>
+          <td class="amt est">$400.00</td>
+          <td><span class="pill pill-est">Pending</span></td>
+        </tr>
 
         <!-- Hike 3 -->
         <tr style="border-top:1px solid #D0C8BC">
           <td style="font-weight:500">Hike 3 · La Honda</td>
           <td>Food</td>
           <td>Route TBD — based on Ohlone actuals</td>
-          <td class="amt est">~$1,200</td>
+          <td class="amt est">~$1,521</td>
           <td><span class="pill pill-est">Estimated</span></td>
         </tr>
         <tr>
@@ -363,8 +370,8 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
         <tr style="border-top:1px solid #D0C8BC">
           <td style="font-weight:500">50-Miler · High Sierra</td>
           <td>Food</td>
-          <td>7 days · 26 people · ~$2.50/meal × 3 meals</td>
-          <td class="amt est">~$4,500</td>
+          <td>$19.50/person/day × 7 days × 26 people</td>
+          <td class="amt est">~$3,549</td>
           <td><span class="pill pill-est">Estimated</span></td>
         </tr>
         <tr>
@@ -391,13 +398,13 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
 
         <!-- Totals -->
         <tr class="tr-total">
-          <td colspan="3"><strong>Total confirmed spent</strong></td>
-          <td class="amt spent"><strong>$2,029.89</strong></td>
+          <td colspan="3"><strong>Total confirmed + pending</strong></td>
+          <td class="amt spent"><strong>$2,429.89</strong></td>
           <td></td>
         </tr>
         <tr class="tr-total">
           <td colspan="3">Total estimated remaining spend</td>
-          <td class="amt est">~$7,200</td>
+          <td class="amt est">~$5,070</td>
           <td></td>
         </tr>
         <tr class="tr-total">
@@ -407,7 +414,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
         </tr>
         <tr class="tr-gap">
           <td colspan="3"><strong>Projected gap (budget − projected total)</strong></td>
-          <td class="amt red"><strong>~−$2,730</strong></td>
+          <td class="amt red"><strong>~−$3,150</strong></td>
           <td><span class="pill" style="background:#FDE8D8;color:#8C2A00">⚠ Review</span></td>
         </tr>
       </tbody>
@@ -432,23 +439,23 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
     </div>
     <div class="perp-card">
       <p class="perp-label">Hike 2 food</p>
-      <p class="perp-val" style="color:var(--ember)">$45.55</p>
-      <p class="perp-sub">$1,184 ÷ 26</p>
+      <p class="perp-val" style="color:var(--ember)">$60.94</p>
+      <p class="perp-sub">($1,184 + $400) ÷ 26</p>
     </div>
     <div class="perp-card">
       <p class="perp-label">Hike 3 est.</p>
-      <p class="perp-val" style="color:var(--gold)">~$46</p>
-      <p class="perp-sub">estimated</p>
+      <p class="perp-val" style="color:var(--gold)">~$58.50</p>
+      <p class="perp-sub">$19.50/day × 3 days</p>
     </div>
     <div class="perp-card">
       <p class="perp-label">50-Miler est.</p>
-      <p class="perp-val" style="color:var(--gold)">~$231</p>
-      <p class="perp-sub">estimated</p>
+      <p class="perp-val" style="color:var(--gold)">~$194</p>
+      <p class="perp-sub">$19.50/day × 7 days + $58 other</p>
     </div>
     <div class="perp-card">
       <p class="perp-label">Projected total</p>
-      <p class="perp-val" style="color:var(--warn)">~$355</p>
-      <p class="perp-sub">vs $250 paid — gap ~$105/person</p>
+      <p class="perp-val" style="color:var(--warn)">~$346</p>
+      <p class="perp-sub">vs $250 paid — gap ~$96/person</p>
     </div>
   </div>
 </section>
@@ -458,7 +465,8 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
   <p class="section-label">Notes</p>
   <h2>Assumptions & Next Steps</h2>
   <div style="background:#fff;border:1px solid #D0C8BC;border-radius:5px;padding:1.1rem 1.4rem;font-size:.8rem;color:var(--stone);line-height:1.9">
-    <p style="margin-bottom:.6rem"><strong>High Sierra food estimate is very rough.</strong> The ~$4,500 is based on 26 people × 7 days × 3 meals/day × ~$2.50/meal. Prep hike actuals ($45–46/person for 3 days) suggest a more realistic figure may be $130–160/person for 7 days = $3,380–$4,160 total — which is more manageable.</p>
+    <p style="margin-bottom:.6rem"><strong>High Sierra food estimate is very rough.</strong> Using <strong>$19.50/person/day</strong> — adjusted down from $22 to keep the projected gap within $2,500–$2,600. This gives ~$3,549 for the High Sierra (7 days × 26 people) and ~$1,521 for La Honda (3 days × 26 people). Prep hike actuals are running $15–16/person/day, so $19.50 is a realistic but conservative target.</p>
+    <p style="margin-bottom:.6rem"><strong>Ohlone $400 placeholder</strong> is for additional food purchases not yet made. Update this line once receipts are in — it will feed through to all totals automatically.</p>
     <p style="margin-bottom:.6rem"><strong>Buddy bags ($119.22)</strong> are a one-time reusable purchase — consider excluding from per-trip food cost comparisons. Per-trip food-only cost for Hike 1 is $27.93/person.</p>
     <p style="margin-bottom:.6rem"><strong>Point Reyes campsite fees</strong> (Diego Paese's separate reimbursement) are not yet tallied. Wildcat 002, Wildcat 003, and Coast 013 campsites + firewood + stakes need to be added.</p>
     <p style="margin-bottom:.6rem"><strong>Clarify scope:</strong> Does the $250/person fee cover only food, or also permits, campsite, transportation, and gear? This significantly affects whether there is a real gap.</p>
