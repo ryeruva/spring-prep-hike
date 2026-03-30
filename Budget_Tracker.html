@@ -39,7 +39,7 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,7vw,4.5rem);color:
 .bh-total{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--gold);line-height:1}
 .bh-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;opacity:.6;margin-bottom:.25rem}
 .bh-stats{display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:1.3rem}
-/*.bh-stat{} */
+.bh-stat{}
 .bh-stat .val{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;line-height:1}
 .bh-stat .val.green{color:#8FD18F}
 .bh-stat .val.red{color:#F08080}
@@ -160,7 +160,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
       <div class="lbl">Confirmed spent</div>
     </div>
     <div class="bh-stat">
-      <div class="val amber">~$6,570</div>
+      <div class="val amber">~$5,070</div>
       <div class="lbl">Estimated remaining</div>
     </div>
     <div class="bh-stat">
@@ -188,7 +188,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
     </div>
   </div>
   <p style="font-family:'DM Mono',monospace;font-size:.68rem;opacity:.55;margin-top:.6rem">
-    &#9888; Projected total spend (~$9,000) exceeds budget by ~$2,500. High Sierra estimates are rough — see notes below.
+    &#9888; Projected total spend (~$9,230) exceeds budget by ~$2,730. High Sierra estimates are rough — see notes below.
   </p>
 </div>
 
@@ -212,10 +212,10 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
       <div class="hc-head done">Hike 1 <span class="badge-small b-done">Done ✓</span></div>
       <div class="hc-body">
         <p class="hc-name">Point Reyes</p>
-        <p class="hc-date">Feb 14–16, 2026</p>
+        <p class="hc-date">Feb 14–16, 2026 &nbsp;·&nbsp; <strong>14 attendees</strong></p>
         <p class="hc-amount spent">$845.49</p>
         <p class="hc-amt-label">Confirmed · reimbursed</p>
-        <p class="hc-perp">$60.39 / person &nbsp;·&nbsp; food+bags</p>
+        <p class="hc-perp">$60.39 / person (14 attendees) &nbsp;·&nbsp; $30.20 / person / day</p>
         <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">+ campsite fees TBD</p>
         <a href="Point_Reyes_Expenses.html" class="hc-link">View expense report →</a>
       </div>
@@ -228,7 +228,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
         <p class="hc-date">Apr 4–6, 2026</p>
         <p class="hc-amount spent">$1,584.40</p>
         <p class="hc-amt-label">$1,184 confirmed + $400 pending</p>
-        <p class="hc-perp">$60.94 / person</p>
+        <p class="hc-perp">$60.94 / person &nbsp;·&nbsp; $20.31 / person / day</p>
         <a href="Spring_Prep_Hike_Expenses.html" class="hc-link">View expense report →</a>
       </div>
     </div>
@@ -240,7 +240,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
         <p class="hc-date">May 2026 · TBD</p>
         <p class="hc-amount est">~$1,521</p>
         <p class="hc-amt-label">Estimated · not purchased</p>
-        <p class="hc-perp">~$58.50 / person (est.)</p>
+        <p class="hc-perp">~$58.50 / person &nbsp;·&nbsp; $19.50 / person / day</p>
         <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">$19.50/person/day × 3 days × 26</p>
       </div>
     </div>
@@ -252,7 +252,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
         <p class="hc-date">Summer 2026 · 7 days</p>
         <p class="hc-amount est">~$5,049</p>
         <p class="hc-amt-label">Estimated · not purchased</p>
-        <p class="hc-perp">~$194 / person (est.)</p>
+        <p class="hc-perp">~$194 / person &nbsp;·&nbsp; $19.50 / person / day (food)</p>
         <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">$19.50/day × 7 days × 26 + $1,500 other</p>
       </div>
     </div>
@@ -272,6 +272,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
           <th>Category</th>
           <th>Detail</th>
           <th class="amt">Amount</th>
+          <th class="amt" style="white-space:nowrap">$/p/day</th>
           <th>Status</th>
         </tr>
       </thead>
@@ -281,28 +282,28 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
           <td style="font-weight:500">Hike 1 · Point Reyes</td>
           <td>Food</td>
           <td>Amazon ×2 + REI (Kerri Atkins)</td>
-          <td class="amt spent">$726.27</td>
+          <td class="amt spent">$726.27</td><td class="amt" style="color:var(--bark);font-size:.72rem">$30.20</td>
           <td><span class="pill pill-done">Confirmed</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Gear</td>
           <td>Buddy Food Bags — reusable all hikes</td>
-          <td class="amt spent">$119.22</td>
+          <td class="amt spent">$119.22</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-done">Confirmed</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Campsite</td>
           <td>Wildcat 002/003, Coast 013 (Diego Paese)</td>
-          <td class="amt tbd">TBD</td>
+          <td class="amt tbd">TBD</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-est">Pending</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Gear</td>
           <td>Firewood + extra tent stakes (Diego)</td>
-          <td class="amt tbd">TBD</td>
+          <td class="amt tbd">TBD</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-est">Pending</span></td>
         </tr>
 
@@ -311,42 +312,49 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
           <td style="font-weight:500">Hike 2 · Ohlone</td>
           <td>Food</td>
           <td>Peak Refuel (freeze-dried meals)</td>
-          <td class="amt spent">$519.60</td>
+          <td class="amt spent">$519.60</td><td class="amt" style="color:var(--bark);font-size:.72rem">$20.31</td>
           <td><span class="pill pill-done">Confirmed</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Food</td>
           <td>Amazon (bars, snacks, chicken, PB)</td>
-          <td class="amt spent">$383.23</td>
+          <td class="amt spent">$383.23</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-done">Confirmed</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Food</td>
           <td>Sports Basement (Krave jerky)</td>
-          <td class="amt spent">$163.80</td>
+          <td class="amt spent">$163.80</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-done">Confirmed</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Food</td>
           <td>Walmart (Gatorade, Swiss Miss, Idahoan)</td>
-          <td class="amt spent">$84.56</td>
+          <td class="amt spent">$84.56</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-done">Confirmed</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Food</td>
           <td>Sprouts/Instacart (allergy scout items)</td>
-          <td class="amt spent">$33.21</td>
+          <td class="amt spent">$33.21</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
+          <td><span class="pill pill-done">Confirmed</span></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Food</td>
+          <td>Costco via Instacart — tortillas ×4, cheese, salame, trail mix, yoggies, VIA coffee</td>
+          <td class="amt spent">$142.67</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-done">Confirmed</span></td>
         </tr>
         <tr style="background:#FFFBF5">
           <td></td>
           <td>Food</td>
           <td>Additional Ohlone purchases — placeholder (not yet bought)</td>
-          <td class="amt est">$400.00</td>
+          <td class="amt est">$400.00</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-est">Pending</span></td>
         </tr>
 
@@ -362,7 +370,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
           <td></td>
           <td>Campsite</td>
           <td>TBD pending route confirmation</td>
-          <td class="amt tbd">TBD</td>
+          <td class="amt tbd">TBD</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-est">Estimated</span></td>
         </tr>
 
@@ -371,50 +379,50 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
           <td style="font-weight:500">50-Miler · High Sierra</td>
           <td>Food</td>
           <td>$19.50/person/day × 7 days × 26 people</td>
-          <td class="amt est">~$3,549</td>
+          <td class="amt est">~$3,549</td><td class="amt" style="color:var(--bark);font-size:.72rem">$19.50</td>
           <td><span class="pill pill-est">Estimated</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Permits</td>
           <td>Inyo NF wilderness permits via recreation.gov</td>
-          <td class="amt est">~$500</td>
+          <td class="amt est">~$500</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-est">Estimated</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Campsite</td>
           <td>Sabrina Campground + fees</td>
-          <td class="amt est">~$500</td>
+          <td class="amt est">~$500</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-est">Estimated</span></td>
         </tr>
         <tr>
           <td></td>
           <td>Other</td>
           <td>Shuttles, firewood, misc logistics</td>
-          <td class="amt est">~$500</td>
+          <td class="amt est">~$500</td><td class="amt" style="color:var(--bark);font-size:.72rem">—</td>
           <td><span class="pill pill-est">Estimated</span></td>
         </tr>
 
         <!-- Totals -->
         <tr class="tr-total">
           <td colspan="3"><strong>Total confirmed + pending</strong></td>
-          <td class="amt spent"><strong>$2,429.89</strong></td>
+          <td class="amt spent"><strong>$2,572.56</strong></td><td></td>
           <td></td>
         </tr>
         <tr class="tr-total">
           <td colspan="3">Total estimated remaining spend</td>
-          <td class="amt est">~$6,570</td>
+          <td class="amt est">~$5,070</td>
           <td></td>
         </tr>
         <tr class="tr-total">
           <td colspan="3"><strong>Total budget collected</strong></td>
-          <td class="amt green"><strong>$6,500.00</strong></td>
+          <td class="amt green"><strong>$6,500.00</strong></td><td></td>
           <td></td>
         </tr>
         <tr class="tr-gap">
-          <td colspan="3"><strong>Projected gap (budget − projected total)</strong></td>
-          <td class="amt red"><strong>~−$2,500</strong></td>
+          <td colspan="4"><strong>Projected gap (budget − projected total)</strong></td>
+          <td class="amt red"><strong>~−$3,150</strong></td>
           <td><span class="pill" style="background:#FDE8D8;color:#8C2A00">⚠ Review</span></td>
         </tr>
       </tbody>
@@ -434,8 +442,8 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
     </div>
     <div class="perp-card">
       <p class="perp-label">Hike 1 food</p>
-      <p class="perp-val" style="color:var(--ember)">$60.39</p>
-      <p class="perp-sub">$845.49 ÷ 14 · + campsite TBD</p>
+      <p class="perp-val" style="color:var(--ember)">$32.52</p>
+      <p class="perp-sub">$726 ÷ 26 · + campsite TBD</p>
     </div>
     <div class="perp-card">
       <p class="perp-label">Hike 2 food</p>
@@ -468,6 +476,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;di
     <p style="margin-bottom:.6rem"><strong>High Sierra food estimate is very rough.</strong> Using <strong>$19.50/person/day</strong> — adjusted down from $22 to keep the projected gap within $2,500–$2,600. This gives ~$3,549 for the High Sierra (7 days × 26 people) and ~$1,521 for La Honda (3 days × 26 people). Prep hike actuals are running $15–16/person/day, so $19.50 is a realistic but conservative target.</p>
     <p style="margin-bottom:.6rem"><strong>Ohlone $400 placeholder</strong> is for additional food purchases not yet made. Update this line once receipts are in — it will feed through to all totals automatically.</p>
     <p style="margin-bottom:.6rem"><strong>Buddy bags ($119.22)</strong> are a one-time reusable purchase — consider excluding from per-trip food cost comparisons. Per-trip food-only cost for Hike 1 is $27.93/person.</p>
+    <p style="margin-bottom:.6rem"><strong>Point Reyes: 14 attendees vs 26 participants.</strong> Food cost is $60.39/person based on 14 who attended. If allocated across all 26 payers it would be $32.52/person. Campsite fees still TBD from Diego's receipts.</p>
     <p style="margin-bottom:.6rem"><strong>Point Reyes campsite fees</strong> (Diego Paese's separate reimbursement) are not yet tallied. Wildcat 002, Wildcat 003, and Coast 013 campsites + firewood + stakes need to be added.</p>
     <p style="margin-bottom:.6rem"><strong>Clarify scope:</strong> Does the $250/person fee cover only food, or also permits, campsite, transportation, and gear? This significantly affects whether there is a real gap.</p>
     <p><strong>Next action:</strong> Confirm High Sierra permit costs with Diego/Kerri and get a real food budget estimate from the Philmont meal planning spreadsheet before La Honda purchases are made.</p>
