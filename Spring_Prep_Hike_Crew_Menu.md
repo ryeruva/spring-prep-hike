@@ -68,7 +68,7 @@
 |---|---|---|---|---|
 | Columbus Italian Dry Salame | 2 oz pre-sliced | ~6 oz | ~8 oz | slice & bag on Apr 3 |
 | Tillamook Cheddar Snacking Cheese | 2 packets (0.75 oz each) | 6 pkts | 8 pkts | |
-| Chicken in a Biskit crackers | 1 oz (~12 crackers) | 3 oz | 4 oz | |
+| Wasa Crisp'n Light Crackerbread | 1 oz (~12 crackers) | 3 oz | 4 oz | |
 
 ### Dinner *(↑ in bear can — hot)*
 

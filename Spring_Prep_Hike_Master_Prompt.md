@@ -63,9 +63,39 @@ Hike 3 — La Honda             May TBD,  2026   UPCOMING
 
 | Hike | Location | Dates | People | Format | Status |
 |---|---|---|---|---|---|
-| Hike 1 | Point Reyes | Feb 14–16, 2026 | ~20 | 3-day, bear cans | Done ✓ |
+| Hike 1 | Point Reyes — Bear Valley → Wildcat Camp | Feb 14–16, 2026 | ~20 | 3-day, basecamp style, bear cans | Done ✓ |
 | Hike 2 | Ohlone Wilderness | Apr 4–6, 2026 | 20 (12 scouts + 8 adults) | 3-day, bear cans | Done ✓ |
 | Hike 3 | La Honda | May 2026, TBD | TBD | 3-day, bear cans | Upcoming |
+
+
+## Hike 1 (Point Reyes) — Completed Trip Summary
+
+**Route:** Bear Valley Visitor Center → Wildcat Camp (both nights) → Bear Valley
+**Dates:** February 14–16, 2026
+**Mileage:** ~16 miles total (Day 1: ~6 mi, Day 2: 0–7 mi optional, Day 3: ~4 mi)
+**Campsite:** Wildcat Camp Site 003 — two nights basecamp style
+**Difficulty:** Moderate
+
+**What made it basecamp style:**
+Scouts carried full packs only on Days 1 and 3. Day 2 was daypack-only with optional day hikes, skill modules, and free exploration — a deliberate recovery/shakedown structure before Ohlone's harder ridge traverse.
+
+**Day 2 activities (scouts chose several):**
+- Alamere Falls day hike (~1.4 mi RT) — rare tidefall waterfall, best at low tide
+- Coastal bluff exploration — whale watching in February, navigation practice
+- Wildcat Beach — beach cleanup service project, journaling, sand structures
+- Wilderness skills: map & compass, first aid scenarios, knots, stove safety, bear can packing, LNT stations
+- Optional longer hikes north (toward Stewart/Double Point) or south (toward Coast Camp) 4–7 mi RT
+
+**Key campsite features (Wildcat Camp):**
+- Water spigot on site
+- Bear storage lockers
+- Direct access to Wildcat Beach
+- Path to Alamere Falls from camp
+- Group-friendly layout with ocean views
+
+**Reference doc:** https://docs.google.com/document/d/18OzeNne5yUNdVfSD6WIUONJrHdlH9sAFPDxYrXNLTT0/edit
+
+---
 
 **Bear can structure (Hike 2 — reference for future hikes):**
 - 4 scout cans × 3 scouts = 12 scouts
