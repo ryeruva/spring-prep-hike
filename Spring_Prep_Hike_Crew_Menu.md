@@ -57,10 +57,9 @@
 | Item | Per person | Scout can qty | Adult can qty | Notes |
 |---|---|---|---|---|
 | Kind PB Dark Choc Healthy Grains bar | 1 bar (1.4 oz) | 6 bars | 8 bars | ⚠ nuts |
-| Krave Sea Salt Beef Jerky | 1 bag (0.625 oz) | 3 bags | 4 bags | |
+| Krave Sea Salt Beef Jerky | ½ packet (0.74 oz) — 1×1.48oz packet per person split across 2 snack days | 3 bags | 4 bags | |
 | Gatorade G Zero powder | 1 packet | 3 pkts | 4 pkts | |
 | Dried Mango Slices | 1 oz pack | 3 packs | 4 packs | nut-free ✓ |
-| Strawberry Yoggies | 1 bag (0.7 oz) | 3 bags | 4 bags | nut-free ✓ |
 
 ### Lunch *(🎒 backpack — trail charcuterie, no cook)*
 
@@ -103,7 +102,7 @@
 | Item | Per person | Scout can qty | Adult can qty | Notes |
 |---|---|---|---|---|
 | Kind Dark Choc Sea Salt bar | 1 bar (1.4 oz) | 3 | 4 | ⚠ nuts |
-| Krave Sea Salt Beef Jerky | 1 bag (0.625 oz) | 3 | 4 | |
+| Krave Sea Salt Beef Jerky | ½ packet (0.74 oz) — 1×1.48oz packet per person split across 2 snack days | 3 | 4 | |
 | Gatorade G Zero powder | 2 packets | 6 pkts | 8 pkts | 2 per person — hardest day |
 | Banana Chips | 1 oz pack | 3 | 4 | nut-free ✓ |
 | Nature's Garden Trail Mix | 1 bag (1.2 oz) | 3 | 4 | ⚠ check nut label |
@@ -151,7 +150,6 @@
 | Item | Per person | Scout can qty | Adult can qty | Notes |
 |---|---|---|---|---|
 | Clif Bar | 1 bar (2.4 oz) | 3 | 4 | ⚠ nuts |
-| Krave Sea Salt Beef Jerky | 1 bag (0.625 oz) | 3 | 4 | |
 | Gatorade G Zero powder | 1 packet | 3 pkts | 4 pkts | |
 | Nature's Garden Trail Mix | 1 bag (1.2 oz) | 3 | 4 | ⚠ check nut label |
 | Peak Refuel Brownie Bites | ½ pouch per person | 2 pouches | 2 pouches | buddy pairs share |
