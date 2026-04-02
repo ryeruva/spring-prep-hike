@@ -59,15 +59,15 @@
 | Kind PB Dark Choc Healthy Grains bar | 1 bar (1.4 oz) | 6 bars | 8 bars | ⚠ nuts |
 | Krave Sea Salt Beef Jerky | ½ packet (0.74 oz) — 1×1.48oz packet per person split across 2 snack days | 3 bags | 4 bags | |
 | Gatorade G Zero powder | 1 packet | 3 pkts | 4 pkts | |
-| Dried Mango Slices | 1 oz pack | 3 packs | 4 packs | nut-free ✓ |
+| Dried Mango Slices | 1.6 oz pack | 3 packs | 4 packs | nut-free ✓ |
 
 ### Lunch *(🎒 backpack — trail charcuterie, no cook)*
 
 | Item | Per person | Scout can qty | Adult can qty | Notes |
 |---|---|---|---|---|
-| Columbus Italian Dry Salame | 2 oz pre-sliced | ~6 oz | ~8 oz | slice & bag on Apr 3 |
-| Tillamook Cheddar Snacking Cheese | 2 packets (0.75 oz each) | 6 pkts | 8 pkts | |
-| Wasa Crisp'n Light Crackerbread | 1 oz (~12 crackers) | 3 oz | 4 oz | |
+| Columbus Italian Dry Salame | 3.2 oz pre-sliced | ~9.6 oz | ~12.8 oz | slice & bag on Apr 3 |
+| Tillamook Cheddar Snacking Cheese | 3 packets (0.75 oz each) | 9 pkts | 12 pkts | |
+| Wasa Crisp'n Light Crackerbread | 2 oz (~9 crackers) | 6 oz | 8 oz | |
 
 ### Dinner *(↑ in bear can — hot)*
 
@@ -104,8 +104,8 @@
 | Kind Dark Choc Sea Salt bar | 1 bar (1.4 oz) | 3 | 4 | ⚠ nuts |
 | Krave Sea Salt Beef Jerky | ½ packet (0.74 oz) — 1×1.48oz packet per person split across 2 snack days | 3 | 4 | |
 | Gatorade G Zero powder | 2 packets | 6 pkts | 8 pkts | 2 per person — hardest day |
-| Banana Chips | 1 oz pack | 3 | 4 | nut-free ✓ |
-| Nature's Garden Trail Mix | 1 bag (1.2 oz) | 3 | 4 | ⚠ check nut label |
+| Banana Chips | 3.2 oz pack | 3 | 4 | nut-free ✓ |
+| Strawberry Yoggies | 1 bag (0.7 oz) | 3 | 4 | nut-free ✓ |
 
 ### Lunch *(no cook)*
 
@@ -151,7 +151,7 @@
 |---|---|---|---|---|
 | Clif Bar | 1 bar (2.4 oz) | 3 | 4 | ⚠ nuts |
 | Gatorade G Zero powder | 1 packet | 3 pkts | 4 pkts | |
-| Nature's Garden Trail Mix | 1 bag (1.2 oz) | 3 | 4 | ⚠ check nut label |
+| Chocolate Filled Crepes | 1 bag (1.2 oz) | 3 | 4 | ⚠ check label |
 | Peak Refuel Brownie Bites | ½ pouch per person | 2 pouches | 2 pouches | buddy pairs share |
 
 ### Lunch *(no cook)*
@@ -159,7 +159,7 @@
 | Item | Per person | Scout can qty | Adult can qty | Notes |
 |---|---|---|---|---|
 | Guerrero 8" Flour Tortillas | 2 tortillas | 6 | 8 | |
-| Justin's Classic PB Squeeze | 1.5 packs (scout) / 2 packs (adult) | 3 | 4 | ⚠ nuts |
+| Justin's Classic PB Squeeze | 1 pack (1.15 oz) | 3 | 4 | ⚠ nuts |
 
 ---
 
@@ -185,13 +185,12 @@
 | Kind Dark Choc Sea Salt bar | 88 Acres Seed + Oat Bar | SUN snacks |
 | MET-Rx Big100 bar | GoMacro Heartwarming Retreat | SUN breakfast |
 | ProBar Meal bar | GoMacro Heartwarming Retreat | MON breakfast |
-| Clif Bar (all) | Clif Chocolate Chip (nut-free) | SUN/MON snacks |
-| Justin's PB Squeeze (all) | Once Again Sunflower Butter | SUN/MON lunch |
+| Clif Bar (all) | Clif Chocolate Chip | SUN lunch / MON snacks |
+| Justin's PB Squeeze (all) | Sunbutter on the go | SUN/MON lunch |
+| Chocolate Filled Crepes | Strawberry Yoggies (2x) | MON snacks |
 | Justin's Dark Choc PB Cups | Honey Stinger Gold Waffle | SUN dessert |
 | BP Crème Brûlée | Honey Stinger Gold Waffle (if cashews present) | SAT dessert |
-| Clif Builder's bar | N/A — adult only, scout doesn't receive | — |
 
-> ⚠ Check Nature's Garden Trail Mix label — swap if nuts present.
 > All swap items carried in a separate labeled personal bag.
 
 ---
