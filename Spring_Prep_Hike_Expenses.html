@@ -167,6 +167,16 @@
       color: var(--bark)
     }
 
+    .badge-gear {
+      background: #EDE8D8;
+      color: #5C4033
+    }
+
+    .badge-campsite {
+      background: #E8F5ED;
+      color: var(--fern)
+    }
+
     /* Receipt sections */
     .receipt {
       margin-bottom: 2rem;
@@ -203,6 +213,18 @@
 
     .receipt-header.amazon {
       background: #F5F8FF
+    }
+
+    .receipt-header.costco {
+      background: #EEF3FA
+    }
+
+    .receipt-header.rei {
+      background: #F5EDE8
+    }
+
+    .receipt-header.reserveamerica {
+      background: #EDF5ED
     }
 
     .store-name {
@@ -516,7 +538,9 @@
       Menu</a>
 
     <a href="Spring_Prep_Hike_Expenses.html"
-      style="color:#C4A882;text-decoration:none;text-transform:uppercase">Expenses</a>
+      style="color:#E8C96A;text-decoration:none;text-transform:uppercase;border-bottom:1px solid #C8A028">Expenses</a>
+    <a href="Spring_Prep_Hike_Expenses_receipts.html"
+      style="color:#C4A882;text-decoration:none;text-transform:uppercase">Receipts</a>
 
     <span style="color:#3D332A;font-size:.5rem">&#9679;</span>
     <span style="color:#6B5040;text-transform:uppercase">Hike 2 — Spring Prep / Ohlone</span>
@@ -532,12 +556,12 @@
     <div class="summary-grid">
       <div class="card">
         <p class="card-label">Total Spent</p>
-        <p class="card-value big">$1,352.01</p>
-        <p class="card-sub">7 orders</p>
+        <p class="card-value big">$1,412.51</p>
+        <p class="card-sub">10 orders</p>
       </div>
       <div class="card">
         <p class="card-label">Per Person</p>
-        <p class="card-value">$67.60</p>
+        <p class="card-value">$70.63</p>
         <p class="card-sub">20 participants</p>
       </div>
       <div class="card">
@@ -547,8 +571,8 @@
       </div>
       <div class="card">
         <p class="card-label">Over Budget</p>
-        <p class="card-value" style="color:#C0392B">$117.01</p>
-        <p class="card-sub">9.5% above</p>
+        <p class="card-value" style="color:#C0392B">$177.51</p>
+        <p class="card-sub">14.4% above</p>
       </div>
       <div class="card">
         <p class="card-label">Discounts Saved</p>
@@ -917,167 +941,300 @@
     <!-- Grand total -->
 
     <!-- ── RECEIPT 6: Costco via Instacart ── -->
-    <div class="receipt-block" id="receipt-6">
-      <div class="receipt-header" style="background:linear-gradient(135deg,#005DAA 0%,#0073CF 100%)">
+    <div class="receipt">
+      <div class="receipt-header costco">
         <div>
-          <p class="store-name" style="color:#fff">Costco Wholesale <span style="opacity:.7;font-size:.8rem">via
-              Instacart Same-Day</span></p>
-          <p class="receipt-meta" style="color:rgba(255,255,255,.75)">Order #19706174709404604 &nbsp;·&nbsp; Apr 1, 2026
-            delivery &nbsp;·&nbsp; Visa ····3996</p>
+          <p class="store-name">Costco Wholesale <span
+              style="font-size:.72rem;font-weight:300;color:var(--stone)">via Instacart Same-Day</span></p>
+          <p class="store-meta">Apr 1, 2026 &nbsp;·&nbsp; Order #19706174709404604 &nbsp;·&nbsp; <span
+              class="pay-tag">Visa ····3996</span></p>
         </div>
-        <p class="receipt-total" style="color:#FFD700;font-size:1.3rem;font-weight:700">$140.10</p>
+        <span class="receipt-total">$140.10</span>
       </div>
-      <table class="receipt-table">
+      <table>
         <thead>
           <tr>
             <th>Item</th>
-            <th>Qty</th>
-            <th style="text-align:right">Price</th>
+            <th>Category</th>
+            <th class="r">Qty</th>
+            <th class="r">Unit</th>
+            <th class="r">Total</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Nature's Garden Probiotic Strawberry Yoggies 0.7oz (30-ct) <span
-                style="font-size:.72rem;color:#4A6741">nut-free ✓</span></td>
-            <td>×1</td>
-            <td style="text-align:right;font-family:monospace">$14.63</td>
-          </tr>
-          <tr style="background:#F9F9F9">
-            <td>Columbus Italian Dry Salame Sliced 16oz 2-ct <span style="font-size:.72rem;color:#4A6741">Save $4</span>
-            </td>
-            <td>×2</td>
-            <td style="text-align:right;font-family:monospace">$22.68</td>
+            <td class="item-name">Nature's Garden Probiotic Strawberry Yoggies 0.7oz (30-ct)</td>
+            <td><span class="badge badge-snacks">Snack</span></td>
+            <td class="r">1</td>
+            <td class="r">$14.63</td>
+            <td class="r">$14.63</td>
           </tr>
           <tr>
-            <td>Starbucks VIA Instant Colombia Coffee Medium Roast 26-ct <span
-                style="font-size:.72rem;color:#1F4E79">adults · 3 sticks/adult</span></td>
-            <td>×1</td>
-            <td style="text-align:right;font-family:monospace">$18.15</td>
-          </tr>
-          <tr style="background:#F9F9F9">
-            <td>Ziploc Seal Top Bag, Variety Pack, 322-count</td>
-            <td>×1</td>
-            <td style="text-align:right;font-family:monospace">$16.45</td>
+            <td class="item-name">Columbus Italian Dry Salame Sliced 16oz (2-ct)</td>
+            <td><span class="badge badge-meals">Sat Lunch</span></td>
+            <td class="r">2</td>
+            <td class="r">$11.34</td>
+            <td class="r">$22.68</td>
           </tr>
           <tr>
-            <td>Tillamook Medium Cheddar Snacking Cheese 0.75oz (52-ct)</td>
-            <td>×2</td>
-            <td style="text-align:right;font-family:monospace">$33.34</td>
-          </tr>
-          <tr style="background:#F9F9F9">
-            <td>Guerrero 8" Flour Tortillas 40-ct</td>
-            <td>×4</td>
-            <td style="text-align:right;font-family:monospace">$21.76</td>
+            <td class="item-name">Starbucks VIA Instant Colombia Coffee Medium Roast 26-ct</td>
+            <td><span class="badge badge-drinks">Scout Drink</span></td>
+            <td class="r">1</td>
+            <td class="r">$18.15</td>
+            <td class="r">$18.15</td>
           </tr>
           <tr>
-            <td>La Boulangere Chocolate Filled Crepes with Hazelnut 1.13oz (20-ct) <span
-                style="font-size:.72rem;color:#4A6741">Save $2</span></td>
-            <td>×1</td>
-            <td style="text-align:right;font-family:monospace">$6.80</td>
+            <td class="item-name">Ziploc Seal Top Bag Variety Pack 322-count</td>
+            <td></td>
+            <td class="r">1</td>
+            <td class="r">$16.45</td>
+            <td class="r">$16.45</td>
+          </tr>
+          <tr>
+            <td class="item-name">Tillamook Medium Cheddar Snacking Cheese 0.75oz (52-ct)</td>
+            <td><span class="badge badge-snacks">Snack</span></td>
+            <td class="r">2</td>
+            <td class="r">$16.67</td>
+            <td class="r">$33.34</td>
+          </tr>
+          <tr>
+            <td class="item-name">Guerrero 8" Flour Tortillas 40-ct</td>
+            <td><span class="badge badge-meals">Sat Lunch</span></td>
+            <td class="r">4</td>
+            <td class="r">$5.44</td>
+            <td class="r">$21.76</td>
+          </tr>
+          <tr>
+            <td class="item-name">La Boulangere Chocolate Filled Crepes with Hazelnut 1.13oz (20-ct)</td>
+            <td><span class="badge badge-snacks">Dessert</span></td>
+            <td class="r">1</td>
+            <td class="r">$6.80</td>
+            <td class="r">$6.80</td>
           </tr>
         </tbody>
       </table>
-      <div class="receipt-footer-rows">
-        <div class="footer-row"><span>Items subtotal</span><span>$133.81</span></div>
-        <div class="footer-row"><span>Sales Tax</span><span>$1.60</span></div>
-        <div class="footer-row"><span>Delivery discount</span><span style="color:#4A6741">−$2.00</span></div>
-        <div class="footer-row"><span>Tip</span><span>$6.69</span></div>
-        <div class="footer-row"
-          style="font-weight:700;font-size:.92rem;border-top:2px solid #C8A028;padding-top:.4rem;margin-top:.2rem">
-          <span>Order Total</span><span style="color:#4A6741">$140.10</span>
+      <div class="receipt-note">You saved $12.00. Final charge may differ from $139.70 auth hold. Tortillas: 4×40ct =
+        160 total.</div>
+      <div class="receipt-footer">
+        <div class="footer-row subtotal"><span>Items subtotal</span><span>$133.81</span></div>
+        <div class="footer-row fees"><span>Sales tax</span><span>$1.60</span></div>
+        <div class="footer-row discount"><span>Delivery discount</span><span>−$2.00</span></div>
+        <div class="footer-row fees"><span>Tip</span><span>$6.69</span></div>
+        <div class="footer-row grand"><span>Order Total</span><span>$140.10</span></div>
+      </div>
+    </div>
+
+    <!-- ── RECEIPT 7: Amazon Fresh/Same-Day ── -->
+    <div class="receipt">
+      <div class="receipt-header amazon">
+        <div>
+          <p class="store-name">Amazon Fresh/Same-Day</p>
+          <p class="store-meta">April 1, 2026 &nbsp;·&nbsp; Order #111-9111139-7309830 &nbsp;·&nbsp; Delivered April 1
+            &nbsp;·&nbsp; <span class="pay-tag">Amex ····3006</span></p>
         </div>
+        <span class="receipt-total">$27.51</span>
       </div>
-      <div style="padding:.5rem .9rem;background:#F0F8FF;border-top:1px solid #D0D8E8">
-        <p style="font-size:.7rem;color:#5C4033;font-style:italic">ℹ You saved $12.00. Final charge may differ from
-          $139.70 auth hold. Tortillas: 4×40ct = 160 total ✓</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Category</th>
+            <th class="r">Qty</th>
+            <th class="r">Unit</th>
+            <th class="r">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item-name">Velveeta Original Cheese Sauce Pouches, 3 ct Box with 4 oz Pouches</td>
+            <td><span class="badge badge-meals">Staples</span></td>
+            <td class="r">2</td>
+            <td class="r">$3.28</td>
+            <td class="r">$6.56</td>
+          </tr>
+          <tr>
+            <td class="item-name">Wasa Crisp'n Light 7 Grains Crispbread, 4.9 oz (Pack of 4)</td>
+            <td><span class="badge badge-snacks">Snack</span></td>
+            <td class="r">1</td>
+            <td class="r">$15.96</td>
+            <td class="r">$15.96</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="receipt-footer">
+        <div class="footer-row subtotal"><span>Items subtotal</span><span>$22.52</span></div>
+        <div class="footer-row fees"><span>Shipping &amp; tax</span><span>$0.00</span></div>
+        <div class="footer-row fees"><span>Delivery fee</span><span>$4.99</span></div>
+        <div class="footer-row grand"><span>Order Total</span><span>$27.51</span></div>
       </div>
     </div>
 
+    <!-- ── RECEIPT 8: REI Co-op ── -->
+    <div class="receipt">
+      <div class="receipt-header rei">
+        <div>
+          <p class="store-name">REI Co-op <span
+              style="font-size:.72rem;font-weight:300;color:var(--stone)">Sunnyvale — In Store</span></p>
+          <p class="store-meta">March 28, 2026 &nbsp;·&nbsp; Order #7602 &nbsp;·&nbsp; <span
+              class="pay-tag">Diego (reimbursable)</span></p>
+        </div>
+        <span class="receipt-total">$22.50</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Category</th>
+            <th class="r">Qty</th>
+            <th class="r">Unit</th>
+            <th class="r">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item-name">Jetpower Fuel — 8.11 oz / 230 g</td>
+            <td><span class="badge badge-gear">Cooking Gear</span></td>
+            <td class="r">3</td>
+            <td class="r">$6.95</td>
+            <td class="r">$20.85</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="receipt-note">Full receipt total $243.84 — only trip-related items shown. Proportional tax included in
+        reimbursable total. Paid by Diego Sabio Paese.</div>
+      <div class="receipt-footer">
+        <div class="footer-row subtotal"><span>Items subtotal</span><span>$20.85</span></div>
+        <div class="footer-row fees"><span>Proportional sales tax</span><span>$1.65</span></div>
+        <div class="footer-row grand"><span>Reimbursable Total</span><span>$22.50</span></div>
+      </div>
+    </div>
 
-  </div>
+    <!-- ── RECEIPT 9: ReserveAmerica — Stars Rest ── -->
+    <div class="receipt">
+      <div class="receipt-header reserveamerica">
+        <div>
+          <p class="store-name">ReserveAmerica &mdash; Sunol Regional Wilderness</p>
+          <p class="store-meta">March 12, 2026 &nbsp;·&nbsp; Reservation #2-38925892 &nbsp;·&nbsp; Receipt
+            #318532354 &nbsp;·&nbsp; <span class="pay-tag">Diego (reimbursable)</span></p>
+        </div>
+        <span class="receipt-total">$23.00</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Category</th>
+            <th class="r">Qty</th>
+            <th class="r">Unit</th>
+            <th class="r">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item-name">SUN: Stars Rest BP Camp (30) — Sat Apr 4 → Sun Apr 5, 2026 &nbsp;<span
+                class="td note">9 occupants</span></td>
+            <td><span class="badge badge-campsite">Campsite</span></td>
+            <td class="r">1 night</td>
+            <td class="r">$15.00</td>
+            <td class="r">$15.00</td>
+          </tr>
+          <tr>
+            <td class="item-name">Transaction fee</td>
+            <td></td>
+            <td class="r">1</td>
+            <td class="r">$8.00</td>
+            <td class="r">$8.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="receipt-note">Paid by Diego Sabio Paese.</div>
+      <div class="receipt-footer">
+        <div class="footer-row subtotal"><span>Use fee</span><span>$15.00</span></div>
+        <div class="footer-row fees"><span>Transaction fee</span><span>$8.00</span></div>
+        <div class="footer-row grand"><span>Order Total</span><span>$23.00</span></div>
+      </div>
+    </div>
 
-  <!-- ── RECEIPT 7: Amazon Fresh/Same-Day ── -->
-  <div class="receipt">
-    <div class="receipt-header amazon">
+    <!-- ── RECEIPT 10: ReserveAmerica — Maggie's BP ── -->
+    <div class="receipt">
+      <div class="receipt-header reserveamerica">
+        <div>
+          <p class="store-name">ReserveAmerica &mdash; Sunol / Ohlone Backpack Park</p>
+          <p class="store-meta">March 12, 2026 &nbsp;·&nbsp; Reservation #2-38925893 &nbsp;·&nbsp; Receipt
+            #318532336 &nbsp;·&nbsp; <span class="pay-tag">Diego (reimbursable)</span></p>
+        </div>
+        <span class="receipt-total">$15.00</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Category</th>
+            <th class="r">Qty</th>
+            <th class="r">Unit</th>
+            <th class="r">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="item-name">OHL: Maggie's #3 BP Camp (16) — Sun Apr 5 → Mon Apr 6, 2026 &nbsp;<span
+                class="td note">9 occupants</span></td>
+            <td><span class="badge badge-campsite">Campsite</span></td>
+            <td class="r">1 night</td>
+            <td class="r">$15.00</td>
+            <td class="r">$15.00</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="receipt-note">Paid by Diego Sabio Paese.</div>
+      <div class="receipt-footer">
+        <div class="footer-row subtotal"><span>Use fee</span><span>$15.00</span></div>
+        <div class="footer-row grand"><span>Order Total</span><span>$15.00</span></div>
+      </div>
+    </div>
+
+    <div class="grand-total-block">
       <div>
-        <p class="store-name">Amazon Fresh/Same-Day</p>
-        <p class="store-meta">April 1, 2026 &nbsp;&middot;&nbsp; Order #111-9111139-7309830 &nbsp;&middot;&nbsp;
-          Delivered April 1 &nbsp;&middot;&nbsp; <span class="pay-tag">Amex
-            &middot;&middot;&middot;&middot;3006</span></p>
+        <p class="gt-label">Total Expenditure</p>
+        <p class="gt-value">$1,412.51</p>
       </div>
-      <span class="receipt-total">$27.51</span>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Category</th>
-          <th class="r">Qty</th>
-          <th class="r">Unit</th>
-          <th class="r">Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="item-name">Velveeta Original Cheese Sauce Pouches, 3 ct Box with 4 oz Pouches</td>
-          <td><span class="badge badge-meals">Staples</span></td>
-          <td class="r">2</td>
-          <td class="r">$3.28</td>
-          <td class="r">$6.56</td>
-        </tr>
-        <tr>
-          <td class="item-name">Wasa Crisp'n Light 7 Grains Crispbread, 4.9 oz (Pack of 4)</td>
-          <td><span class="badge badge-snacks">Snack</span></td>
-          <td class="r">1</td>
-          <td class="r">$15.96</td>
-          <td class="r">$15.96</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="receipt-footer">
-      <div class="footer-row"><span>Items subtotal</span><span>$22.52</span></div>
-      <div class="footer-row fees"><span>Shipping &amp; tax</span><span>$0.00</span></div>
-      <div class="footer-row fees"><span>Delivery fee</span><span>$4.99</span></div>
-      <div class="footer-row grand"><span>Order Total</span><span>$27.51</span></div>
+      <div class="gt-breakdown">
+        <span><span>Peak Refuel (meals &amp; desserts)</span><strong>$519.60</strong></span>
+        <span><span>Amazon (bars, snacks, lunch, crispbread)</span><strong>$410.74</strong></span>
+        <span><span>Sports Basement (jerky)</span><strong>$163.80</strong></span>
+        <span><span>Instacart / Costco (staples &amp; cheese)</span><strong>$140.10</strong></span>
+        <span><span>Walmart (staples &amp; drinks)</span><strong>$84.56</strong></span>
+        <span><span>ReserveAmerica (campsites)</span><strong>$38.00</strong></span>
+        <span><span>Instacart / Sprouts (allergy scout)</span><strong>$33.21</strong></span>
+        <span><span>REI (cooking gear)</span><strong>$22.50</strong></span>
+      </div>
     </div>
 
+    <!-- Budget comparison -->
+    <div class="comparison">
+      <h3>Budget vs. Actual</h3>
+      <div class="comp-row"><span class="comp-label">Estimated budget</span><span
+          class="comp-val neutral">$1,235.00</span></div>
+      <div class="comp-row"><span class="comp-label">Actual total spent</span><span
+          class="comp-val neutral">$1,412.51</span></div>
+      <div class="comp-row"><span class="comp-label">Total discounts &amp; savings</span><span
+          class="comp-val under">−$94.73</span></div>
+      <div class="comp-row"><span class="comp-label">Allergy scout items (Sprouts)</span><span
+          class="comp-val neutral">$26.48 food + $6.73 delivery</span></div>
+      <div class="comp-row"><span class="comp-label">REI cooking gear (reimbursable)</span><span
+          class="comp-val neutral">$22.50 — paid by Diego</span></div>
+      <div class="comp-row"><span class="comp-label">Campsite fees (ReserveAmerica)</span><span
+          class="comp-val neutral">$38.00 — paid by Diego</span></div>
+      <div class="comp-row"><span class="comp-label"><strong>Under / over budget</strong></span><span
+          class="comp-val over"><strong>$177.51 over</strong></span></div>
+      <div class="comp-row"><span class="comp-label"><strong>Cost per person (20 ppl)</strong></span><span
+          class="comp-val neutral"><strong>$70.63</strong></span></div>
+    </div>
+
+    <footer class="footer">
+      <p>Spring Prep Hike &nbsp;·&nbsp; April 4–6, 2026 &nbsp;·&nbsp; Food Expense Report</p>
+    </footer>
 
   </div>
-
-  <div class="grand-total-block">
-    <div>
-      <p class="gt-label">Total Food Expenditure</p>
-      <p class="gt-value">$1,352.01</p>
-    </div>
-    <div class="gt-breakdown">
-      <span><span>Peak Refuel (meals &amp; desserts)</span><strong>$519.60</strong></span>
-      <span><span>Amazon (bars, snacks, lunch, crispbread)</span><strong>$410.74</strong></span>
-      <span><span>Sports Basement (jerky)</span><strong>$163.80</strong></span>
-      <span><span>Instacart / Costco (staples &amp; cheese)</span><strong>$140.10</strong></span>
-      <span><span>Walmart (staples &amp; drinks)</span><strong>$84.56</strong></span>
-      <span><span>Instacart / Sprouts (allergy scout)</span><strong>$33.21</strong></span>
-    </div>
-  </div>
-
-  <!-- Budget comparison -->
-  <div class="comparison">
-    <h3>Budget vs. Actual</h3>
-    <div class="comp-row"><span class="comp-label">Estimated budget</span><span
-        class="comp-val neutral">$1,235.00</span></div>
-    <div class="comp-row"><span class="comp-label">Actual total spent</span><span
-        class="comp-val neutral">$1,352.01</span></div>
-    <div class="comp-row"><span class="comp-label">Total discounts &amp; savings</span><span
-        class="comp-val under">−$94.73</span></div>
-    <div class="comp-row"><span class="comp-label">Allergy scout items (Sprouts)</span><span
-        class="comp-val neutral">$26.48 food + $6.73 delivery</span></div>
-    <div class="comp-row"><span class="comp-label"><strong>Under / over budget</strong></span><span
-        class="comp-val over"><strong>$117.01 over</strong></span></div>
-    <div class="comp-row"><span class="comp-label"><strong>Cost per person (20 ppl)</strong></span><span
-        class="comp-val neutral"><strong>$67.60</strong></span></div>
-  </div>
-
-
-
-  <footer class="footer">
-    <p>Spring Prep Hike &nbsp;·&nbsp; April 4–6, 2026 &nbsp;·&nbsp; Food Expense Report</p>
-  </footer>
+</body>
+</html>
