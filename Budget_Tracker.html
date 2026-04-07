@@ -633,194 +633,277 @@
         &nbsp;·&nbsp; As of April 2, 2026</p>
     </div>
 
-    <!-- ── Hero budget bar ── -->
-    <div class="budget-hero">
-      <div class="bh-top">
-        <div>
-          <p class="bh-label">Total collected</p>
-          <p class="bh-total">$6,500</p>
-        </div>
-        <div style="text-align:right">
-          <p class="bh-label">26 participants &times; $250</p>
-          <p style="font-family:'DM Mono',monospace;font-size:.8rem;opacity:.7">Budget year: 2026</p>
-        </div>
-      </div>
+    <!-- ── Hero budget bar — populated from budget_tracker.json ── -->
+    <div id="budget-hero" class="budget-hero"></div>
 
-      <div class="bh-stats">
-        <div class="bh-stat">
-          <div class="val spent" style="color:#F08080">$2,258.00</div>
-          <div class="lbl">Confirmed spent</div>
-        </div>
-        <div class="bh-stat">
-          <div class="val amber">~$5,070</div>
-          <div class="lbl">Estimated remaining</div>
-        </div>
-        <div class="bh-stat">
-          <div class="val green">$4,242.00</div>
-          <div class="lbl">Available now</div>
-        </div>
-        <div class="bh-stat">
-          <div class="val red">~−$828</div>
-          <div class="lbl">Projected gap ⚠</div>
-        </div>
-      </div>
+    <!-- ── Warning — populated from budget_tracker.json ── -->
+    <div id="warn-box"></div>
 
-      <!-- stacked progress bar -->
-      <div style="margin-bottom:.4rem">
-        <div class="bar-wrap">
-          <!-- confirmed spent: 2258/6500 = 34.7% -->
-          <div class="bar-spent" style="width:34.7%"></div>
-          <!-- estimated future -->
-          <div class="bar-est" style="left:34.7%;width:65.3%;background:var(--gold);opacity:.5"></div>
-        </div>
-        <div class="bar-labels">
-          <span>$0</span>
-          <span style="color:#F08080">$2,258 confirmed (35%)</span>
-          <span style="color:var(--gold)">$6,500 budget</span>
-        </div>
-      </div>
-      <p style="font-family:'DM Mono',monospace;font-size:.68rem;opacity:.55;margin-top:.6rem">
-        &#9888; Projected total spend (~$7,328) exceeds budget by ~$828. Hike 2 came in $172 under the $400 placeholder
-        estimate. High Sierra estimates remain rough — see notes below.
-      </p>
-    </div>
-
-    <!-- ── Warning ── -->
-    <div class="warn-box">
-      <strong>⚠ &nbsp;Projected budget gap — review before La Honda purchasing</strong>
-      Hike 2 (Ohlone) is fully closed at $1,412.51 — $172 under the prior $400 placeholder estimate. Projected total
-      (~$7,328) still exceeds $6,500 collected by approximately <strong>$828</strong>, driven entirely by High Sierra
-      estimates. Key decisions needed:
-      &nbsp;·&nbsp; Are permits/campsite fees covered by the $250 fee or separate?
-      &nbsp;·&nbsp; Will food cost for 7 days for 26 people fit in ~$3,242 remaining after prep hikes?
-      &nbsp;·&nbsp; Does the budget include gear, transportation, or just food?
-    </div>
-
-    <!-- ── Hike cards ── -->
+    <!-- ── Hike cards — populated from budget_tracker.json ── -->
     <section class="section">
       <p class="section-label">All Trips</p>
       <h2>Spend by Trip</h2>
-      <div class="hike-grid">
-
-        <div class="hike-card">
-          <div class="hc-head done">Hike 1 <span class="badge-small b-done">Done ✓</span></div>
-          <div class="hc-body">
-            <p class="hc-name">Point Reyes</p>
-            <p class="hc-date">Feb 14–16, 2026 &nbsp;·&nbsp; <strong>14 attendees</strong></p>
-            <p class="hc-amount spent">$845.49</p>
-            <p class="hc-amt-label">Confirmed · reimbursed</p>
-            <p class="hc-perp">$60.39 / person (14 attendees) &nbsp;·&nbsp; $20.13 / person / day</p>
-            <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">+ campsite
-              fees TBD</p>
-            <a href="Point_Reyes_Expenses.html" class="hc-link">View expense report →</a>
-          </div>
-        </div>
-
-        <div class="hike-card">
-          <div class="hc-head active">Hike 2 <span class="badge-small b-active">Current</span></div>
-          <div class="hc-body">
-            <p class="hc-name">Spring Prep<br>/ Ohlone</p>
-            <p class="hc-date">Apr 4–6, 2026 &nbsp;·&nbsp; <strong>19 attendees</strong></p>
-            <p class="hc-amount spent">$1,412.51</p>
-            <p class="hc-amt-label">Fully confirmed · 10 orders</p>
-            <p class="hc-perp">$74.34 / person (19 attendees) &nbsp;·&nbsp; $24.78 / person / day</p>
-            <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">incl. $60.50
-              Diego (gear + campsites)</p>
-            <a href="Spring_Prep_Hike_Expenses.html" class="hc-link">View expense report →</a>
-          </div>
-        </div>
-
-        <div class="hike-card">
-          <div class="hc-head upcoming">Hike 3 <span class="badge-small b-est">Upcoming</span></div>
-          <div class="hc-body">
-            <p class="hc-name">La Honda</p>
-            <p class="hc-date">May 2026 · TBD</p>
-            <p class="hc-amount est">~$1,521</p>
-            <p class="hc-amt-label">Estimated · not purchased</p>
-            <p class="hc-perp">~$58.50 / person &nbsp;·&nbsp; $19.50 / person / day</p>
-            <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">
-              $19.50/person/day × 3 days × 26</p>
-          </div>
-        </div>
-
-        <div class="hike-card">
-          <div class="hc-head main">50-Miler <span class="badge-small b-est">Summer</span></div>
-          <div class="hc-body">
-            <p class="hc-name">High Sierra</p>
-            <p class="hc-date">Summer 2026 · 7 days</p>
-            <p class="hc-amount est">~$5,049</p>
-            <p class="hc-amt-label">Estimated · not purchased</p>
-            <p class="hc-perp">~$194 / person &nbsp;·&nbsp; $19.50 / person / day (food)</p>
-            <p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">$19.50/day ×
-              7 days × 26 + $1,500 other</p>
-          </div>
-        </div>
-
-      </div>
+      <div class="hike-grid" id="hike-grid"></div>
     </section>
 
 
-    <!-- ── Per-person breakdown ── -->
+    <!-- ── Per-person breakdown — populated from budget_tracker.json ── -->
     <section class="section">
       <p class="section-label">Per Person</p>
       <h2>Cost Per Participant</h2>
-      <div class="perp-grid">
-        <div class="perp-card">
-          <p class="perp-label">Paid in</p>
-          <p class="perp-val" style="color:var(--sage)">$250</p>
-          <p class="perp-sub">per person</p>
-        </div>
-        <div class="perp-card">
-          <p class="perp-label">Hike 1 food</p>
-          <p class="perp-val" style="color:var(--ember)">$60.39</p>
-          <p class="perp-sub">$845.49 ÷ 14 attendees</p>
-        </div>
-        <div class="perp-card">
-          <p class="perp-label">Hike 2 actual</p>
-          <p class="perp-val" style="color:var(--ember)">$74.34</p>
-          <p class="perp-sub">$1,412.51 ÷ 19 attendees</p>
-        </div>
-        <div class="perp-card">
-          <p class="perp-label">Hike 3 est.</p>
-          <p class="perp-val" style="color:var(--gold)">~$58.50</p>
-          <p class="perp-sub">$19.50/day × 3 days</p>
-        </div>
-        <div class="perp-card">
-          <p class="perp-label">50-Miler est.</p>
-          <p class="perp-val" style="color:var(--gold)">~$194</p>
-          <p class="perp-sub">$19.50/day × 7 days + $58 other</p>
-        </div>
-        <div class="perp-card">
-          <p class="perp-label">Projected total</p>
-          <p class="perp-val" style="color:var(--warn)">~$387</p>
-          <p class="perp-sub">vs $250 paid — gap ~$137/person</p>
-        </div>
-      </div>
+      <div class="perp-grid" id="perp-grid"></div>
     </section>
 
-    <!-- ── Notes ── -->
+    <!-- ── Notes — populated from budget_tracker.json ── -->
     <section class="section">
       <p class="section-label">Notes</p>
       <h2>Assumptions & Next Steps</h2>
-      <div
+      <div id="notes-box"
         style="background:#fff;border:1px solid #D0C8BC;border-radius:5px;padding:1.1rem 1.4rem;font-size:.8rem;color:var(--stone);line-height:1.9">
-        <p style="margin-bottom:.6rem"><strong>High Sierra food estimate is very rough.</strong> Using
-          <strong>$19.50/person/day</strong> — adjusted down from $22 to keep the projected gap within $2,500–$2,600.
-          This gives ~$3,549 for the High Sierra (7 days × 26 people) and ~$1,521 for La Honda (3 days × 26 people).
-          Prep hike actuals are running $15–16/person/day, so $19.50 is a realistic but conservative target.
-        </p>
-        <p style="margin-bottom:.6rem"><strong>Point Reyes campsite fees</strong> (Diego Paese's separate reimbursement)
-          are not yet tallied. Wildcat 002, Wildcat 003, and Coast 013 campsites + firewood + stakes need to be added.
-        </p>
       </div>
     </section>
 
     <footer>
       <span class="footer-brand">Troop 222</span>
-      <span class="footer-note">50-Miler Series Budget Tracker · Updated April 2, 2026</span>
+      <span class="footer-note" id="footer-note">50-Miler Series Budget Tracker</span>
     </footer>
 
   </div>
+
+  <script>
+    // ── Formatting helpers ────────────────────────────────────────────────────
+    function fmt(n)      { return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function fmtW(n)     { return '$' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function fmtSign(n)  { return (n >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+    // ── Resolve allocated budget per hike from allocation rules ───────────────
+    function getAllocated(hike, d) {
+      const total = d.meta.totalCollected;
+      const pct   = hike.type === 'prep' ? d.allocation.prepHikePct : d.allocation.finalHikePct;
+      return total * (pct / 100);
+    }
+
+    // ── Fetch a hike's actual total from its linked budget file ───────────────
+    // budgetTotalPath is a dot-path like "summary.totalSpent"
+    function resolvePath(obj, path) {
+      return path.split('.').reduce((o, k) => o && o[k], obj);
+    }
+    function fetchHikeTotal(hike) {
+      if (!hike.budgetFile) return Promise.resolve(null);
+      return fetch(hike.budgetFile)
+        .then(r => r.json())
+        .then(data => resolvePath(data, hike.budgetTotalPath || 'summary.totalSpent'))
+        .catch(() => null);
+    }
+
+    // ── Render hero bar ───────────────────────────────────────────────────────
+    function renderHero(d, hikes) {
+      const m = d.meta, a = d.allocation;
+      const confirmedSpent = hikes.filter(h => h._actual != null && !h.estimatedTotal)
+                                   .reduce((s, h) => s + h._actual, 0);
+      const projectedTotal = hikes.reduce((s, h) => s + (h._actual ?? h.estimatedTotal ?? 0), 0);
+      const projectedGap   = projectedTotal - m.totalCollected;
+      const availableNow   = m.totalCollected - confirmedSpent;
+      const spentPct       = Math.min((confirmedSpent / m.totalCollected) * 100, 100);
+      const remainPct      = (100 - spentPct).toFixed(1);
+
+      document.getElementById('budget-hero').innerHTML = `
+        <div class="bh-top">
+          <div>
+            <p class="bh-label">Total collected</p>
+            <p class="bh-total">${fmtW(m.totalCollected)}</p>
+          </div>
+          <div style="text-align:right">
+            <p class="bh-label">${m.participants} participants &times; $${m.perPersonCollected}</p>
+            <p style="font-family:'DM Mono',monospace;font-size:.8rem;opacity:.7">Budget year: ${m.budgetYear}</p>
+          </div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;opacity:.55;margin-bottom:.8rem">
+          Allocation: ${a.prepHikePct}% per prep hike (×${a.prepHikeCount} = ${a.prepHikePct * a.prepHikeCount}%) &nbsp;·&nbsp; ${a.finalHikePct}% for 50-Miler
+          &nbsp;·&nbsp; ${fmtW(m.totalCollected * a.prepHikePct / 100)} / prep hike &nbsp;·&nbsp; ${fmtW(m.totalCollected * a.finalHikePct / 100)} for final
+        </div>
+        <div class="bh-stats">
+          <div class="bh-stat">
+            <div class="val" style="color:#F08080">${fmt(confirmedSpent)}</div>
+            <div class="lbl">Confirmed spent</div>
+          </div>
+          <div class="bh-stat">
+            <div class="val green">${fmtW(availableNow)}</div>
+            <div class="lbl">Available now</div>
+          </div>
+          <div class="bh-stat">
+            <div class="val amber">~${fmtW(projectedTotal)}</div>
+            <div class="lbl">Projected total</div>
+          </div>
+          <div class="bh-stat">
+            <div class="val ${projectedGap > 0 ? 'red' : 'green'}">${projectedGap > 0 ? '~' : ''}${fmtSign(projectedGap)}</div>
+            <div class="lbl">${projectedGap > 0 ? 'Projected gap ⚠' : 'Projected surplus'}</div>
+          </div>
+        </div>
+        <div style="margin-bottom:.4rem">
+          <div class="bar-wrap">
+            <div class="bar-spent" style="width:${spentPct.toFixed(1)}%"></div>
+            <div class="bar-est" style="left:${spentPct.toFixed(1)}%;width:${remainPct}%;background:var(--gold);opacity:.5"></div>
+          </div>
+          <div class="bar-labels">
+            <span>$0</span>
+            <span style="color:#F08080">${fmtW(confirmedSpent)} confirmed (${Math.round(spentPct)}%)</span>
+            <span style="color:var(--gold)">${fmtW(m.totalCollected)} budget</span>
+          </div>
+        </div>
+        <p style="font-family:'DM Mono',monospace;font-size:.68rem;opacity:.55;margin-top:.6rem">
+          &#9888; Projected total spend (~${fmtW(projectedTotal)}) ${projectedGap > 0 ? 'exceeds' : 'is under'} budget by ~${fmtW(Math.abs(projectedGap))}.
+          High Sierra estimates remain rough — see notes below.
+        </p>`;
+    }
+
+    // ── Render warning box ────────────────────────────────────────────────────
+    function renderWarning(d, hikes) {
+      const m = d.meta, a = d.allocation;
+      const prepAlloc = m.totalCollected * a.prepHikePct / 100;
+      const overHikes = hikes.filter(h => h._actual != null && h._actual > prepAlloc);
+      const projectedTotal = hikes.reduce((s, h) => s + (h._actual ?? h.estimatedTotal ?? 0), 0);
+      const projectedGap   = projectedTotal - m.totalCollected;
+      const confirmedSpent = hikes.filter(h => h._actual != null && !h.estimatedTotal)
+                                   .reduce((s, h) => s + h._actual, 0);
+      const remainingAfterPrep = m.totalCollected - hikes.filter(h => h.type === 'prep')
+                                   .reduce((s, h) => s + (h._actual ?? h.estimatedTotal ?? 0), 0);
+      const isOver = projectedGap > 0;
+      document.getElementById('warn-box').innerHTML = isOver ? `
+        <div class="warn-box">
+          <strong>⚠ &nbsp;Projected budget gap — review before next hike purchasing</strong>
+          Each prep hike is budgeted at ${a.prepHikePct}% = ${fmtW(prepAlloc)}.
+          ${overHikes.map(h => `Hike ${h.number} (${h.name}) came in ${fmt(h._actual)} — ${fmtSign(h._actual - prepAlloc)} vs allocation.`).join(' ')}
+          Projected total (~${fmtW(projectedTotal)}) exceeds ${fmtW(m.totalCollected)} collected by approximately <strong>${fmtW(projectedGap)}</strong>.
+          &nbsp;·&nbsp; Are permits/campsite fees covered by the $${m.perPersonCollected} fee or separate?
+          &nbsp;·&nbsp; Will final hike food fit in ~${fmtW(remainingAfterPrep)} remaining after prep hikes?
+          &nbsp;·&nbsp; Does the budget include gear, transportation, or just food?
+        </div>` : `
+        <div class="ok-box">
+          <strong>✓ &nbsp;On track — projected spend within budget</strong>
+          Each prep hike is budgeted at ${a.prepHikePct}% = ${fmtW(prepAlloc)}.
+          Projected total ~${fmtW(projectedTotal)} leaves a surplus of ~${fmtW(Math.abs(projectedGap))}.
+        </div>`;
+    }
+
+    // ── Render a single hike card ─────────────────────────────────────────────
+    function renderHikeCard(h, allocated) {
+      const actual    = h._actual;
+      const display   = actual ?? h.estimatedTotal;
+      const isEst     = actual == null;
+      const amtClass  = isEst ? 'est' : 'spent';
+      const prefix    = isEst ? '~' : '';
+      const diff      = actual != null ? actual - allocated : null;
+      const diffHtml  = diff != null
+        ? `<p style="font-family:'DM Mono',monospace;font-size:.65rem;margin-top:.3rem;color:${diff > 0 ? 'var(--warn)' : 'var(--sage)'}">
+             ${fmtSign(diff)} vs ${fmtW(allocated)} allocation (${Math.round((diff/allocated)*100)}%)</p>`
+        : `<p style="font-family:'DM Mono',monospace;font-size:.65rem;margin-top:.3rem;color:var(--bark)">
+             Allocated: ${fmtW(allocated)}</p>`;
+      const badgeClass = { done: 'b-done', active: 'b-active', upcoming: 'b-est', main: 'b-est' }[h.status];
+      const perPerson  = display / h.attendees;
+      const perPPD     = h.perPersonPerDay;
+      const link       = h.link ? `<a href="${h.link}" class="hc-link">${h.linkLabel}</a>` : '';
+      const notes      = h.notes.map(n => `<p style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-top:.3rem">${n}</p>`).join('');
+      return `
+        <div class="hike-card">
+          <div class="hc-head ${h.status}">Hike ${h.number} <span class="badge-small ${badgeClass}">${h.statusLabel}</span></div>
+          <div class="hc-body">
+            <p class="hc-name">${h.name}</p>
+            <p class="hc-date">${h.dates} &nbsp;·&nbsp; <strong>${h.attendees} attendees</strong></p>
+            <p class="hc-amount ${amtClass}">${prefix}${isEst ? fmtW(display) : fmt(display)}</p>
+            <p class="hc-amt-label">${h.amountLabel}</p>
+            ${diffHtml}
+            <p class="hc-perp">${prefix}${fmt(perPerson)} / person &nbsp;·&nbsp; $${perPPD.toFixed(2)} / person / day</p>
+            ${notes}
+            ${link}
+          </div>
+        </div>`;
+    }
+
+    // ── Render per-person grid ────────────────────────────────────────────────
+    function renderPerPerson(d, hikes) {
+      const m = d.meta;
+      const projectedTotal = hikes.reduce((s, h) => s + (h._actual ?? h.estimatedTotal ?? 0), 0);
+      const projectedPerPerson = projectedTotal / m.participants;
+      const gap = projectedPerPerson - m.perPersonCollected;
+      const cards = hikes.map(h => {
+        const amt   = h._actual ?? h.estimatedTotal ?? 0;
+        const pp    = amt / h.attendees;
+        const isEst = h._actual == null;
+        const color = h.status === 'done' || h.status === 'active' ? 'var(--ember)' : 'var(--gold)';
+        return `<div class="perp-card">
+          <p class="perp-label">Hike ${h.number}${isEst ? ' est.' : ''}</p>
+          <p class="perp-val" style="color:${color}">${isEst ? '~' : ''}${fmt(pp)}</p>
+          <p class="perp-sub">${isEst ? '~' : ''}${fmtW(amt)} ÷ ${h.attendees} attendees</p>
+        </div>`;
+      }).join('');
+      document.getElementById('perp-grid').innerHTML = `
+        <div class="perp-card">
+          <p class="perp-label">Paid in</p>
+          <p class="perp-val" style="color:var(--sage)">$${m.perPersonCollected}</p>
+          <p class="perp-sub">per person</p>
+        </div>
+        ${cards}
+        <div class="perp-card">
+          <p class="perp-label">Projected total</p>
+          <p class="perp-val" style="color:var(--warn)">~${fmt(projectedPerPerson)}</p>
+          <p class="perp-sub">vs $${m.perPersonCollected} paid — gap ~${fmt(Math.abs(gap))}/person</p>
+        </div>`;
+    }
+
+    // ── Render notes ──────────────────────────────────────────────────────────
+    function renderNotes(d) {
+      const n = d.notes, m = d.meta, a = d.allocation;
+      const prepAlloc  = m.totalCollected * a.prepHikePct / 100;
+      const finalAlloc = m.totalCollected * a.finalHikePct / 100;
+      document.getElementById('notes-box').innerHTML = `
+        <p style="margin-bottom:.6rem"><strong>Budget allocation: ${a.prepHikePct}% per prep hike, ${a.finalHikePct}% for 50-Miler.</strong>
+          Each prep hike is budgeted at ${fmtW(prepAlloc)} (${a.prepHikePct}% of ${fmtW(m.totalCollected)}).
+          The final 50-Miler is budgeted at ${fmtW(finalAlloc)} (${a.finalHikePct}%).
+        </p>
+        <p style="margin-bottom:.6rem"><strong>High Sierra food estimate is very rough.</strong> Using
+          <strong>$${n.dailyFoodRate}/person/day</strong> — adjusted down from $${n.originalDailyRate}.
+          This gives ~${fmtW(n.highSierraFoodTotal)} for the High Sierra
+          (7 days × ${m.participants} people) and ~${fmtW(n.laHondaFoodTotal)} for La Honda
+          (3 days × ${m.participants} people). Prep hike actuals are running $${n.hikeActualDailyRange}/person/day,
+          so $${n.dailyFoodRate} is a realistic but conservative target.
+        </p>
+        <p style="margin-bottom:.6rem"><strong>Point Reyes campsite fees</strong> (Diego Paese's separate reimbursement)
+          are not yet tallied. Wildcat 002, Wildcat 003, and Coast 013 campsites + firewood + stakes need to be added.
+        </p>`;
+    }
+
+    // ── Bootstrap: fetch tracker, then fetch any linked hike budget files ─────
+    fetch('budget_tracker.json')
+      .then(r => r.json())
+      .then(d => {
+        // Fetch all hike budget files in parallel, fall back to confirmedTotal
+        return Promise.all(
+          d.hikes.map(h =>
+            fetchHikeTotal(h).then(fetched => {
+              h._actual = fetched ?? h.confirmedTotal;
+              return h;
+            })
+          )
+        ).then(hikes => ({ d, hikes }));
+      })
+      .then(({ d, hikes }) => {
+        renderHero(d, hikes);
+        renderWarning(d, hikes);
+        document.getElementById('hike-grid').innerHTML =
+          hikes.map(h => renderHikeCard(h, getAllocated(h, d))).join('');
+        renderPerPerson(d, hikes);
+        renderNotes(d);
+        document.getElementById('footer-note').textContent =
+          `50-Miler Series Budget Tracker · Updated ${d.meta.asOf}`;
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById('budget-hero').innerHTML =
+          '<p style="color:#8C4A2F;padding:1.5rem">⚠ Could not load budget_tracker.json. ' +
+          'Serve via local server: <code>python3 -m http.server</code></p>';
+      });
+  </script>
 </body>
 
 </html>
