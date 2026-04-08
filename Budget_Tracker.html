@@ -676,24 +676,88 @@
     function fmtW(n)     { return '$' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
     function fmtSign(n)  { return (n >= 0 ? '+' : '−') + '$' + Math.abs(Math.round(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
-    // ── Resolve allocated budget per hike from allocation rules ───────────────
-    function getAllocated(hike, d) {
-      const total = d.meta.totalCollected;
-      const pct   = hike.type === 'prep' ? d.allocation.prepHikePct : d.allocation.finalHikePct;
-      return total * (pct / 100);
+    // ── Google Sheets CSV URLs ────────────────────────────────────────────────
+    const CSV_CONFIG = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT0_Go2s4W_NQeUNARF8tDQJLKKeGHmzBcv2IkKPCfjp3tIiLt85aR9ltTxZAwBqInMvwBuWhmE9w0W/pub?output=csv';
+    const CSV_HIKES  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTe1YPGQ7dEt0DNOz6vsACnPNPOAmtNWQG1Pt8TB5EdCrZDBfB3kaBt7lRYPEEhMIrxMudvN2OW_s3J/pub?output=csv';
+
+    // ── CSV parser ────────────────────────────────────────────────────────────
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      function parseLine(line) {
+        const fields = []; let cur = '', inQ = false;
+        for (const c of line) {
+          if (c === '"') { inQ = !inQ; }
+          else if (c === ',' && !inQ) { fields.push(cur.trim()); cur = ''; }
+          else { cur += c; }
+        }
+        fields.push(cur.trim());
+        return fields;
+      }
+      const headers = parseLine(lines[0]);
+      return lines.slice(1).filter(l => l.trim()).map(l => {
+        const vals = parseLine(l);
+        return Object.fromEntries(headers.map((h, i) => [h, vals[i] ?? '']));
+      });
     }
 
-    // ── Fetch a hike's actual total from its linked budget file ───────────────
-    // budgetTotalPath is a dot-path like "summary.totalSpent"
-    function resolvePath(obj, path) {
-      return path.split('.').reduce((o, k) => o && o[k], obj);
+    // ── Build structured config object from key-value CSV rows ───────────────
+    function buildConfig(rows) {
+      const c = Object.fromEntries(rows.map(r => [r.key, r.value]));
+      const num = k => parseFloat(c[k]);
+      return {
+        meta: {
+          participants:       num('participants'),
+          perPersonCollected: num('perPersonCollected'),
+          totalCollected:     num('totalCollected'),
+          asOf:               c['asOf'],
+          budgetYear:         c['budgetYear']
+        },
+        allocation: {
+          prepHikePct:  num('prepHikePct'),
+          finalHikePct: num('finalHikePct'),
+          prepHikeCount: num('prepHikeCount')
+        },
+        notes: {
+          dailyFoodRate:        num('dailyFoodRate'),
+          originalDailyRate:    num('originalDailyRate'),
+          hikeActualDailyRange: c['hikeActualDailyRange'],
+          highSierraFoodTotal:  num('highSierraFoodTotal'),
+          laHondaFoodTotal:     num('laHondaFoodTotal')
+        }
+      };
     }
-    function fetchHikeTotal(hike) {
-      if (!hike.budgetFile) return Promise.resolve(null);
-      return fetch(hike.budgetFile)
-        .then(r => r.json())
-        .then(data => resolvePath(data, hike.budgetTotalPath || 'summary.totalSpent'))
-        .catch(() => null);
+
+    // ── Build hike objects from CSV rows ──────────────────────────────────────
+    function buildHikes(rows) {
+      return rows.map(r => {
+        const confirmed  = r.confirmedTotal  ? parseFloat(r.confirmedTotal)  : null;
+        const estimated  = r.estimatedTotal  ? parseFloat(r.estimatedTotal)  : null;
+        return {
+          id:            r.id,
+          number:        r.number,
+          type:          r.type,
+          status:        r.status,
+          statusLabel:   r.statusLabel,
+          name:          r.name,
+          dates:         r.dates,
+          days:          parseInt(r.days),
+          attendees:     parseInt(r.attendees),
+          confirmedTotal: confirmed,
+          estimatedTotal: estimated,
+          amountLabel:   r.amountLabel,
+          perPersonPerDay: parseFloat(r.perPersonPerDay),
+          notes:         r.notes ? [r.notes] : [],
+          link:          r.link  || null,
+          linkLabel:     r.linkLabel || null,
+          _actual:       confirmed ?? estimated
+        };
+      });
+    }
+
+    // ── Resolve allocated budget per hike from allocation rules ───────────────
+    function getAllocated(hike, d) {
+      const pct = hike.type === 'prep' ? d.allocation.prepHikePct : d.allocation.finalHikePct;
+      return d.meta.totalCollected * (pct / 100);
     }
 
     // ── Render hero bar ───────────────────────────────────────────────────────
@@ -873,21 +937,12 @@
         </p>`;
     }
 
-    // ── Bootstrap: fetch tracker, then fetch any linked hike budget files ─────
-    fetch('budget_tracker.json')
-      .then(r => r.json())
-      .then(d => {
-        // Fetch all hike budget files in parallel, fall back to confirmedTotal
-        return Promise.all(
-          d.hikes.map(h =>
-            fetchHikeTotal(h).then(fetched => {
-              h._actual = fetched ?? h.confirmedTotal;
-              return h;
-            })
-          )
-        ).then(hikes => ({ d, hikes }));
-      })
-      .then(({ d, hikes }) => {
+    // ── Bootstrap: fetch both Google Sheets CSVs in parallel ─────────────────
+    Promise.all([
+      fetch(CSV_CONFIG).then(r => r.text()).then(parseCSV).then(buildConfig),
+      fetch(CSV_HIKES).then(r => r.text()).then(parseCSV).then(buildHikes)
+    ])
+      .then(([d, hikes]) => {
         renderHero(d, hikes);
         renderWarning(d, hikes);
         document.getElementById('hike-grid').innerHTML =
@@ -900,8 +955,8 @@
       .catch(err => {
         console.error(err);
         document.getElementById('budget-hero').innerHTML =
-          '<p style="color:#8C4A2F;padding:1.5rem">⚠ Could not load budget_tracker.json. ' +
-          'Serve via local server: <code>python3 -m http.server</code></p>';
+          '<p style="color:#8C4A2F;padding:1.5rem">⚠ Could not load Google Sheets data. ' +
+          'Check that both sheets are published to the web.</p>';
       });
   </script>
 </body>
