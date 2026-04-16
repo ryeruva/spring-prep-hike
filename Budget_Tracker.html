@@ -504,41 +504,6 @@
       color: #3A1A6A
     }
 
-    /* ── Warning box ── */
-    .warn-box {
-      background: #FFF0EE;
-      border: 1.5px solid #E8A07A;
-      border-radius: 5px;
-      padding: .9rem 1.1rem;
-      margin-bottom: 1.5rem;
-      font-size: .8rem;
-      color: #5C2A1A;
-      line-height: 1.75
-    }
-
-    .warn-box strong {
-      display: block;
-      margin-bottom: .3rem;
-      font-size: .82rem
-    }
-
-    .ok-box {
-      background: #EDF5E8;
-      border: 1.5px solid #7ABE7A;
-      border-radius: 5px;
-      padding: .9rem 1.1rem;
-      margin-bottom: 1.5rem;
-      font-size: .8rem;
-      color: #1A4A1A;
-      line-height: 1.75
-    }
-
-    .ok-box strong {
-      display: block;
-      margin-bottom: .3rem;
-      font-size: .82rem
-    }
-
     /* ── Per-person breakdown ── */
     .perp-grid {
       display: grid;
@@ -635,9 +600,6 @@
 
     <!-- ── Hero budget bar — populated from Google Sheets ── -->
     <div id="budget-hero" class="budget-hero"></div>
-
-    <!-- ── Warning — populated from Google Sheets ── -->
-    <div id="warn-box"></div>
 
     <!-- ── Hike cards — populated from Google Sheets ── -->
     <section class="section">
@@ -821,35 +783,6 @@
         </p>`;
     }
 
-    // ── Render warning box ────────────────────────────────────────────────────
-    function renderWarning(d, hikes) {
-      const m = d.meta, a = d.allocation;
-      const prepAlloc = m.totalCollected * a.prepHikePct / 100;
-      const overHikes = hikes.filter(h => h._actual != null && h._actual > prepAlloc);
-      const projectedTotal = hikes.reduce((s, h) => s + (h._actual ?? h.estimatedTotal ?? 0), 0);
-      const projectedGap   = projectedTotal - m.totalCollected;
-      const confirmedSpent = hikes.filter(h => h._actual != null && !h.estimatedTotal)
-                                   .reduce((s, h) => s + h._actual, 0);
-      const remainingAfterPrep = m.totalCollected - hikes.filter(h => h.type === 'prep')
-                                   .reduce((s, h) => s + (h._actual ?? h.estimatedTotal ?? 0), 0);
-      const isOver = projectedGap > 0;
-      document.getElementById('warn-box').innerHTML = isOver ? `
-        <div class="warn-box">
-          <strong>⚠ &nbsp;Projected budget gap — review before next hike purchasing</strong>
-          Each prep hike is budgeted at ${a.prepHikePct}% = ${fmtW(prepAlloc)}.
-          ${overHikes.map(h => `Hike ${h.number} (${h.name}) came in ${fmt(h._actual)} — ${fmtSign(h._actual - prepAlloc)} vs allocation.`).join(' ')}
-          Projected total (~${fmtW(projectedTotal)}) exceeds ${fmtW(m.totalCollected)} collected by approximately <strong>${fmtW(projectedGap)}</strong>.
-          &nbsp;·&nbsp; Are permits/campsite fees covered by the $${m.perPersonCollected} fee or separate?
-          &nbsp;·&nbsp; Will final hike food fit in ~${fmtW(remainingAfterPrep)} remaining after prep hikes?
-          &nbsp;·&nbsp; Does the budget include gear, transportation, or just food?
-        </div>` : `
-        <div class="ok-box">
-          <strong>✓ &nbsp;On track — projected spend within budget</strong>
-          Each prep hike is budgeted at ${a.prepHikePct}% = ${fmtW(prepAlloc)}.
-          Projected total ~${fmtW(projectedTotal)} leaves a surplus of ~${fmtW(Math.abs(projectedGap))}.
-        </div>`;
-    }
-
     // ── Render a single hike card ─────────────────────────────────────────────
     function renderHikeCard(h, allocated) {
       const actual    = h._actual;
@@ -944,7 +877,6 @@
     ])
       .then(([d, hikes]) => {
         renderHero(d, hikes);
-        renderWarning(d, hikes);
         document.getElementById('hike-grid').innerHTML =
           hikes.map(h => renderHikeCard(h, getAllocated(h, d))).join('');
         renderPerPerson(d, hikes);
