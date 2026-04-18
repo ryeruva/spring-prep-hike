@@ -5,319 +5,156 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Troop T222 · Outing Insights</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=DM+Mono:wght@400;500&display=swap');
+
 :root {
-  --forest: #1a3a2a;
-  --pine: #2d5a3d;
-  --sage: #4a7c59;
-  --fern: #6b9e78;
-  --mist: #a8c5a0;
-  --cream: #f5f0e8;
-  --sand: #e8dfc8;
-  --amber: #c8872a;
-  --ember: #d94f2e;
-  --sky: #2e6b9e;
-  --dusk: #1a3f5c;
-  --white: #fdfaf5;
-  --ink: #1a1a18;
-  --ink2: #3a3a35;
-  --ink3: #6a6a60;
+–forest:#1a3a2a; –pine:#2d5a3d; –sage:#4a7c59; –fern:#6b9e78;
+–mist:#a8c5a0; –cream:#f5f0e8; –sand:#e8dfc8; –amber:#c8872a;
+–ember:#d94f2e; –sky:#2e6b9e; –white:#fdfaf5; –ink:#1a1a18;
+–grid:rgba(168,197,160,0.08); –mistc:rgba(168,197,160,0.5);
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(–forest);color:var(–cream);font-family:‘DM Sans’,system-ui,sans-serif;font-size:15px;line-height:1.6;}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.hero{position:relative;padding:56px 48px 48px;background:linear-gradient(160deg,#0d2018 0%,var(–forest) 60%,#1a2f1a 100%);border-bottom:1px solid rgba(168,197,160,0.15);overflow:hidden;}
+.hero::before{content:’’;position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(74,124,89,0.18) 0%,transparent 70%);pointer-events:none;}
+.hero::after{content:‘T222’;position:absolute;bottom:-20px;right:40px;font-family:‘Bebas Neue’,Impact,sans-serif;font-size:180px;color:rgba(168,197,160,0.06);pointer-events:none;line-height:1;}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(168,197,160,0.12);border:1px solid rgba(168,197,160,0.25);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(–mist);margin-bottom:20px;}
+.badge span{width:6px;height:6px;background:var(–fern);border-radius:50%;display:inline-block;}
+.hero h1{font-family:‘Bebas Neue’,Impact,sans-serif;font-size:clamp(52px,8vw,88px);line-height:0.92;color:var(–white);margin-bottom:16px;}
+.hero h1 em{color:var(–fern);font-style:normal;}
+.hero p{font-size:16px;color:var(–mist);max-width:520px;font-weight:300;}
+.hero-stats{display:flex;gap:40px;margin-top:36px;flex-wrap:wrap;}
+.hstat{display:flex;flex-direction:column;gap:2px;}
+.hstat-n{font-family:‘Bebas Neue’,Impact,sans-serif;font-size:42px;color:var(–white);line-height:1;}
+.hstat-n em{color:var(–fern);font-style:normal;}
+.hstat-l{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(–mist);font-weight:500;}
 
-body {
-background: var(–forest);
-color: var(–cream);
-font-family: ‘DM Sans’, sans-serif;
-font-size: 15px;
-line-height: 1.6;
-min-height: 100vh;
-}
+.nav-tabs{background:#0f2218;border-bottom:1px solid rgba(168,197,160,0.1);padding:0 48px;display:flex;overflow-x:auto;scrollbar-width:none;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.tab-btn{padding:14px 20px;font-family:‘DM Sans’,sans-serif;font-size:13px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;color:var(–mist);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.tab-btn:hover{color:var(–cream);}
+.tab-btn.active{color:var(–fern);border-bottom-color:var(–fern);}
 
-/* ── HERO ── */
-.hero {
-position: relative;
-padding: 64px 48px 52px;
-background: linear-gradient(160deg, #0d2018 0%, var(–forest) 60%, #1a2f1a 100%);
-border-bottom: 1px solid rgba(168,197,160,0.15);
-overflow: hidden;
-}
-.hero::before {
-content: ‘’;
-position: absolute;
-top: -80px; right: -80px;
-width: 400px; height: 400px;
-background: radial-gradient(circle, rgba(74,124,89,0.18) 0%, transparent 70%);
-pointer-events: none;
-}
-.hero::after {
-content: ‘T222’;
-position: absolute;
-bottom: -20px; right: 40px;
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 180px;
-color: rgba(168,197,160,0.06);
-pointer-events: none;
-line-height: 1;
-}
-.troop-badge {
-display: inline-flex;
-align-items: center;
-gap: 8px;
-background: rgba(168,197,160,0.12);
-border: 1px solid rgba(168,197,160,0.25);
-border-radius: 100px;
-padding: 5px 14px;
-font-size: 12px;
-font-weight: 500;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-color: var(–mist);
-margin-bottom: 20px;
-}
-.troop-badge span { width: 6px; height: 6px; background: var(–fern); border-radius: 50%; display: inline-block; }
-.hero h1 {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: clamp(52px, 8vw, 88px);
-line-height: 0.92;
-letter-spacing: 0.01em;
-color: var(–white);
-margin-bottom: 16px;
-}
-.hero h1 em { color: var(–fern); font-style: normal; }
-.hero p {
-font-size: 16px;
-color: var(–mist);
-max-width: 520px;
-font-weight: 300;
-}
-.hero-stats {
-display: flex;
-gap: 40px;
-margin-top: 36px;
-flex-wrap: wrap;
-}
-.hstat { display: flex; flex-direction: column; gap: 2px; }
-.hstat-n {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 42px;
-color: var(–white);
-line-height: 1;
-}
-.hstat-n em { color: var(–fern); font-style: normal; }
-.hstat-l { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(–mist); font-weight: 500; }
+.main{padding:40px 48px;max-width:1200px;}
+.section{display:none;}
+.section.active{display:block;}
 
-/* ── NAV TABS ── */
-.nav-tabs {
-background: #0f2218;
-border-bottom: 1px solid rgba(168,197,160,0.1);
-padding: 0 48px;
-display: flex;
-gap: 0;
-overflow-x: auto;
-scrollbar-width: none;
-}
-.nav-tabs::-webkit-scrollbar { display: none; }
-.tab-btn {
-padding: 14px 20px;
-font-family: ‘DM Sans’, sans-serif;
-font-size: 13px;
-font-weight: 500;
-letter-spacing: 0.04em;
-text-transform: uppercase;
-color: var(–mist);
-background: none;
-border: none;
-border-bottom: 2px solid transparent;
-cursor: pointer;
-white-space: nowrap;
-transition: all 0.2s;
-}
-.tab-btn:hover { color: var(–cream); }
-.tab-btn.active { color: var(–fern); border-bottom-color: var(–fern); }
+.sec-header{margin-bottom:28px;}
+.sec-header h2{font-family:‘Bebas Neue’,Impact,sans-serif;font-size:36px;color:var(–white);letter-spacing:0.02em;}
+.sec-header p{font-size:14px;color:var(–mist);margin-top:4px;font-weight:300;}
 
-/* ── MAIN CONTENT ── */
-.main { padding: 40px 48px; max-width: 1200px; }
-.section { display: none; }
-.section.active { display: block; }
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:36px;}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(168,197,160,0.12);border-radius:12px;padding:20px;transition:border-color 0.2s;}
+.card:hover{border-color:rgba(168,197,160,0.3);}
+.card-n{font-family:‘Bebas Neue’,Impact,sans-serif;font-size:38px;color:var(–white);line-height:1;}
+.card-n.amber{color:var(–amber);} .card-n.ember{color:var(–ember);} .card-n.sky{color:#6bb3e6;} .card-n.fern{color:var(–fern);}
+.card-l{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(–mist);margin-top:4px;font-weight:500;}
 
-/* ── SECTION HEADERS ── */
-.sec-header { margin-bottom: 28px; }
-.sec-header h2 {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 36px;
-color: var(–white);
-letter-spacing: 0.02em;
-}
-.sec-header p { font-size: 14px; color: var(–mist); margin-top: 4px; font-weight: 300; }
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+.chart-row.full{grid-template-columns:1fr;}
+.chart-box{background:rgba(255,255,255,0.03);border:1px solid rgba(168,197,160,0.1);border-radius:14px;padding:24px;}
+.chart-box h3{font-family:‘Bebas Neue’,Impact,sans-serif;font-size:18px;color:var(–cream);letter-spacing:0.05em;margin-bottom:4px;}
+.chart-box .sub{font-size:12px;color:var(–mist);margin-bottom:18px;font-weight:300;}
+.chart-wrap{position:relative;width:100%;}
+.chart-wrap.h240{height:240px;} .chart-wrap.h260{height:260px;} .chart-wrap.h280{height:280px;} .chart-wrap.h320{height:320px;}
 
-/* ── CARDS ── */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 36px; }
-.card {
-background: rgba(255,255,255,0.04);
-border: 1px solid rgba(168,197,160,0.12);
-border-radius: 12px;
-padding: 20px;
-transition: border-color 0.2s;
-}
-.card:hover { border-color: rgba(168,197,160,0.3); }
-.card-n {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 38px;
-color: var(–white);
-line-height: 1;
-}
-.card-n.amber { color: var(–amber); }
-.card-n.ember { color: var(–ember); }
-.card-n.sky { color: #6bb3e6; }
-.card-n.fern { color: var(–fern); }
-.card-l { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(–mist); margin-top: 4px; font-weight: 500; }
+/* Heatmap */
+.heatmap{width:100%;overflow-x:auto;}
+.heatmap table{border-collapse:collapse;width:100%;min-width:580px;font-size:11px;}
+.heatmap th{padding:6px 8px;text-align:center;color:var(–mist);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:500;}
+.heatmap th.left{text-align:left;padding-left:0;}
+.heatmap td{padding:5px 8px;text-align:center;border-radius:4px;font-family:‘DM Mono’,monospace;font-size:11px;min-width:36px;}
+.heatmap td.ml{text-align:left;font-family:‘DM Sans’,sans-serif;font-size:12px;font-weight:500;color:var(–mist);padding-left:0;padding-right:12px;}
+.heatmap td.tc{font-weight:600;color:var(–fern);font-family:‘DM Mono’,monospace;}
+.h0{color:rgba(168,197,160,0.2);}
+.h1{background:rgba(74,124,89,0.25);color:var(–fern);}
+.h2{background:rgba(74,124,89,0.5);color:#8fd4a0;}
+.h3{background:rgba(74,124,89,0.75);color:#b8efc8;}
+.h4{background:rgba(107,184,120,0.9);color:#0d2018;font-weight:700;}
 
-/* ── CHART CONTAINERS ── */
-.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
-.chart-row.full { grid-template-columns: 1fr; }
-.chart-box {
-background: rgba(255,255,255,0.03);
-border: 1px solid rgba(168,197,160,0.1);
-border-radius: 14px;
-padding: 24px;
-}
-.chart-box h3 {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 18px;
-color: var(–cream);
-letter-spacing: 0.05em;
-margin-bottom: 4px;
-}
-.chart-box .sub { font-size: 12px; color: var(–mist); margin-bottom: 18px; font-weight: 300; }
-.chart-wrap { position: relative; width: 100%; }
-.chart-wrap.h240 { height: 240px; }
-.chart-wrap.h280 { height: 280px; }
-.chart-wrap.h320 { height: 320px; }
+/* Location table */
+.loc-table{width:100%;border-collapse:collapse;}
+.loc-table th{text-align:left;padding:10px 12px;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(–mist);font-weight:500;border-bottom:1px solid rgba(168,197,160,0.12);}
+.loc-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(168,197,160,0.06);color:var(–cream);}
+.loc-table tr:hover td{background:rgba(168,197,160,0.04);}
+.loc-table td.loc-name{font-weight:500;}
+.loc-table td.loc-count{font-family:‘DM Mono’,monospace;color:var(–fern);font-weight:600;}
+.loc-table td.loc-last{color:var(–mist);font-size:12px;}
+.loc-tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-left:4px;}
+.tag-day{background:rgba(168,197,160,0.15);color:var(–mist);}
+.tag-bp{background:rgba(46,107,158,0.25);color:#6bb3e6;}
+.tag-camp{background:rgba(200,135,42,0.25);color:var(–amber);}
+.tag-adv{background:rgba(217,79,46,0.25);color:#e88060;}
 
-/* ── HEATMAP ── */
-.heatmap { width: 100%; overflow-x: auto; }
-.heatmap table { border-collapse: collapse; width: 100%; min-width: 600px; font-size: 11px; }
-.heatmap th { padding: 6px 8px; text-align: center; color: var(–mist); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; }
-.heatmap th.left { text-align: left; padding-left: 0; }
-.heatmap td { padding: 5px 8px; text-align: center; border-radius: 4px; font-family: ‘DM Mono’, monospace; font-size: 11px; min-width: 38px; }
-.heatmap td.ml { text-align: left; font-family: ‘DM Sans’, sans-serif; font-size: 12px; font-weight: 500; color: var(–mist); padding-left: 0; padding-right: 12px; }
-.heatmap td.tc { font-weight: 600; color: var(–fern); font-family: ‘DM Mono’, monospace; }
-.h0 { color: rgba(168,197,160,0.2); }
-.h1 { background: rgba(74,124,89,0.25); color: var(–fern); }
-.h2 { background: rgba(74,124,89,0.5); color: #8fd4a0; }
-.h3 { background: rgba(74,124,89,0.75); color: #b8efc8; }
-.h4 { background: rgba(107,184,120,0.9); color: #0d2018; font-weight: 700; }
+/* Bar meters */
+.bar-meter{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.bm-label{font-size:12px;color:var(–cream);min-width:200px;}
+.bm-track{flex:1;height:8px;background:rgba(168,197,160,0.1);border-radius:4px;overflow:hidden;}
+.bm-fill{height:100%;border-radius:4px;}
+.bm-val{font-family:‘DM Mono’,monospace;font-size:11px;color:var(–fern);min-width:28px;text-align:right;}
 
-/* ── LOCATION TABLE ── */
-.loc-table { width: 100%; border-collapse: collapse; }
-.loc-table th {
-text-align: left; padding: 10px 12px;
-font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
-color: var(–mist); font-weight: 500;
-border-bottom: 1px solid rgba(168,197,160,0.12);
-}
-.loc-table td {
-padding: 10px 12px;
-font-size: 13px;
-border-bottom: 1px solid rgba(168,197,160,0.06);
-color: var(–cream);
-}
-.loc-table tr:hover td { background: rgba(168,197,160,0.04); }
-.loc-table td.loc-name { font-weight: 500; }
-.loc-table td.loc-count { font-family: ‘DM Mono’, monospace; color: var(–fern); font-weight: 600; }
-.loc-table td.loc-last { color: var(–mist); font-size: 12px; }
-.loc-tag {
-display: inline-block; padding: 2px 8px; border-radius: 100px;
-font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;
-margin-left: 6px;
-}
-.tag-day { background: rgba(168,197,160,0.15); color: var(–mist); }
-.tag-bp { background: rgba(46,107,158,0.25); color: #6bb3e6; }
-.tag-camp { background: rgba(200,135,42,0.25); color: var(–amber); }
-.tag-adv { background: rgba(217,79,46,0.25); color: #e88060; }
+/* Filters */
+.filter-row{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;}
+.filter-btn{padding:6px 14px;border-radius:100px;font-size:12px;font-weight:500;border:1px solid rgba(168,197,160,0.2);background:transparent;color:var(–mist);cursor:pointer;transition:all 0.15s;font-family:‘DM Sans’,sans-serif;}
+.filter-btn:hover{border-color:var(–fern);color:var(–fern);}
+.filter-btn.on{background:var(–fern);border-color:var(–fern);color:var(–forest);font-weight:600;}
 
-/* ── BAR METERS ── */
-.bar-meter { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.bar-meter-label { font-size: 12px; color: var(–cream); min-width: 140px; }
-.bar-meter-track { flex: 1; height: 8px; background: rgba(168,197,160,0.1); border-radius: 4px; overflow: hidden; }
-.bar-meter-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
-.bar-meter-val { font-family: ‘DM Mono’, monospace; font-size: 11px; color: var(–fern); min-width: 28px; text-align: right; }
+/* Timeline */
+.timeline{position:relative;padding-left:20px;}
+.timeline::before{content:’’;position:absolute;left:0;top:8px;bottom:8px;width:1px;background:rgba(168,197,160,0.2);}
+.tl-item{position:relative;margin-bottom:20px;padding-left:20px;}
+.tl-item::before{content:’’;position:absolute;left:-24px;top:6px;width:9px;height:9px;border-radius:50%;background:var(–fern);border:2px solid var(–forest);}
+.tl-year{font-family:‘Bebas Neue’,Impact,sans-serif;font-size:22px;color:var(–fern);letter-spacing:0.05em;}
+.tl-highlight{font-size:13px;color:var(–cream);margin-top:2px;font-weight:300;line-height:1.6;}
+.tl-highlight strong{color:var(–amber);font-weight:500;}
 
-/* ── TIMELINE ── */
-.timeline { position: relative; padding-left: 20px; }
-.timeline::before { content: ‘’; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: rgba(168,197,160,0.2); }
-.tl-item { position: relative; margin-bottom: 20px; padding-left: 20px; }
-.tl-item::before {
-content: ‘’; position: absolute; left: -24px; top: 6px;
-width: 9px; height: 9px; border-radius: 50%;
-background: var(–fern); border: 2px solid var(–forest);
-}
-.tl-year { font-family: ‘Bebas Neue’, sans-serif; font-size: 22px; color: var(–fern); letter-spacing: 0.05em; }
-.tl-highlight { font-size: 13px; color: var(–cream); margin-top: 2px; font-weight: 300; }
-.tl-highlight strong { color: var(–amber); font-weight: 500; }
+/* Camp cards */
+.camp-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+.camp-card{background:rgba(200,135,42,0.12);border:1px solid rgba(200,135,42,0.28);border-radius:10px;padding:12px 16px;}
+.camp-card-label{font-size:11px;color:var(–amber);text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
+.camp-card-years{font-size:24px;font-family:‘Bebas Neue’,Impact,sans-serif;color:var(–white);}
 
-/* ── FILTERS ── */
-.filter-row { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-.filter-btn {
-padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 500;
-border: 1px solid rgba(168,197,160,0.2); background: transparent;
-color: var(–mist); cursor: pointer; transition: all 0.15s; font-family: ‘DM Sans’, sans-serif;
-}
-.filter-btn:hover { border-color: var(–fern); color: var(–fern); }
-.filter-btn.on { background: var(–fern); border-color: var(–fern); color: var(–forest); font-weight: 600; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 700px) {
-.hero, .nav-tabs, .main { padding-left: 20px; padding-right: 20px; }
-.chart-row { grid-template-columns: 1fr; }
-.hero h1 { font-size: 52px; }
+@media(max-width:700px){
+.hero,.nav-tabs,.main{padding-left:20px;padding-right:20px;}
+.chart-row{grid-template-columns:1fr;}
+.hero h1{font-size:52px;}
+.bm-label{min-width:140px;}
 }
 </style>
 
 </head>
 <body>
 
-<!-- HERO -->
-
 <div class="hero">
-  <div class="troop-badge"><span></span>Menlo Park, CA · BSA Pacific Skyline Council</div>
+  <div class="badge"><span></span>Menlo Park, CA · BSA Pacific Skyline Council</div>
   <h1>Troop <em>T222</em><br>Outing Insights</h1>
   <p>9 years of adventures — 161 outings, 30+ unique locations, from backpacking Yosemite to sailing the Florida Keys.</p>
   <div class="hero-stats">
     <div class="hstat"><div class="hstat-n">161</div><div class="hstat-l">Total Outings</div></div>
     <div class="hstat"><div class="hstat-n"><em>9</em></div><div class="hstat-l">Years of Data</div></div>
-    <div class="hstat"><div class="hstat-n">30<em>+</em></div><div class="hstat-l">Unique Locations</div></div>
-    <div class="hstat"><div class="hstat-n">5</div><div class="hstat-l">High Adventures</div></div>
+    <div class="hstat"><div class="hstat-n">35<em>+</em></div><div class="hstat-l">Unique Locations</div></div>
+    <div class="hstat"><div class="hstat-n"><em>6</em></div><div class="hstat-l">High Adventures</div></div>
     <div class="hstat"><div class="hstat-n">17<em>.9</em></div><div class="hstat-l">Avg Outings / Year</div></div>
   </div>
 </div>
 
-<!-- NAV -->
-
 <div class="nav-tabs">
-  <button class="tab-btn active" onclick="showTab(event,'overview')">Overview</button>
-  <button class="tab-btn" onclick="showTab(event,'types')">Outing Types</button>
-  <button class="tab-btn" onclick="showTab(event,'monthly')">Monthly Patterns</button>
-  <button class="tab-btn" onclick="showTab(event,'locations')">Locations</button>
-  <button class="tab-btn" onclick="showTab(event,'highlights')">Year Highlights</button>
+  <button class="tab-btn active" data-tab="overview">Overview</button>
+  <button class="tab-btn" data-tab="types">Outing Types</button>
+  <button class="tab-btn" data-tab="monthly">Monthly Patterns</button>
+  <button class="tab-btn" data-tab="locations">Locations</button>
+  <button class="tab-btn" data-tab="highlights">Year Highlights</button>
 </div>
-
-<!-- MAIN -->
 
 <div class="main">
 
-<!-- ══ OVERVIEW ══ -->
+<!-- OVERVIEW -->
 
 <div id="tab-overview" class="section active">
-  <div class="sec-header">
-    <h2>10-Year Overview</h2>
-    <p>Outing volume and composition across every scout year since 2017</p>
-  </div>
-
+  <div class="sec-header"><h2>10-Year Overview</h2><p>Outing volume and composition across every scout year since 2017</p></div>
   <div class="cards">
     <div class="card"><div class="card-n fern">161</div><div class="card-l">Total Outings</div></div>
     <div class="card"><div class="card-n">63</div><div class="card-l">Day Outings</div></div>
@@ -325,495 +162,381 @@ color: var(–mist); cursor: pointer; transition: all 0.15s; font-family: ‘DM 
     <div class="card"><div class="card-n amber">9</div><div class="card-l">Summer Camps</div></div>
     <div class="card"><div class="card-n ember">12</div><div class="card-l">High Adventures</div></div>
   </div>
-
   <div class="chart-row">
-    <div class="chart-box">
-      <h3>Outings per Year</h3>
-      <div class="sub">2017 – 2026 (2026 partial)</div>
-      <div class="chart-wrap h240"><canvas id="c-yearly" role="img" aria-label="Bar chart of outings per year 2017 to 2026"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <h3>Type Breakdown</h3>
-      <div class="sub">All 161 outings by category</div>
-      <div class="chart-wrap h240"><canvas id="c-type-donut" role="img" aria-label="Donut chart of outing types"></canvas></div>
-    </div>
+    <div class="chart-box"><h3>Outings per Year</h3><div class="sub">2017 – 2026 (2026 partial)</div><div class="chart-wrap h240"><canvas id="c-yearly"></canvas></div></div>
+    <div class="chart-box"><h3>Type Breakdown</h3><div class="sub">All 161 outings by category</div><div class="chart-wrap h240"><canvas id="c-donut"></canvas></div></div>
   </div>
-
   <div class="chart-row full">
-    <div class="chart-box">
-      <h3>Outing Mix Over Time</h3>
-      <div class="sub">Stacked view of how outing types have evolved year over year</div>
-      <div class="chart-wrap h280"><canvas id="c-stacked" role="img" aria-label="Stacked bar chart of outing types per year"></canvas></div>
-    </div>
+    <div class="chart-box"><h3>Outing Mix Over Time</h3><div class="sub">Stacked view of how outing types have evolved year over year</div><div class="chart-wrap h280"><canvas id="c-stacked"></canvas></div></div>
   </div>
 </div>
 
-<!-- ══ TYPES ══ -->
+<!-- TYPES -->
 
 <div id="tab-types" class="section">
-  <div class="sec-header">
-    <h2>Outing Types Deep Dive</h2>
-    <p>How T222's outing mix has shifted — and what each category looks like</p>
-  </div>
-
+  <div class="sec-header"><h2>Outing Types Deep Dive</h2><p>How T222's outing mix has shifted — and what each category looks like</p></div>
   <div class="chart-row">
-    <div class="chart-box">
-      <h3>Day Outings by Year</h3>
-      <div class="sub">Hikes, ski trips, rafting, urban adventures</div>
-      <div class="chart-wrap h240"><canvas id="c-day" role="img" aria-label="Day outings by year"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <h3>Overnight & Backpacking</h3>
-      <div class="sub">Car camping + backcountry combined</div>
-      <div class="chart-wrap h240"><canvas id="c-overnight" role="img" aria-label="Overnight outings by year"></canvas></div>
-    </div>
+    <div class="chart-box"><h3>Day Outings by Year</h3><div class="sub">Hikes, ski trips, rafting, urban adventures</div><div class="chart-wrap h240"><canvas id="c-day"></canvas></div></div>
+    <div class="chart-box"><h3>Overnight & Backpacking</h3><div class="sub">Car camping + backcountry combined</div><div class="chart-wrap h240"><canvas id="c-overnight"></canvas></div></div>
   </div>
-
   <div class="chart-row">
+    <div class="chart-box"><h3>Backpacking % of Overnight</h3><div class="sub">Shift toward backcountry over the years</div><div class="chart-wrap h240"><canvas id="c-bppct"></canvas></div></div>
     <div class="chart-box">
-      <h3>Backpacking Shift</h3>
-      <div class="sub">% of outings that are backcountry backpacking (not car camping)</div>
-      <div class="chart-wrap h240"><canvas id="c-bp-pct" role="img" aria-label="Backpacking percentage per year"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <h3>High Adventure Cadence</h3>
-      <div class="sub">Philmont, Sea Base, Northern Tier, Jamboree, 50-Miler</div>
-      <div class="chart-wrap h240">
-        <div style="padding-top:10px;">
-          <div class="bar-meter"><div class="bar-meter-label">Philmont (2019, 2022, 2025)</div><div class="bar-meter-track"><div class="bar-meter-fill" style="width:60%;background:#e88060;"></div></div><div class="bar-meter-val">3</div></div>
-          <div class="bar-meter"><div class="bar-meter-label">Northern Tier (2021, 2024)</div><div class="bar-meter-track"><div class="bar-meter-fill" style="width:40%;background:#6bb3e6;"></div></div><div class="bar-meter-val">2</div></div>
-          <div class="bar-meter"><div class="bar-meter-label">National Jamboree (2017, 2023)</div><div class="bar-meter-track"><div class="bar-meter-fill" style="width:40%;background:#f0c060;"></div></div><div class="bar-meter-val">2</div></div>
-          <div class="bar-meter"><div class="bar-meter-label">Sea Base (2023)</div><div class="bar-meter-track"><div class="bar-meter-fill" style="width:20%;background:#4ab8c8;"></div></div><div class="bar-meter-val">1</div></div>
-          <div class="bar-meter"><div class="bar-meter-label">Mount Whitney 50-Miler (2018)</div><div class="bar-meter-track"><div class="bar-meter-fill" style="width:20%;background:#a870c0;"></div></div><div class="bar-meter-val">1</div></div>
-          <div class="bar-meter"><div class="bar-meter-label">High Sierra 50-Miler (2026)</div><div class="bar-meter-track"><div class="bar-meter-fill" style="width:20%;background:#80c870;"></div></div><div class="bar-meter-val">1↗</div></div>
-          <div class="bar-meter"><div class="bar-meter-label">Sea Base 2027 (planned)</div><div class="bar-meter-track"><div class="bar-meter-fill" style="width:20%;background:#4ab8c8;opacity:0.5;"></div></div><div class="bar-meter-val">↗</div></div>
-        </div>
+      <h3>High Adventure Cadence</h3><div class="sub">Philmont, Sea Base, Northern Tier, Jamboree, 50-Miler</div>
+      <div style="margin-top:16px;">
+        <div class="bar-meter"><div class="bm-label">Philmont (2019, 2022, 2025)</div><div class="bm-track"><div class="bm-fill" style="width:60%;background:#e88060;"></div></div><div class="bm-val">3</div></div>
+        <div class="bar-meter"><div class="bm-label">Northern Tier (2021, 2024)</div><div class="bm-track"><div class="bm-fill" style="width:40%;background:#6bb3e6;"></div></div><div class="bm-val">2</div></div>
+        <div class="bar-meter"><div class="bm-label">National Jamboree (2017, 2023)</div><div class="bm-track"><div class="bm-fill" style="width:40%;background:#f0c060;"></div></div><div class="bm-val">2</div></div>
+        <div class="bar-meter"><div class="bm-label">Florida Sea Base (2023)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:#4ab8c8;"></div></div><div class="bm-val">1</div></div>
+        <div class="bar-meter"><div class="bm-label">Mt Whitney 50-Miler (2018)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:#a870c0;"></div></div><div class="bm-val">1</div></div>
+        <div class="bar-meter"><div class="bm-label">High Sierra 50-Miler (2026 ↗)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:#80c870;"></div></div><div class="bm-val">1</div></div>
+        <div class="bar-meter"><div class="bm-label">Sea Base 2027 (planned ↗)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:#4ab8c8;opacity:0.4;"></div></div><div class="bm-val">↗</div></div>
       </div>
     </div>
   </div>
-
   <div class="chart-box" style="margin-bottom:28px;">
-    <h3>Summer Camp History</h3>
-    <div class="sub">BSA camp programs attended each year (no camp in COVID year 2020)</div>
-    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;">
-      <div style="background:rgba(200,135,42,0.15);border:1px solid rgba(200,135,42,0.3);border-radius:10px;padding:12px 16px;">
-        <div style="font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;font-weight:600;">Camp Oljato</div>
-        <div style="font-size:24px;font-family:'Bebas Neue',sans-serif;color:var(--white);">2017, 2024</div>
-      </div>
-      <div style="background:rgba(200,135,42,0.15);border:1px solid rgba(200,135,42,0.3);border-radius:10px;padding:12px 16px;">
-        <div style="font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;font-weight:600;">Camp Wente</div>
-        <div style="font-size:24px;font-family:'Bebas Neue',sans-serif;color:var(--white);">2018, 2022, 2025</div>
-      </div>
-      <div style="background:rgba(200,135,42,0.15);border:1px solid rgba(200,135,42,0.3);border-radius:10px;padding:12px 16px;">
-        <div style="font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;font-weight:600;">John C. Mensinger</div>
-        <div style="font-size:24px;font-family:'Bebas Neue',sans-serif;color:var(--white);">2019</div>
-      </div>
-      <div style="background:rgba(200,135,42,0.15);border:1px solid rgba(200,135,42,0.3);border-radius:10px;padding:12px 16px;">
-        <div style="font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;font-weight:600;">Camp Chawanakee</div>
-        <div style="font-size:24px;font-family:'Bebas Neue',sans-serif;color:var(--white);">2021</div>
-      </div>
-      <div style="background:rgba(200,135,42,0.15);border:1px solid rgba(200,135,42,0.3);border-radius:10px;padding:12px 16px;">
-        <div style="font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;font-weight:600;">Camp Marin-Sierra</div>
-        <div style="font-size:24px;font-family:'Bebas Neue',sans-serif;color:var(--white);">2023</div>
-      </div>
-      <div style="background:rgba(200,135,42,0.15);border:1px solid rgba(200,135,42,0.3);border-radius:10px;padding:12px 16px;">
-        <div style="font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;font-weight:600;">Camp Hi-Sierra</div>
-        <div style="font-size:24px;font-family:'Bebas Neue',sans-serif;color:var(--white);">2026 ↗</div>
-      </div>
+    <h3>Summer Camp History</h3><div class="sub">BSA camp programs — no camp in COVID year 2020</div>
+    <div class="camp-grid">
+      <div class="camp-card"><div class="camp-card-label">Camp Oljato</div><div class="camp-card-years">2017, 2024</div></div>
+      <div class="camp-card"><div class="camp-card-label">Camp Wente</div><div class="camp-card-years">2018, 2022, 2025</div></div>
+      <div class="camp-card"><div class="camp-card-label">John C. Mensinger</div><div class="camp-card-years">2019</div></div>
+      <div class="camp-card"><div class="camp-card-label">Camp Chawanakee</div><div class="camp-card-years">2021</div></div>
+      <div class="camp-card"><div class="camp-card-label">Camp Marin-Sierra</div><div class="camp-card-years">2023</div></div>
+      <div class="camp-card"><div class="camp-card-label">Camp Hi-Sierra</div><div class="camp-card-years">2026 ↗</div></div>
     </div>
   </div>
 </div>
 
-<!-- ══ MONTHLY ══ -->
+<!-- MONTHLY -->
 
 <div id="tab-monthly" class="section">
-  <div class="sec-header">
-    <h2>Monthly Patterns</h2>
-    <p>When does T222 go out? Every month, every year — mapped.</p>
-  </div>
-
+  <div class="sec-header"><h2>Monthly Patterns</h2><p>When does T222 go out? Every month, every year — mapped.</p></div>
   <div class="chart-row">
-    <div class="chart-box">
-      <h3>Average Outings per Month</h3>
-      <div class="sub">Based on 2017–2026 data</div>
-      <div class="chart-wrap h260"><canvas id="c-monthly-avg" role="img" aria-label="Average outings per month across all years"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <h3>Best Months for Outings</h3>
-      <div class="sub">Total outings per month across all years</div>
-      <div class="chart-wrap h260"><canvas id="c-monthly-total" role="img" aria-label="Total outings per month"></canvas></div>
-    </div>
+    <div class="chart-box"><h3>Avg Outings per Month</h3><div class="sub">Based on 2017–2026 data</div><div class="chart-wrap h260"><canvas id="c-mavg"></canvas></div></div>
+    <div class="chart-box"><h3>Total Outings per Month</h3><div class="sub">All years combined</div><div class="chart-wrap h260"><canvas id="c-mtotal"></canvas></div></div>
   </div>
-
   <div class="chart-box" style="margin-bottom:28px;">
-    <h3>Heatmap — Outings per Month × Year</h3>
-    <div class="sub">Darker = more outings. Zero = —</div>
-    <div class="heatmap" style="margin-top:16px;">
-      <table id="heatmap-table">
-        <thead><tr>
-          <th class="left">Month</th>
-          <th>2017</th><th>2018</th><th>2019</th><th>2020</th><th>2021</th>
-          <th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th>
-          <th>Total</th>
-        </tr></thead>
-        <tbody id="heatmap-body"></tbody>
-      </table>
-    </div>
+    <h3>Heatmap — Outings per Month × Year</h3><div class="sub">Darker = more outings · — = none</div>
+    <div class="heatmap" style="margin-top:16px;"><table><thead><tr>
+      <th class="left">Month</th>
+      <th>2017</th><th>2018</th><th>2019</th><th>2020</th><th>2021</th>
+      <th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th>
+      <th>Total</th>
+    </tr></thead><tbody id="hm-body"></tbody></table></div>
   </div>
 </div>
 
-<!-- ══ LOCATIONS ══ -->
+<!-- LOCATIONS -->
 
 <div id="tab-locations" class="section">
-  <div class="sec-header">
-    <h2>Locations Explorer</h2>
-    <p>Every place T222 has visited — filtered by type</p>
-  </div>
-
+  <div class="sec-header"><h2>Locations Explorer</h2><p>Every place T222 has visited — filter by type</p></div>
   <div class="filter-row" id="loc-filters">
-    <button class="filter-btn on" onclick="filterLocs('all', this)">All</button>
-    <button class="filter-btn" onclick="filterLocs('Backpacking', this)">Backpacking</button>
-    <button class="filter-btn" onclick="filterLocs('Overnight', this)">Car Camping</button>
-    <button class="filter-btn" onclick="filterLocs('Day', this)">Day Outings</button>
-    <button class="filter-btn" onclick="filterLocs('High Adventure', this)">High Adventure</button>
-    <button class="filter-btn" onclick="filterLocs('Summer', this)">Summer Camp</button>
+    <button class="filter-btn on" data-f="all">All</button>
+    <button class="filter-btn" data-f="Backpacking">Backpacking</button>
+    <button class="filter-btn" data-f="Overnight">Car Camping</button>
+    <button class="filter-btn" data-f="Day">Day Outings</button>
+    <button class="filter-btn" data-f="High Adventure">High Adventure</button>
+    <button class="filter-btn" data-f="Summer">Summer Camp</button>
   </div>
-
-  <div class="chart-box" style="margin-bottom:24px;">
-    <h3>Most Visited Locations</h3>
-    <div class="sub">Repeat visits show strong T222 traditions</div>
-    <div class="chart-wrap h280" style="margin-top:12px;"><canvas id="c-loc-bar" role="img" aria-label="Most visited locations bar chart"></canvas></div>
-  </div>
-
-  <div class="chart-box">
-    <h3>Full Location Directory</h3>
-    <div class="sub" style="margin-bottom:14px;">All unique locations visited by T222</div>
-    <table class="loc-table" id="loc-table">
-      <thead><tr>
-        <th>#</th><th>Location</th><th>Type</th><th>Visits</th><th>Last Visit</th>
-      </tr></thead>
-      <tbody id="loc-body"></tbody>
-    </table>
+  <div class="chart-box" style="margin-bottom:24px;"><h3>Most Visited Locations</h3><div class="sub">Repeat visits show strong T222 traditions</div><div class="chart-wrap h300" style="height:300px;"><canvas id="c-locbar"></canvas></div></div>
+  <div class="chart-box"><h3>Full Location Directory</h3><div class="sub" style="margin-bottom:14px;">All unique locations visited by T222</div>
+    <table class="loc-table"><thead><tr><th>#</th><th>Location</th><th>Type</th><th>Visits</th><th>Last Visit</th></tr></thead><tbody id="loc-body"></tbody></table>
   </div>
 </div>
 
-<!-- ══ HIGHLIGHTS ══ -->
+<!-- HIGHLIGHTS -->
 
 <div id="tab-highlights" class="section">
-  <div class="sec-header">
-    <h2>Year by Year Highlights</h2>
-    <p>The standout moments and milestones from each scouting year</p>
-  </div>
-
+  <div class="sec-header"><h2>Year by Year Highlights</h2><p>The standout moments from each scouting year</p></div>
   <div class="chart-row">
-    <div class="chart-box">
-      <h3>Outing Growth Trend</h3>
-      <div class="sub">Volume trajectory 2017–2026</div>
-      <div class="chart-wrap h240"><canvas id="c-trend" role="img" aria-label="Outing trend line chart"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <h3>Season Distribution</h3>
-      <div class="sub">When outings happen across the year (all years combined)</div>
-      <div class="chart-wrap h240"><canvas id="c-season" role="img" aria-label="Season distribution donut chart"></canvas></div>
-    </div>
+    <div class="chart-box"><h3>Outing Volume Trend</h3><div class="sub">2017–2026 trajectory</div><div class="chart-wrap h240"><canvas id="c-trend"></canvas></div></div>
+    <div class="chart-box"><h3>Season Distribution</h3><div class="sub">All years combined — when outings happen</div><div class="chart-wrap h240"><canvas id="c-season"></canvas></div></div>
   </div>
-
-  <div class="chart-box" style="margin-bottom:28px;">
-    <h3>Annual Chronicle</h3>
-    <div class="sub">Key milestones and standout outings by year</div>
-    <div class="timeline" style="margin-top:24px;" id="timeline-body"></div>
-  </div>
-
+  <div class="chart-box" style="margin-bottom:28px;"><h3>Annual Chronicle</h3><div class="sub">Key milestones by year</div><div class="timeline" style="margin-top:24px;" id="tl-body"></div></div>
   <div class="chart-row">
-    <div class="chart-box">
-      <h3>Nights in the Field</h3>
-      <div class="sub">Estimated total nights camping per year</div>
-      <div class="chart-wrap h240"><canvas id="c-nights" role="img" aria-label="Nights camping per year"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <h3>Outing Frequency</h3>
-      <div class="sub">How many months per year had at least 1 outing</div>
-      <div class="chart-wrap h240"><canvas id="c-months-active" role="img" aria-label="Active months per year"></canvas></div>
-    </div>
+    <div class="chart-box"><h3>Estimated Nights in the Field</h3><div class="sub">Per year (overnight + high adventure nights)</div><div class="chart-wrap h240"><canvas id="c-nights"></canvas></div></div>
+    <div class="chart-box"><h3>Active Months per Year</h3><div class="sub">Months with at least 1 outing</div><div class="chart-wrap h240"><canvas id="c-active"></canvas></div></div>
   </div>
 </div>
 
-</div><!-- end .main -->
+</div><!-- .main -->
 
 <script>
-// ── DATA ──
-const YEARS = ['2017','2018','2019','2020','2021','2022','2023','2024','2025','2026'];
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// ── DATA ──────────────────────────────────────────────────────────────────
+const YEARS   = ['2017','2018','2019','2020','2021','2022','2023','2024','2025','2026'];
+const MONTHS  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const yearlyTotal =  [12,17,15,21,16,21,20,16,13,10];
-const yearlyDay =    [3, 8, 6, 10,6, 11,9, 3, 1, 0];
-const yearlyON =     [7, 7, 7, 11,8, 7, 8, 11,10,8];
-const yearlyCamp =   [1, 1, 1, 0, 1, 1, 1, 1, 1, 1];
-const yearlyAdv =    [1, 1, 1, 0, 1, 2, 2, 1, 1, 1];
-const yearlyBP =     [2, 2, 3, 3, 3, 4, 4, 6, 7, 7]; // backpacking subset of ON
-const yearlyNights = [28,35,32,25,30,38,36,42,38,35];
+const yTotal  = [12,17,15,21,16,21,20,16,13,10];
+const yDay    = [3, 8, 6, 10,6, 11,9, 3, 1, 0];
+const yON     = [7, 7, 7, 11,8, 7, 8, 11,10,8];
+const yBP     = [2, 2, 3, 3, 3, 4, 4, 6, 7, 7];
+const yCamp   = [1, 1, 1, 0, 1, 1, 1, 1, 1, 1];
+const yAdv    = [1, 1, 1, 0, 1, 2, 2, 1, 1, 1];
+const yNights = [28,35,32,25,30,38,36,42,38,35];
 
-const monthData = {
-  Jan:[1,2,1,1,0,3,2,2,1,1], Feb:[1,1,1,4,1,1,1,0,2,1],
-  Mar:[2,1,2,1,1,2,2,2,1,1], Apr:[1,3,1,0,1,1,2,2,0,3],
-  May:[0,2,2,0,2,1,3,1,3,2], Jun:[1,0,1,0,1,3,0,0,0,0],
-  Jul:[3,3,1,2,3,2,3,2,2,2], Aug:[0,1,1,4,0,1,0,0,0,0],
-  Sep:[1,1,1,3,1,1,1,2,1,0], Oct:[1,1,1,3,2,4,3,4,2,0],
-  Nov:[0,1,2,3,2,1,2,1,0,0], Dec:[1,1,1,0,2,1,1,0,1,0],
+const mData = [
+  [1,2,1,1,0,3,2,2,1,1], // Jan
+  [1,1,1,4,1,1,1,0,2,1], // Feb
+  [2,1,2,1,1,2,2,2,1,1], // Mar
+  [1,3,1,0,1,1,2,2,0,3], // Apr
+  [0,2,2,0,2,1,3,1,3,2], // May
+  [1,0,1,0,1,3,0,0,0,0], // Jun
+  [3,3,1,2,3,2,3,2,2,2], // Jul
+  [0,1,1,4,0,1,0,0,0,0], // Aug
+  [1,1,1,3,1,1,1,2,1,0], // Sep
+  [1,1,1,3,2,4,3,4,2,0], // Oct
+  [0,1,2,3,2,1,2,1,0,0], // Nov
+  [1,1,1,0,2,1,1,0,1,0], // Dec
+];
+
+const LOCS = [
+  {n:'Henry Coe State Park',          t:'Backpacking',    v:4, l:'2024'},
+  {n:'May Lake / Yosemite',            t:'Backpacking',    v:4, l:'2024'},
+  {n:'Point Reyes Nat\'l Seashore',    t:'Backpacking',    v:4, l:'2026'},
+  {n:'Black Diamond Mines RP',         t:'Backpacking',    v:4, l:'2026'},
+  {n:'Castle Rock State Park',         t:'Backpacking',    v:3, l:'2025'},
+  {n:'Boulder Creek Scout Reservation',t:'Overnight',     v:4, l:'2022'},
+  {n:'Gold Country / Tuolumne',        t:'Overnight',     v:4, l:'2024'},
+  {n:'Pinnacles National Park',        t:'Overnight',     v:3, l:'2025'},
+  {n:'Coyote Lake',                    t:'Overnight',     v:3, l:'2024'},
+  {n:'Memorial Park, San Mateo Co.',   t:'Overnight',     v:3, l:'2025'},
+  {n:'Big Sur / Los Padres NF',        t:'Backpacking',    v:2, l:'2025'},
+  {n:'Desolation Wilderness',          t:'Backpacking',    v:2, l:'2025'},
+  {n:'Monte Bello / Black Mountain',   t:'Backpacking',    v:2, l:'2025'},
+  {n:'Santa Cruz Beach Boardwalk',     t:'Overnight',     v:2, l:'2025'},
+  {n:'Half Moon Bay State Park',       t:'Overnight',     v:2, l:'2021'},
+  {n:'Ohlone Wilderness',              t:'Backpacking',    v:2, l:'2026'},
+  {n:'Arroyo Seco / Los Padres NF',    t:'Overnight',     v:2, l:'2024'},
+  {n:'Windy Hill Open Space',          t:'Day',           v:4, l:'2025'},
+  {n:'Palisades Tahoe (Squaw Valley)', t:'Day',           v:4, l:'2022'},
+  {n:'Cache Creek / American River',   t:'Day',           v:4, l:'2022'},
+  {n:'SF Urban Hike (Chinatown)',      t:'Day',           v:4, l:'2023'},
+  {n:'Elkhorn Slough, Moss Landing',   t:'Day',           v:3, l:'2022'},
+  {n:'Northstar California Resort',    t:'Day',           v:2, l:'2026'},
+  {n:'Philmont Scout Ranch, NM',       t:'High Adventure',v:3, l:'2025'},
+  {n:'Northern Tier BSA (Boundary Waters)',t:'High Adventure',v:2,l:'2024'},
+  {n:'Summit Bechtel Reserve, WV',     t:'High Adventure',v:2, l:'2023'},
+  {n:'Florida Sea Base, FL Keys',      t:'High Adventure',v:1, l:'2023'},
+  {n:'Mt Whitney / Inyo NF',           t:'High Adventure',v:2, l:'2026'},
+  {n:'Camp Wente',                     t:'Summer Camp',   v:3, l:'2025'},
+  {n:'Camp Oljato',                    t:'Summer Camp',   v:2, l:'2024'},
+  {n:'Camp Chawanakee',                t:'Summer Camp',   v:1, l:'2021'},
+  {n:'Camp Marin-Sierra',              t:'Summer Camp',   v:1, l:'2023'},
+  {n:'Camp Hi-Sierra',                 t:'Summer Camp',   v:1, l:'2026'},
+  {n:'Angel Island State Park',        t:'Overnight',     v:1, l:'2026'},
+  {n:'Marshall Beach, Tomales Bay',    t:'Overnight',     v:1, l:'2024'},
+];
+
+const HIGHLIGHTS = [
+  {y:'2017',c:12,txt:'Troop returns to the <strong>National Jamboree</strong> at Bechtel Reserve. Three July outings including the Hetch Hetchy loop. Strong start: 12 outings across 8 active months.'},
+  {y:'2018',c:17,txt:'Most active pre-COVID year with 17 outings. <strong>Mount Whitney 50-Miler</strong> marks T222\'s first major high adventure. 8 day trips — the strongest day outing year in troop history.'},
+  {y:'2019',c:15,txt:'<strong>Philmont 2019</strong> — the troop\'s first Philmont expedition. Cache Creek rafting, Butano overnight, and Gold Country camping. Solid backcountry foundation building.'},
+  {y:'2020',c:21,txt:'COVID year: highest total (21) includes virtual events and socially-distanced outings. Point Reyes and Coyote Lake completed before shutdown. Virtual Camporee and backyard campouts kept scouts connected.'},
+  {y:'2021',c:16,txt:'Return to in-person! <strong>Northern Tier Trek</strong> (Boundary Waters, MN). Pinnacles, Half Moon Bay, and Gold Country all return. Boulder Creek re-opens.'},
+  {y:'2022',c:21,txt:'Tied all-time high: 21 outings. <strong>Philmont 2022</strong> expedition. Strongest day outing year (11). October saw 4 outings — a record single month. Kayaking at Elkhorn Slough added.'},
+  {y:'2023',c:20,txt:'<strong>Florida Sea Base Coral Reef Sailing</strong> + <strong>National Jamboree</strong> — two high adventures in one year. First Sea Base adventure. Three May outings including Henry Coe backpacking.'},
+  {y:'2024',c:16,txt:'<strong>Northern Tier High Adventure</strong> returns (Ely, MN). Heaviest backpacking year: 6 backcountry trips. 50-Miler planning begins. First Arroyo Seco outing in Los Padres NF.'},
+  {y:'2025',c:13,txt:'<strong>Philmont 2025</strong> (sold out). Desolation Wilderness 20-mile advanced route with 5 miles off-trail. Troop shifts decisively to backpacking: 7 backcountry trips, only 1 day outing.'},
+  {y:'2026',c:10,txt:'<strong>High Sierra 50-Miler</strong> planned July. Sea Base 2027 planning active. Angel Island and Sunset State Beach confirmed. 4 outings added Sep–Nov to match historical patterns.'},
+];
+
+// ── CHART DEFAULTS ──────────────────────────────────────────────────────
+const G = 'rgba(168,197,160,0.08)';
+const M = 'rgba(168,197,160,0.5)';
+const tickFont = {family:"'DM Sans',sans-serif", size:11};
+const baseOpts = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{display:false}},
+  scales:{
+    x:{grid:{color:G}, ticks:{color:M, font:tickFont}},
+    y:{grid:{color:G}, ticks:{color:M, font:tickFont}, beginAtZero:true}
+  }
 };
 
-const COLORS = {
-  day: '#6b9e78', overnight: '#2e6b9e', bp: '#4a9ed4',
-  camp: '#c8872a', adv: '#d94f2e', grid: 'rgba(168,197,160,0.08)',
-  mist: 'rgba(168,197,160,0.5)', cream: '#f5f0e8', fern: '#6b9e78',
-};
-const chartDefaults = {
-  plugins: { legend: { display: false } },
-  scales: {
-    x: { grid: { color: COLORS.grid }, ticks: { color: COLORS.mist, font: { family: 'DM Sans', size: 11 } } },
-    y: { grid: { color: COLORS.grid }, ticks: { color: COLORS.mist, font: { family: 'DM Sans', size: 11 } }, beginAtZero: true }
-  },
-  responsive: true, maintainAspectRatio: false,
-};
-
-function makeChart(id, type, labels, datasets, extraOpts={}) {
-  const ctx = document.getElementById(id);
-  if (!ctx) return;
-  return new Chart(ctx, { type, data: { labels, datasets }, options: { ...chartDefaults, ...extraOpts } });
+function mc(id, type, labels, datasets, extra={}) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const opts = JSON.parse(JSON.stringify(baseOpts));
+  // deep merge extra
+  function merge(a, b) { for (const k in b) { if (b[k] && typeof b[k]==='object' && !Array.isArray(b[k])) { a[k]=a[k]||{}; merge(a[k],b[k]); } else { a[k]=b[k]; } } }
+  merge(opts, extra);
+  return new Chart(el, {type, data:{labels, datasets}, options:opts});
 }
 
-// ── OVERVIEW CHARTS ──
-makeChart('c-yearly','bar', YEARS, [{
-  label:'Outings', data: yearlyTotal,
-  backgroundColor: YEARS.map((_,i) => i===9 ? 'rgba(107,158,120,0.5)' : 'rgba(107,158,120,0.8)'),
-  borderColor: YEARS.map((_,i) => i===9 ? '#4a7c59' : '#6b9e78'),
-  borderWidth: 1, borderRadius: 4,
+// ── OVERVIEW ──────────────────────────────────────────────────────────────
+mc('c-yearly','bar',YEARS,[{
+  data:yTotal,
+  backgroundColor:YEARS.map((_,i)=>i===9?'rgba(107,158,120,0.45)':'rgba(107,158,120,0.8)'),
+  borderColor:YEARS.map((_,i)=>i===9?'rgba(74,124,89,0.6)':'#6b9e78'),
+  borderWidth:1, borderRadius:4,
 }]);
 
-new Chart(document.getElementById('c-type-donut'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Day Outings','Overnight/Car Camp','Backpacking','Summer Camp','High Adventure'],
-    datasets: [{ data: [63,43,34,9,12],
-      backgroundColor: ['#4a7c59','#2e6b9e','#4a9ed4','#c8872a','#d94f2e'],
-      borderColor: '#1a3a2a', borderWidth: 3,
+new Chart(document.getElementById('c-donut'),{
+  type:'doughnut',
+  data:{
+    labels:['Day Outings','Overnight/Car Camp','Backpacking','Summer Camp','High Adventure'],
+    datasets:[{
+      data:[63,43,34,9,12],
+      backgroundColor:['#4a7c59','#2e6b9e','#4a9ed4','#c8872a','#d94f2e'],
+      borderColor:'#1a3a2a', borderWidth:3,
     }]
   },
-  options: { responsive: true, maintainAspectRatio: false, cutout:'65%',
-    plugins: { legend: { display: true, position: 'right',
-      labels: { color: '#a8c5a0', font: { family:'DM Sans', size:11 }, boxWidth:12, padding:12 }
+  options:{responsive:true, maintainAspectRatio:false, cutout:'65%',
+    plugins:{legend:{display:true, position:'right',
+      labels:{color:'#a8c5a0', font:{family:"'DM Sans',sans-serif", size:11}, boxWidth:12, padding:12}
     }}
   }
 });
 
-makeChart('c-stacked','bar', YEARS, [
-  { label:'Day', data: yearlyDay, backgroundColor:'rgba(74,124,89,0.85)', borderRadius:2 },
-  { label:'Overnight/Camp', data: yearlyON.map((v,i)=>v-yearlyBP[i]), backgroundColor:'rgba(46,107,158,0.85)', borderRadius:2 },
-  { label:'Backpacking', data: yearlyBP, backgroundColor:'rgba(74,158,212,0.85)', borderRadius:2 },
-  { label:'Summer Camp', data: yearlyCamp, backgroundColor:'rgba(200,135,42,0.85)', borderRadius:2 },
-  { label:'High Adv.', data: yearlyAdv, backgroundColor:'rgba(217,79,46,0.85)', borderRadius:2 },
-], { plugins: { legend: { display: true, labels: { color:'#a8c5a0', font:{family:'DM Sans',size:11}, boxWidth:12, padding:10 }}},
-  scales: { x:{ stacked:true, grid:{color:COLORS.grid}, ticks:{color:COLORS.mist,font:{family:'DM Sans',size:11}} },
-    y:{ stacked:true, grid:{color:COLORS.grid}, ticks:{color:COLORS.mist,font:{family:'DM Sans',size:11}}, beginAtZero:true }},
-  responsive:true, maintainAspectRatio:false });
+mc('c-stacked','bar',YEARS,[
+  {label:'Day',              data:yDay,                          backgroundColor:'rgba(74,124,89,0.85)', borderRadius:2},
+  {label:'Overnight',        data:yON.map((v,i)=>v-yBP[i]),     backgroundColor:'rgba(46,107,158,0.85)', borderRadius:2},
+  {label:'Backpacking',      data:yBP,                          backgroundColor:'rgba(74,158,212,0.85)', borderRadius:2},
+  {label:'Summer Camp',      data:yCamp,                        backgroundColor:'rgba(200,135,42,0.85)', borderRadius:2},
+  {label:'High Adventure',   data:yAdv,                         backgroundColor:'rgba(217,79,46,0.85)', borderRadius:2},
+],{
+  plugins:{legend:{display:true, labels:{color:'#a8c5a0', font:{family:"'DM Sans',sans-serif", size:11}, boxWidth:12, padding:10}}},
+  scales:{x:{stacked:true, grid:{color:G}, ticks:{color:M, font:tickFont}}, y:{stacked:true, grid:{color:G}, ticks:{color:M, font:tickFont}, beginAtZero:true}}
+});
 
-// ── TYPE CHARTS ──
-makeChart('c-day','bar',YEARS,[{data:yearlyDay,backgroundColor:'rgba(74,124,89,0.7)',borderColor:'#6b9e78',borderWidth:1,borderRadius:4}]);
-makeChart('c-overnight','bar',YEARS,[{data:yearlyON,backgroundColor:'rgba(46,107,158,0.7)',borderColor:'#2e6b9e',borderWidth:1,borderRadius:4}]);
+// ── TYPES ────────────────────────────────────────────────────────────────
+mc('c-day','bar',YEARS,[{data:yDay, backgroundColor:'rgba(74,124,89,0.7)', borderColor:'#6b9e78', borderWidth:1, borderRadius:4}]);
+mc('c-overnight','bar',YEARS,[{data:yON, backgroundColor:'rgba(46,107,158,0.7)', borderColor:'#2e6b9e', borderWidth:1, borderRadius:4}]);
+mc('c-bppct','line',YEARS,[{
+  data:yBP.map((v,i)=>yON[i]>0?Math.round(v/yON[i]*100):0),
+  borderColor:'#4a9ed4', backgroundColor:'rgba(74,158,212,0.12)',
+  pointBackgroundColor:'#4a9ed4', pointRadius:5, tension:0.35, fill:true
+}],{scales:{y:{grid:{color:G}, ticks:{color:M, font:tickFont, callback:v=>v+'%'}, beginAtZero:true, max:100}, x:{grid:{color:G}, ticks:{color:M, font:tickFont}}}});
 
-const bpPct = yearlyBP.map((v,i)=>yearlyON[i]>0?Math.round(v/yearlyON[i]*100):0);
-makeChart('c-bp-pct','line',YEARS,[{data:bpPct,borderColor:'#4a9ed4',backgroundColor:'rgba(74,158,212,0.12)',pointBackgroundColor:'#4a9ed4',pointRadius:5,tension:0.35,fill:true}]);
+// ── MONTHLY ──────────────────────────────────────────────────────────────
+const mTotals = mData.map(r=>r.reduce((a,b)=>a+b,0));
+const mAvgs   = mTotals.map(t=>parseFloat((t/10).toFixed(1)));
+const mColors = mAvgs.map(v=> v>=2?'rgba(74,158,212,0.85)': v>=1.5?'rgba(74,124,89,0.85)': v>=1?'rgba(74,124,89,0.55)':'rgba(168,197,160,0.18)');
 
-// ── MONTHLY CHARTS ──
-const monthTotals = MONTHS.map((_,mi) => Object.values(monthData)[mi].reduce((a,b)=>a+b,0));
-const monthAvgs = monthTotals.map(t=>(t/10).toFixed(1));
-makeChart('c-monthly-avg','bar',MONTHS,[{
-  data:monthAvgs, borderRadius:4,
-  backgroundColor: MONTHS.map((_,i)=>{
-    const v=parseFloat(monthAvgs[i]);
-    if(v>=2) return 'rgba(74,158,212,0.85)';
-    if(v>=1.5) return 'rgba(74,124,89,0.85)';
-    if(v>=1) return 'rgba(74,124,89,0.55)';
-    return 'rgba(168,197,160,0.2)';
-  }),
-}]);
-makeChart('c-monthly-total','bar',MONTHS,[{
-  data:monthTotals, borderRadius:4,
-  backgroundColor:'rgba(107,158,120,0.7)', borderColor:'#6b9e78', borderWidth:1,
-}]);
+mc('c-mavg','bar',MONTHS,[{data:mAvgs, backgroundColor:mColors, borderRadius:4}]);
+mc('c-mtotal','bar',MONTHS,[{data:mTotals, backgroundColor:'rgba(107,158,120,0.7)', borderColor:'#6b9e78', borderWidth:1, borderRadius:4}]);
 
-// ── HEATMAP ──
-const heatBody = document.getElementById('heatmap-body');
-Object.entries(monthData).forEach(([m, vals]) => {
-  const total = vals.reduce((a,b)=>a+b,0);
+// Heatmap
+const hmBody = document.getElementById('hm-body');
+mData.forEach((row,mi)=>{
+  const total = row.reduce((a,b)=>a+b,0);
   const tr = document.createElement('tr');
-  const tdM = document.createElement('td'); tdM.className='ml'; tdM.textContent=m; tr.appendChild(tdM);
-  vals.forEach(v=>{
+  const tdM = document.createElement('td'); tdM.className='ml'; tdM.textContent=MONTHS[mi]; tr.appendChild(tdM);
+  row.forEach(v=>{
     const td = document.createElement('td');
     td.className = v===0?'h0':v===1?'h1':v===2?'h2':v===3?'h3':'h4';
     td.textContent = v===0?'—':v; tr.appendChild(td);
   });
   const tdT = document.createElement('td'); tdT.className='tc'; tdT.textContent=total; tr.appendChild(tdT);
-  heatBody.appendChild(tr);
+  hmBody.appendChild(tr);
 });
 
-// ── LOCATIONS ──
-const locations = [
-  {name:'Henry Coe State Park',type:'Backpacking',visits:4,last:'2024'},
-  {name:'May Lake / Yosemite',type:'Backpacking',visits:4,last:'2024'},
-  {name:'Point Reyes National Seashore',type:'Backpacking',visits:4,last:'2026'},
-  {name:'Black Diamond Mines Regional Preserve',type:'Backpacking',visits:4,last:'2026'},
-  {name:'Castle Rock State Park',type:'Backpacking',visits:3,last:'2025'},
-  {name:'Pinnacles National Park',type:'Overnight',visits:3,last:'2025'},
-  {name:'Boulder Creek Scout Reservation',type:'Overnight',visits:4,last:'2022'},
-  {name:'Gold Country / Tuolumne',type:'Overnight',visits:4,last:'2024'},
-  {name:'Elkhorn Slough, Moss Landing',type:'Day',visits:3,last:'2022'},
-  {name:'Coyote Lake',type:'Overnight',visits:3,last:'2024'},
-  {name:'Big Sur / Los Padres NF',type:'Backpacking',visits:2,last:'2025'},
-  {name:'Desolation Wilderness',type:'Backpacking',visits:2,last:'2025'},
-  {name:'Monte Bello / Black Mountain',type:'Backpacking',visits:2,last:'2025'},
-  {name:'Santa Cruz Beach Boardwalk',type:'Overnight',visits:2,last:'2025'},
-  {name:'Memorial Park, San Mateo Co.',type:'Overnight',visits:3,last:'2025'},
-  {name:'Palisades Tahoe (Squaw Valley)',type:'Day',visits:4,last:'2022'},
-  {name:'Northstar California Resort',type:'Day',visits:2,last:'2026'},
-  {name:'Cache Creek / American River',type:'Day',visits:4,last:'2022'},
-  {name:'San Francisco Urban Hike',type:'Day',visits:4,last:'2023'},
-  {name:'Windy Hill Open Space',type:'Day',visits:4,last:'2025'},
-  {name:'Half Moon Bay State Park',type:'Overnight',visits:2,last:'2021'},
-  {name:'Angel Island State Park',type:'Overnight',visits:1,last:'2026'},
-  {name:'Marshall Beach, Tomales Bay',type:'Overnight',visits:1,last:'2024'},
-  {name:'Ohlone Wilderness',type:'Backpacking',visits:2,last:'2026'},
-  {name:'Arroyo Seco / Los Padres NF',type:'Overnight',visits:2,last:'2024'},
-  {name:'Philmont Scout Ranch, NM',type:'High Adventure',visits:3,last:'2025'},
-  {name:'Northern Tier BSA, Boundary Waters MN',type:'High Adventure',visits:2,last:'2024'},
-  {name:'Florida Sea Base, Keys',type:'High Adventure',visits:1,last:'2023'},
-  {name:'Summit Bechtel Reserve, WV',type:'High Adventure',visits:2,last:'2023'},
-  {name:'Mt. Whitney / Inyo NF',type:'High Adventure',visits:2,last:'2026'},
-  {name:'Camp Wente',type:'Summer Camp',visits:3,last:'2025'},
-  {name:'Camp Oljato',type:'Summer Camp',visits:2,last:'2024'},
-  {name:'Camp Chawanakee',type:'Summer Camp',visits:1,last:'2021'},
-  {name:'Camp Marin-Sierra',type:'Summer Camp',visits:1,last:'2023'},
-  {name:'Camp Hi-Sierra',type:'Summer Camp',visits:1,last:'2026'},
-];
-
+// ── LOCATIONS ────────────────────────────────────────────────────────────
 let currentFilter = 'all';
-function filterLocs(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('#loc-filters .filter-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  renderLocTable();
-}
 
-function getTagClass(type) {
-  if(type==='Backpacking') return 'tag-bp';
-  if(type==='High Adventure') return 'tag-adv';
-  if(type==='Summer Camp') return 'tag-camp';
+function tagClass(t) {
+  if(t==='Backpacking') return 'tag-bp';
+  if(t==='High Adventure') return 'tag-adv';
+  if(t==='Summer Camp') return 'tag-camp';
   return 'tag-day';
 }
 
-function renderLocTable() {
-  const tbody = document.getElementById('loc-body');
-  tbody.innerHTML = '';
-  const filtered = currentFilter==='all' ? locations :
-    locations.filter(l => l.type.includes(currentFilter));
-  const sorted = [...filtered].sort((a,b)=>b.visits-a.visits);
+function renderLocs() {
+  const body = document.getElementById('loc-body');
+  body.innerHTML = '';
+  const filtered = currentFilter==='all' ? LOCS : LOCS.filter(l=>l.t.includes(currentFilter));
+  const sorted = [...filtered].sort((a,b)=>b.v-a.v);
   sorted.forEach((l,i)=>{
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:var(--mist);font-size:11px;font-family:'DM Mono',monospace;">${String(i+1).padStart(2,'0')}</td>
-      <td class="loc-name">${l.name}</td>
-      <td><span class="loc-tag ${getTagClass(l.type)}">${l.type}</span></td>
-      <td class="loc-count">${l.visits}×</td>
-      <td class="loc-last">${l.last}</td>
-    `;
-    tbody.appendChild(tr);
+    tr.innerHTML = `<td style="color:var(--mist);font-size:11px;font-family:'DM Mono',monospace;">${String(i+1).padStart(2,'0')}</td>
+      <td class="loc-name">${l.n}</td>
+      <td><span class="loc-tag ${tagClass(l.t)}">${l.t}</span></td>
+      <td class="loc-count">${l.v}×</td>
+      <td class="loc-last">${l.l}</td>`;
+    body.appendChild(tr);
   });
 }
-renderLocTable();
+renderLocs();
 
-// Location bar chart
-const topLocs = [...locations].sort((a,b)=>b.visits-a.visits).slice(0,12);
-const locColors = topLocs.map(l => l.type==='High Adventure'?'rgba(217,79,46,0.8)':l.type==='Summer Camp'?'rgba(200,135,42,0.8)':l.type==='Backpacking'?'rgba(74,158,212,0.8)':'rgba(74,124,89,0.8)');
+document.getElementById('loc-filters').addEventListener('click', e=>{
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  currentFilter = btn.dataset.f;
+  document.querySelectorAll('#loc-filters .filter-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderLocs();
+});
 
-new Chart(document.getElementById('c-loc-bar'), {
-  type: 'bar',
-  data: {
-    labels: topLocs.map(l=>l.name.length>22?l.name.slice(0,22)+'…':l.name),
-    datasets: [{ data: topLocs.map(l=>l.visits), backgroundColor: locColors, borderRadius:4 }]
+// Location bar chart (top 12)
+const topLocs = [...LOCS].sort((a,b)=>b.v-a.v).slice(0,12);
+new Chart(document.getElementById('c-locbar'),{
+  type:'bar',
+  data:{
+    labels:topLocs.map(l=>l.n.length>24?l.n.slice(0,24)+'…':l.n),
+    datasets:[{
+      data:topLocs.map(l=>l.v),
+      backgroundColor:topLocs.map(l=>l.t==='High Adventure'?'rgba(217,79,46,0.8)':l.t==='Summer Camp'?'rgba(200,135,42,0.8)':l.t==='Backpacking'?'rgba(74,158,212,0.8)':'rgba(74,124,89,0.8)'),
+      borderRadius:4,
+    }]
   },
-  options: {
+  options:{
     indexAxis:'y', responsive:true, maintainAspectRatio:false,
     plugins:{legend:{display:false}},
     scales:{
-      x:{grid:{color:COLORS.grid},ticks:{color:COLORS.mist,font:{family:'DM Sans',size:11}},beginAtZero:true},
-      y:{grid:{display:false},ticks:{color:COLORS.cream,font:{family:'DM Sans',size:11}}}
+      x:{grid:{color:G}, ticks:{color:M, font:tickFont}, beginAtZero:true},
+      y:{grid:{display:false}, ticks:{color:'#f5f0e8', font:tickFont}}
     }
   }
 });
 
-// ── HIGHLIGHTS ──
-const highlights = [
-  {year:'2017',count:12,text:'Troop returns to <strong>National Jamboree</strong> at Bechtel Reserve. 3 July outings including Hetch Hetchy loop. First year of modern outing tracking.'},
-  {year:'2018',count:17,text:'Record activity with 17 outings. <strong>Mount Whitney 50-Miler</strong> marks troop's first major high adventure. Strong day outing program (8 day trips).'},
-  {year:'2019',count:15,text:'<strong>Philmont 2019</strong> — first Philmont expedition. Cache Creek rafting returns. Strong backcountry program with Black Diamond, Butano, and Gold Country.'},
-  {year:'2020',count:21,text:'COVID year — highest outing count (21) due to virtual events. Point Reyes backpacking and Coyote Lake completed before shutdown. Virtual Camporee and backyard campouts kept scouts connected.'},
-  {year:'2021',count:16,text:'Return to in-person! <strong>Northern Tier Trek</strong> (Boundary Waters). Pinnacles, Half Moon Bay, Gold Country all return. Boulder Creek re-opens.'},
-  {year:'2022',count:21,text:'Tied for most outings. <strong>Philmont 2022</strong>. Strongest day outing year (11). October had 4 outings. Elkhorn Slough kayaking added.'},
-  {year:'2023',count:20,text:'<strong>Florida Sea Base Coral Reef Sailing</strong> + National Jamboree in same year. First Sea Base adventure. 3 May outings including Henry Coe backpacking.'},
-  {year:'2024',count:16,text:'<strong>Northern Tier High Adventure</strong> returns (Ely, MN). Heaviest backpacking year — 6 backcountry trips. 50-Miler planning begins. First Arroyo Seco outing.'},
-  {year:'2025',count:13,text:'<strong>Philmont 2025</strong> (sold out). Desolation Wilderness advanced 20-mile route. Troop shifts decisively to backpacking — 7 backcountry trips, only 1 day outing.'},
-  {year:'2026',count:10,text:'<strong>High Sierra 50-Miler</strong> planned July. Sea Base 2027 planning active. Angel Island, Sunset State Beach confirmed. 4 new outings added to fill Sep–Nov gap.'},
-];
-
-const tlBody = document.getElementById('timeline-body');
-highlights.forEach(h=>{
-  const div = document.createElement('div');
-  div.className='tl-item';
-  div.innerHTML=`<div class="tl-year">${h.year} <span style="font-size:14px;font-family:'DM Sans';color:var(--mist);font-weight:300;">${h.count} outings</span></div><div class="tl-highlight">${h.text}</div>`;
-  tlBody.appendChild(div);
-});
-
-makeChart('c-trend','line',YEARS,[{
-  data:yearlyTotal, borderColor:'#6b9e78', backgroundColor:'rgba(74,124,89,0.12)',
-  pointBackgroundColor: YEARS.map((_,i)=>i===9?'rgba(107,158,120,0.5)':'#6b9e78'),
+// ── HIGHLIGHTS ────────────────────────────────────────────────────────────
+mc('c-trend','line',YEARS,[{
+  data:yTotal, borderColor:'#6b9e78', backgroundColor:'rgba(74,124,89,0.12)',
+  pointBackgroundColor:YEARS.map((_,i)=>i===9?'rgba(107,158,120,0.5)':'#6b9e78'),
   pointRadius:6, tension:0.3, fill:true,
 }]);
 
-new Chart(document.getElementById('c-season'), {
+new Chart(document.getElementById('c-season'),{
   type:'doughnut',
   data:{
     labels:['Winter (Dec–Feb)','Spring (Mar–May)','Summer (Jun–Aug)','Fall (Sep–Nov)'],
     datasets:[{
       data:[35,46,30,45],
       backgroundColor:['rgba(74,158,212,0.8)','rgba(74,124,89,0.8)','rgba(200,135,42,0.8)','rgba(217,79,46,0.8)'],
-      borderColor:'#1a3a2a',borderWidth:3,
+      borderColor:'#1a3a2a', borderWidth:3
     }]
   },
-  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
-    plugins:{legend:{display:true,position:'right',labels:{color:'#a8c5a0',font:{family:'DM Sans',size:11},boxWidth:12,padding:10}}}}
+  options:{responsive:true, maintainAspectRatio:false, cutout:'60%',
+    plugins:{legend:{display:true, position:'right', labels:{color:'#a8c5a0', font:{family:"'DM Sans',sans-serif",size:11}, boxWidth:12, padding:10}}}
+  }
 });
 
-makeChart('c-nights','bar',YEARS,[{
-  data:yearlyNights, backgroundColor:'rgba(74,158,212,0.65)', borderColor:'#2e6b9e', borderWidth:1, borderRadius:4,
-}]);
+mc('c-nights','bar',YEARS,[{data:yNights, backgroundColor:'rgba(74,158,212,0.65)', borderColor:'#2e6b9e', borderWidth:1, borderRadius:4}]);
 
-const activeMonths = YEARS.map((_,yi)=>
-  Object.values(monthData).filter(vals=>vals[yi]>0).length
-);
-makeChart('c-months-active','bar',YEARS,[{
-  data:activeMonths, backgroundColor:'rgba(107,158,120,0.7)', borderColor:'#6b9e78', borderWidth:1, borderRadius:4,
-}],{ scales:{ 
-    x:{ grid:{color:'rgba(168,197,160,0.08)'}, ticks:{color:'rgba(168,197,160,0.5)',font:{family:'DM Sans',size:11}} },
-    y:{ grid:{color:'rgba(168,197,160,0.08)'}, ticks:{color:'rgba(168,197,160,0.5)',font:{family:'DM Sans',size:11}}, beginAtZero:true, max:12 }
-  }, responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} });
+const activeMonths = YEARS.map((_,yi)=>mData.filter(row=>row[yi]>0).length);
+mc('c-active','bar',YEARS,[{
+  data:activeMonths, backgroundColor:'rgba(107,158,120,0.7)', borderColor:'#6b9e78', borderWidth:1, borderRadius:4
+}],{scales:{y:{grid:{color:G}, ticks:{color:M, font:tickFont}, beginAtZero:true, max:12}, x:{grid:{color:G}, ticks:{color:M, font:tickFont}}}});
 
-// ── TAB SWITCHING ──
-function showTab(e, id) {
+// Timeline
+const tlBody = document.getElementById('tl-body');
+HIGHLIGHTS.forEach(h=>{
+  const div = document.createElement('div');
+  div.className='tl-item';
+  div.innerHTML=`<div class="tl-year">${h.y} <span style="font-size:14px;font-family:'DM Sans',sans-serif;color:var(--mist);font-weight:300;">${h.c} outings</span></div><div class="tl-highlight">${h.txt}</div>`;
+  tlBody.appendChild(div);
+});
+
+// ── TABS (event delegation, no implicit `event`) ───────────────────────
+document.querySelector('.nav-tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  e.target.classList.add('active');
-}
+  const tab = btn.dataset.tab;
+  document.getElementById('tab-'+tab).classList.add('active');
+  btn.classList.add('active');
+});
 </script>
 
 </body>
