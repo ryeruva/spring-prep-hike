@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Troop T222 · Outing Insights</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -204,6 +209,17 @@ nav .current{color:var(--bark);text-transform:uppercase}
 .hm-tooltip-item::before{content:'›';color:var(--gold);flex-shrink:0;font-size:13px}
 .hm-tooltip-empty{font-size:12px;color:var(--bark);font-style:italic}
 
+/* Map View */
+#map{width:100%;height:600px;border-radius:4px;border:1px solid rgba(100,80,50,.15)}
+.map-info-panel{background:#fff;border:1px solid rgba(100,80,50,.18);border-radius:4px;padding:20px;margin-top:20px;max-width:100%;overflow-y:auto;max-height:400px}
+.map-info-title{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--stone);margin-bottom:12px}
+.map-event-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(100,80,50,.08);font-size:13px}
+.map-event-row:last-child{border-bottom:none}
+.map-event-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.map-event-text{flex:1}
+.map-event-name{color:var(--stone);font-weight:500;line-height:1.3}
+.map-event-date{font-size:11px;color:var(--bark);margin-top:2px}
+
 footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
   position:relative;z-index:1}
@@ -245,6 +261,7 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem
   <button class="tab-btn" data-tab="types">Outing Types</button>
   <button class="tab-btn" data-tab="monthly">Monthly Patterns</button>
   <button class="tab-btn" data-tab="locations">Locations</button>
+  <button class="tab-btn" data-tab="map">Map View</button>
   <button class="tab-btn" data-tab="highlights">Year Highlights</button>
   <button class="tab-btn" data-tab="calendar">Calendar View</button>
 </div>
@@ -337,6 +354,16 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem
   <div class="chart-box" style="margin-bottom:24px;"><h3>Most Visited Locations</h3><div class="sub">Repeat visits show strong T222 traditions</div><div class="chart-wrap h300" style="height:300px;"><canvas id="c-locbar"></canvas></div></div>
   <div class="chart-box"><h3>Full Location Directory</h3><div class="sub" style="margin-bottom:14px;">All unique locations visited by T222</div>
     <table class="loc-table"><thead><tr><th>#</th><th>Location</th><th>Type</th><th>Visits</th><th>Last Visit</th></tr></thead><tbody id="loc-body"></tbody></table>
+  </div>
+</div>
+
+<!-- MAP VIEW -->
+<div id="tab-map" class="section">
+  <div class="sec-header"><h2>Location Map</h2><p>All 161 outings across 40+ unique locations — click clusters to see nearby places</p></div>
+  <div id="map"></div>
+  <div class="map-info-panel" style="display:none;" id="map-info">
+    <div class="map-info-title" id="map-info-title"></div>
+    <div id="map-info-events"></div>
   </div>
 </div>
 
@@ -1129,6 +1156,126 @@ document.getElementById('cal-next').addEventListener('click', () => { calMonth++
 buildCalYearBtns();
 renderCal();
 
+// ── MAP VIEW ──────────────────────────────────────────────────────────────
+const mapEl = document.getElementById('map');
+const mapInfoPanel = document.getElementById('map-info');
+const mapInfoTitle = document.getElementById('map-info-title');
+const mapInfoEvents = document.getElementById('map-info-events');
+
+const map = L.map(mapEl).setView([38,-119], 6); // Centered on California
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+  maxZoom: 15
+}).addTo(map);
+
+// Parse locations and create markers
+const COLORS = {day:'#4a7c59',overnight:'#2e6b9e',backpack:'#4a9ed4',camp:'#c8872a',adventure:'#d94f2e'};
+const locMarkers = {};
+
+ALL_EVENTS.forEach(ev => {
+  const parts = ev.loc.split(',');
+  if (!parts[0]) return;
+  const key = ev.loc;
+  if (!locMarkers[key]) {
+    locMarkers[key] = {loc:ev.loc, events:[], lat:null, lng:null};
+  }
+  locMarkers[key].events.push(ev);
+});
+
+// Geocode locations
+const GEOCODED = {
+  'Half Moon Bay State Park, CA': [37.460,-122.439],
+  'Point Reyes National Seashore, CA': [37.997,-122.756],
+  'Yosemite National Park, CA': [37.865,-119.535],
+  'Tomales Bay, CA': [38.167,-122.839],
+  'Cutter Scout Reservation, CA': [37.583,-121.983],
+  'Cache Creek, CA': [38.663,-122.261],
+  'Camp Oljato, CA': [36.166,-120.665],
+  'Summit Bechtel Reserve, WV': [38.126,-82.765],
+  'May Lake, Yosemite, CA': [37.826,-119.450],
+  'Memorial Park, Loma Mar, CA': [37.250,-122.293],
+  'Palisades Tahoe, CA': [39.196,-120.237],
+  'Planet Granite, Belmont, CA': [37.516,-122.289],
+  'Davis, CA': [38.545,-121.741],
+  'San Francisco, CA': [37.775,-122.419],
+  'Menlo Park, CA': [37.454,-122.180],
+  'Henry Coe State Park, CA': [37.233,-121.550],
+  'Los Altos Rod & Gun, CA': [37.370,-122.060],
+  'Windy Hill Open Space, CA': [37.368,-122.238],
+  'Camp Wente, Willits, CA': [39.406,-123.371],
+  'Inyo National Forest, CA': [37.900,-118.700],
+  'Cutter BSA Reserve, CA': [37.583,-121.983],
+  'Pinnacles National Park, CA': [36.480,-121.170],
+  'Boulder Creek Scout Reservation, CA': [37.127,-122.153],
+  'Butano State Park, CA': [37.179,-122.302],
+  'Camp Mensinger, CA': [37.500,-121.000],
+  'Philmont Scout Ranch, NM': [36.330,-104.979],
+  'Black Diamond Mines RP, Antioch, CA': [37.875,-121.835],
+  'Tuttletown Recreation Area, CA': [38.067,-120.890],
+  'K-1 Speed, Santa Clara, CA': [37.355,-121.936],
+  'Mt. Hermon Adventures, Felton, CA': [37.046,-122.075],
+  'Coyote Lake Campground, CA': [37.370,-121.590],
+  'Coast Camp, Point Reyes, CA': [37.926,-122.903],
+  'Atherton Scout Site, CA': [37.460,-122.193],
+  'Embarcadero Rd, Palo Alto, CA': [37.441,-122.160],
+  'Magruder House, CA': [37.466,-122.187],
+  'Rancho San Antonio Open Space, CA': [37.397,-122.159],
+  '22 Holbrook Lane, Atherton, CA': [37.465,-122.195],
+  'Greenville Rd, Livermore, CA': [37.639,-121.876],
+  'Elkhorn Slough, Moss Landing, CA': [36.807,-121.791],
+  'Ohlone Regional Wilderness, CA': [37.433,-121.633],
+  'Morgan Territory Regional Preserve, CA': [37.919,-121.763],
+  'Desolation Wilderness, CA': [38.962,-120.243],
+  'Los Padres National Forest, CA': [34.729,-119.621],
+  'Arroyo Seco, Los Padres, CA': [36.243,-121.367],
+  'Big Sur, Los Padres NF, CA': [36.263,-121.413],
+  'Sunset State Beach, Santa Cruz County, CA': [36.926,-121.810],
+  'La Honda area, CA': [37.267,-122.333],
+  'Angel Island State Park, SF Bay, CA': [37.864,-122.434],
+  'Camp Hi-Sierra, Long Barn, CA': [38.322,-120.168],
+  'Boundary Waters, MN': [48.000,-89.600],
+  'Ely, MN': [47.900,-91.900],
+  'Florida Sea Base, FL': [24.690,-81.385],
+  'National Jamboree, VA': [38.580,-77.848]
+};
+
+const markerGroup = L.markerClusterGroup({maxClusterRadius: 50});
+
+Object.entries(locMarkers).forEach(([key, data]) => {
+  const coords = GEOCODED[key];
+  if (coords) {
+    data.lat = coords[0];
+    data.lng = coords[1];
+    const typeColorCount = {};
+    data.events.forEach(e => { typeColorCount[e.type] = (typeColorCount[e.type]||0)+1; });
+    const primaryType = Object.keys(typeColorCount).sort((a,b)=>typeColorCount[b]-typeColorCount[a])[0];
+    const color = COLORS[primaryType] || '#999';
+    const marker = L.circleMarker([data.lat, data.lng], {
+      radius: 8, fillColor: color, color: '#fff', weight: 2, opacity: 0.8, fillOpacity: 0.7
+    });
+    marker.bindPopup(key);
+    marker.on('click', () => {
+      mapInfoTitle.textContent = key + ' (' + data.events.length + ' events)';
+      mapInfoEvents.innerHTML = data.events.map(e => `<div class="map-event-row">
+        <div class="map-event-dot" style="background:${COLORS[e.type]}"></div>
+        <div class="map-event-text">
+          <div class="map-event-name">${e.name}</div>
+          <div class="map-event-date">${new Date(e.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+        </div>
+      </div>`).join('');
+      mapInfoPanel.style.display = 'block';
+      map.setView([data.lat, data.lng], 10);
+    });
+    markerGroup.addLayer(marker);
+  }
+});
+
+map.addLayer(markerGroup);
+
+map.on('moveend', () => {
+  if (map.getZoom() < 7) mapInfoPanel.style.display = 'none';
+});
+
 // ── TABS (event delegation, no implicit `event`) ───────────────────────
 document.querySelector('.nav-tabs').addEventListener('click', e=>{
   const btn = e.target.closest('.tab-btn');
@@ -1138,6 +1285,9 @@ document.querySelector('.nav-tabs').addEventListener('click', e=>{
   const tab = btn.dataset.tab;
   document.getElementById('tab-'+tab).classList.add('active');
   btn.classList.add('active');
+  if (tab === 'map') {
+    setTimeout(() => map.invalidateSize(), 100);
+  }
 });
 </script>
 
