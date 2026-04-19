@@ -128,6 +128,23 @@ nav .current{color:var(--bark);text-transform:uppercase}
 .tl-year{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--stone);letter-spacing:.05em}
 .tl-highlight{font-size:13px;color:var(--stone);margin-top:2px;font-weight:300;line-height:1.6}
 .tl-highlight strong{color:var(--ember);font-weight:500}
+.tl-expand-btn{font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--sky);background:none;border:1px solid rgba(74,124,154,.3);border-radius:3px;
+  padding:2px 8px;cursor:pointer;margin-left:10px;vertical-align:middle;transition:all .15s}
+.tl-expand-btn:hover{background:rgba(74,124,154,.1);border-color:var(--sky)}
+.tl-events{display:none;margin-top:14px;padding-top:12px;border-top:1px solid rgba(100,80,50,.12)}
+.tl-events.open{display:block}
+.tl-month-group{margin-bottom:12px}
+.tl-month-label{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--bark);font-weight:500;margin-bottom:5px}
+.tl-event-item{display:flex;align-items:baseline;gap:8px;padding:3px 0;font-size:12px;color:var(--stone);
+  border-bottom:1px solid rgba(100,80,50,.06)}
+.tl-event-item:last-child{border-bottom:none}
+.tl-event-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.tl-event-name{flex:1;font-weight:400}
+.tl-event-type{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.06em;opacity:.65}
+.dot-day{background:#4a7c59}.dot-overnight{background:#2e6b9e}.dot-backpack{background:#4a9ed4}
+.dot-camp{background:#c8872a}.dot-adventure{background:#d94f2e}
 
 /* Camp cards */
 .camp-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
@@ -779,11 +796,40 @@ mc('c-active','bar',YEARS,[{
 
 // Timeline
 const tlBody = document.getElementById('tl-body');
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const TYPE_LABELS = {day:'Day',overnight:'Overnight',backpack:'Backpack',camp:'Summer Camp',adventure:'High Adv'};
+
 HIGHLIGHTS.forEach(h=>{
+  // Group events for this year by month
+  const yearEvents = ALL_EVENTS.filter(e=>e.date.startsWith(h.y));
+  const byMonth = {};
+  yearEvents.forEach(e=>{
+    const m = parseInt(e.date.split('-')[1],10)-1;
+    if(!byMonth[m]) byMonth[m]=[];
+    byMonth[m].push(e);
+  });
+  const monthsHtml = Object.keys(byMonth).sort((a,b)=>a-b).map(m=>{
+    const evHtml = byMonth[m].map(e=>`<div class="tl-event-item">
+      <div class="tl-event-dot dot-${e.type}"></div>
+      <span class="tl-event-name">${e.name}</span>
+      <span class="tl-event-type">${TYPE_LABELS[e.type]||e.type}</span>
+    </div>`).join('');
+    return `<div class="tl-month-group"><div class="tl-month-label">${MONTH_NAMES[m]}</div>${evHtml}</div>`;
+  }).join('');
+
   const div = document.createElement('div');
   div.className='tl-item';
-  div.innerHTML=`<div class="tl-year">${h.y} <span style="font-size:14px;font-family:'DM Sans',sans-serif;color:var(--mist);font-weight:300;">${h.c} outings</span></div><div class="tl-highlight">${h.txt}</div>`;
+  div.innerHTML=`<div class="tl-year">${h.y} <span style="font-size:14px;font-family:'DM Sans',sans-serif;color:var(--bark);font-weight:300;">${h.c} outings</span><button class="tl-expand-btn" data-year="${h.y}">&#9656; Show Events</button></div><div class="tl-highlight">${h.txt}</div><div class="tl-events" id="tl-ev-${h.y}">${monthsHtml}</div>`;
   tlBody.appendChild(div);
+});
+
+tlBody.addEventListener('click', e=>{
+  const btn = e.target.closest('.tl-expand-btn');
+  if(!btn) return;
+  const yr = btn.dataset.year;
+  const panel = document.getElementById('tl-ev-'+yr);
+  const open = panel.classList.toggle('open');
+  btn.innerHTML = open ? '&#9662; Hide Events' : '&#9656; Show Events';
 });
 
 
