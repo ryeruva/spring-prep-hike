@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planning Dashboard — Troop 222</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Spectral:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1410;--stone:#3D332A;--bark:#6B5040;--sand:#C4A882;--cream:#F5EDD8;
+  --sage:#7C9070;--sky:#4A7C9A;--gold:#C8A028;--ember:#C84820;--bg:#F0E8D5;
+  --border:rgba(100,80,50,.18);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Spectral',Georgia,serif;overflow-x:hidden;font-size:15px;line-height:1.7}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(100,80,50,.06) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(100,80,50,.04) 40px);
+  background-size:40px 40px;
+}
+.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 1.5rem 5rem}
+
+nav{background:#1A1410;padding:.55rem 1.5rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;position:sticky;top:0;z-index:100;margin:0 -1.5rem}
+nav a{color:#C4A882;text-decoration:none;text-transform:uppercase;transition:color .15s}
+nav a:hover{color:#C8A028}
+nav a.home{color:#C8A028;font-weight:500}
+nav .sep{color:#3D332A;font-size:.5rem}
+nav .current{color:#6B5040;text-transform:uppercase}
+
+/* Header */
+.header{text-align:center;padding:3rem 0 2rem;border-bottom:2px solid var(--gold);margin-bottom:2.5rem}
+.header::before{content:'';display:block;width:40px;height:2px;background:var(--gold);margin:0 auto 1.2rem}
+.report-label{font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--stone);margin-bottom:.5rem}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,6vw,3.8rem);font-weight:700;color:var(--stone);margin-bottom:.3rem;line-height:1.1}
+.meta{font-size:.9rem;color:var(--bark);margin-bottom:.5rem}
+
+/* Calendar Grid */
+.calendar-container{margin-bottom:3rem}
+.calendar-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--stone);margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:.5rem}
+.calendar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:2rem}
+
+.calendar-event{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
+.calendar-event:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.08);border-color:var(--gold)}
+
+.event-header{background:linear-gradient(135deg,var(--sky) 0%,var(--sage) 100%);color:#fff;padding:1.2rem;display:flex;align-items:flex-start;justify-content:space-between}
+.event-date{display:flex;flex-direction:column;gap:.2rem}
+.event-month{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;opacity:.9}
+.event-day{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;font-weight:700}
+.event-year{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;opacity:.8}
+
+.event-type{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.2);padding:.3rem .6rem;border-radius:3px;white-space:nowrap;text-align:right}
+
+.event-body{padding:1.2rem}
+.event-name{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--stone);margin-bottom:.5rem;line-height:1.2}
+.event-location{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--bark);margin-bottom:.8rem;letter-spacing:.05em;text-transform:uppercase}
+.event-desc{font-size:.85rem;color:var(--ink);margin-bottom:1rem;line-height:1.6}
+
+.event-btn{display:inline-flex;align-items:center;gap:.3rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.6rem 1rem;border-radius:2px;background:var(--sky);color:#fff;text-decoration:none;transition:background .15s;font-weight:500}
+.event-btn:hover{background:#3a6a8a}
+
+/* Section styles */
+.section{padding:2.5rem 0 2rem}
+.section-header{margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:1rem}
+.section-header h2{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--stone);margin-bottom:.5rem;line-height:1}
+.section-header p{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bark)}
+
+/* Quick Links Grid */
+.quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-bottom:3rem}
+.quick-link-card{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:2rem;text-align:center;transition:transform .2s,box-shadow .2s,border-color .2s}
+.quick-link-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.08);border-color:var(--gold)}
+.quick-link-card::before{content:'';display:block;width:40px;height:2px;background:var(--gold);margin:0 auto 1rem}
+
+.quick-link-icon{font-size:2.5rem;margin-bottom:.8rem;display:block}
+.quick-link-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--stone);margin-bottom:.8rem}
+.quick-link-desc{font-size:.85rem;color:var(--bark);margin-bottom:1.2rem;line-height:1.6}
+
+.btn-primary{display:inline-flex;align-items:center;gap:.3rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.7rem 1.3rem;border-radius:2px;background:var(--sage);color:#fff;text-decoration:none;transition:background .15s;font-weight:500}
+.btn-primary:hover{background:#6a8a60}
+
+.btn-secondary{display:inline-flex;align-items:center;gap:.3rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.7rem 1.3rem;border-radius:2px;background:transparent;color:var(--stone);border:1px solid var(--border);text-decoration:none;transition:all .15s;font-weight:500}
+.btn-secondary:hover{background:var(--stone);color:#fff;border-color:var(--stone)}
+
+/* Legend */
+.legend{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:1.5rem;margin:2rem 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.5rem}
+.legend-item{display:flex;align-items:center;gap:.8rem}
+.legend-dot{width:16px;height:16px;border-radius:2px;flex-shrink:0}
+.legend-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;color:var(--bark)}
+
+.leg-backpack{background:linear-gradient(135deg,#4A7C9A 0%,#7C9070 100%)}
+.leg-prep{background:linear-gradient(135deg,#C8A028 0%,#C84820 100%)}
+.leg-summer{background:linear-gradient(135deg,#3D332A 0%,#6B5040 100%)}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--bark);letter-spacing:.05em}
+.footer-note{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);opacity:.6;letter-spacing:.08em}
+
+@media(max-width:768px){
+  .calendar-grid{grid-template-columns:1fr}
+  .event-header{flex-direction:column}
+  .event-type{text-align:left;align-self:flex-start;margin-top:.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="home">&#8962; Troop 222</a>
+  <span class="sep">&#9679;</span>
+  <a href="Planning_Hub.html">Planning Hub</a>
+  <span class="sep">&#9679;</span>
+  <span class="current">Planning Dashboard</span>
+</nav>
+
+<div class="page">
+  <header class="header">
+    <p class="report-label">Command Center</p>
+    <h1>Planning Dashboard</h1>
+    <p class="meta">Calendar view of all planned outings & activities</p>
+  </header>
+
+  <div class="section">
+    <div class="calendar-container">
+      <h2 class="calendar-title">Upcoming Events</h2>
+
+      <div class="calendar-grid">
+        <!-- Event 1: Sunset State Beach -->
+        <div class="calendar-event">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-month">April</span>
+              <span class="event-day">24</span>
+              <span class="event-year">2026</span>
+            </div>
+            <div class="event-type">Overnight</div>
+          </div>
+          <div class="event-body">
+            <h3 class="event-name">Sunset State Beach</h3>
+            <p class="event-location">Santa Cruz County, CA</p>
+            <p class="event-desc">Coastal camping experience with beach exploration and bonfire activities.</p>
+            <a href="#" class="event-btn">View Details →</a>
+          </div>
+        </div>
+
+        <!-- Event 2: 50-Miler Prep -->
+        <div class="calendar-event">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-month">May</span>
+              <span class="event-day">08</span>
+              <span class="event-year">2026</span>
+            </div>
+            <div class="event-type">Backpacking</div>
+          </div>
+          <div class="event-body">
+            <h3 class="event-name">50-Miler Prep — La Honda</h3>
+            <p class="event-location">La Honda Area, CA</p>
+            <p class="event-desc">Intensive training hike preparing scouts for the High Sierra 50-miler challenge.</p>
+            <a href="T222_2026_50Miler.html#prep-hikes" class="event-btn">View Details →</a>
+          </div>
+        </div>
+
+        <!-- Event 3: Angel Island -->
+        <div class="calendar-event">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-month">May</span>
+              <span class="event-day">23</span>
+              <span class="event-year">2026</span>
+            </div>
+            <div class="event-type">Overnight</div>
+          </div>
+          <div class="event-body">
+            <h3 class="event-name">Angel Island Camping</h3>
+            <p class="event-location">SF Bay, CA</p>
+            <p class="event-desc">Island camping adventure with historical exploration and water-based activities.</p>
+            <a href="#" class="event-btn">View Details →</a>
+          </div>
+        </div>
+
+        <!-- Event 4: Camp Hi-Sierra -->
+        <div class="calendar-event">
+          <div class="event-header">
+            <div class="event-date">
+              <span class="event-month">July</span>
+              <span class="event-day">12</span>
+              <span class="event-year">2026</span>
+            </div>
+            <div class="event-type">Summer Camp</div>
+          </div>
+          <div class="event-body">
+            <h3 class="event-name">Camp Hi-Sierra</h3>
+            <p class="event-location">Long Barn, CA</p>
+            <p class="event-desc">Week-long summer camp featuring leadership training, skill-building, and high-adventure activities.</p>
+            <a href="#" class="event-btn">View Details →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot leg-backpack"></div>
+          <span class="legend-label">Backpacking</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot leg-prep"></div>
+          <span class="legend-label">Prep Hikes</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot leg-summer"></div>
+          <span class="legend-label">Summer Camp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2>Navigation Hub</h2>
+      <p>Access key resources and planning tools</p>
+    </div>
+
+    <div class="quick-links">
+      <!-- Link 1: Planning Hub -->
+      <div class="quick-link-card">
+        <span class="quick-link-icon">📋</span>
+        <h3 class="quick-link-title">Planning Hub</h3>
+        <p class="quick-link-desc">Manage permits, reservations, health forms, transportation, and logistics for all trips.</p>
+        <a href="Planning_Hub.html" class="btn-primary">Open Hub →</a>
+      </div>
+
+      <!-- Link 2: Outings Catalog -->
+      <div class="quick-link-card">
+        <span class="quick-link-icon">🗺️</span>
+        <h3 class="quick-link-title">Destination Catalog</h3>
+        <p class="quick-link-desc">Explore 35+ historical outing locations with booking mechanics, reservations, and availability info.</p>
+        <a href="Outings.html" class="btn-primary">Browse Catalog →</a>
+      </div>
+
+      <!-- Link 3: Explore New Destinations -->
+      <div class="quick-link-card">
+        <span class="quick-link-icon">🌲</span>
+        <h3 class="quick-link-title">Explore New Places</h3>
+        <p class="quick-link-desc">Research unexplored destinations, discover new activity ideas, and brainstorm future adventure concepts.</p>
+        <a href="Exploration_Ideas.html" class="btn-primary">Explore Ideas →</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-brand">Troop 222</span>
+    <span class="footer-note">BSA · Pacific Skyline Council · Menlo Park</span>
+  </footer>
+</div>
+
+</body>
+</html>
