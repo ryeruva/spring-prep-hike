@@ -331,7 +331,6 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;display
   <button class="nav-btn" data-tab="locations">Locations</button>
   <button class="nav-btn" data-tab="highlights">Year Highlights</button>
   <button class="nav-btn" data-tab="calendar">Calendar</button>
-  <button class="nav-btn" data-tab="map">Map View</button>
 </nav>
 
 <!-- ══ OVERVIEW ══ -->
@@ -352,6 +351,7 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;display
   <div class="chart-row full">
     <div class="chart-box"><h3>Outing Mix Over Time</h3><div class="sub">How outing types have evolved year over year</div><div class="chart-wrap h280"><canvas id="c-stacked"></canvas></div></div>
   </div>
+  <div class="chart-box" style="margin-top:2rem"><h3>Most Visited Locations</h3><div class="sub">Repeat visits = strong T222 traditions</div><div class="chart-wrap h300" style="height:300px"><canvas id="c-locbar"></canvas></div></div>
 </div>
 
 <!-- ══ TYPES ══ -->
@@ -423,9 +423,20 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;display
     <button class="filter-btn" data-f="High Adventure">High Adventure</button>
     <button class="filter-btn" data-f="Summer">Summer Camp</button>
   </div>
-  <div class="chart-box" style="margin-bottom:1.5rem"><h3>Most Visited Locations</h3><div class="sub">Repeat visits = strong T222 traditions</div><div class="chart-wrap h300" style="height:300px"><canvas id="c-locbar"></canvas></div></div>
-  <div class="chart-box"><h3>Full Directory</h3><div class="sub" style="margin-bottom:1rem">All unique locations visited by T222</div>
+  <div class="chart-box" style="margin-bottom:1.5rem"><h3>Full Directory</h3><div class="sub" style="margin-bottom:1rem">All unique locations visited by T222</div>
     <table class="loc-table"><thead><tr><th>#</th><th>Location</th><th>Type</th><th>Visits</th><th>Last</th></tr></thead><tbody id="loc-body"></tbody></table>
+  </div>
+  <div class="chart-box">
+    <h3>Where We've Gone</h3>
+    <div class="sub" style="margin-bottom:1.2rem">Every T222 location plotted on the map. Click any marker for visit history and booking info.</div>
+        <div class="map-wrap" id="map-container"></div>
+    <div class="map-legend">
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#7C9070"></div>Day Outing</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#4A7C9A"></div>Overnight / Car Camp</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#6A8A40"></div>Backpacking</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#C8A028"></div>Summer Camp</div>
+      <div class="map-legend-item"><div class="map-legend-dot" style="background:#C84820"></div>High Adventure</div>
+    </div>
   </div>
 </div>
 
@@ -494,28 +505,6 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;display
 </footer>
 
 
-<!-- ══ MAP VIEW ══ -->
-<div id="tab-map" class="section">
-  <p class="section-label">Locations Mapped</p>
-  <h2>Where We've Gone</h2>
-  <p style="font-family:'Spectral',serif;font-style:italic;color:var(--bark);font-size:.88rem;margin-bottom:1.2rem">Every T222 location plotted on the map. Click any marker for visit history and booking info.</p>
-  <div class="map-filter-row" id="map-filters">
-    <button class="filter-btn on" data-mf="all">All</button>
-    <button class="filter-btn" data-mf="Overnight Backpacking">Backpacking</button>
-    <button class="filter-btn" data-mf="Overnight Outing">Car Camping</button>
-    <button class="filter-btn" data-mf="Day Outing">Day Outings</button>
-    <button class="filter-btn" data-mf="High Adventure">High Adventure</button>
-    <button class="filter-btn" data-mf="Summer Camp">Summer Camp</button>
-  </div>
-  <div class="map-wrap" id="map-container"></div>
-  <div class="map-legend">
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#7C9070"></div>Day Outing</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#4A7C9A"></div>Overnight / Car Camp</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#6A8A40"></div>Backpacking</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#C8A028"></div>Summer Camp</div>
-    <div class="map-legend-item"><div class="map-legend-dot" style="background:#C84820"></div>High Adventure</div>
-  </div>
-</div>
 
 </div><!-- .page -->
 
@@ -641,7 +630,7 @@ document.getElementById('loc-filters').addEventListener('click',e=>{
   const btn=e.target.closest('.filter-btn');if(!btn)return;
   locFilter=btn.dataset.f;
   document.querySelectorAll('#loc-filters .filter-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');renderLocs();
+  btn.classList.add('on');renderLocs();renderMapMarkers(locFilter);
 });
 const topLocs=[...LOCS].sort((a,b)=>b.v-a.v).slice(0,12);
 new Chart(document.getElementById('c-locbar'),{type:'bar',data:{labels:topLocs.map(l=>l.n.length>24?l.n.slice(0,24)+'\u2026':l.n),datasets:[{data:topLocs.map(l=>l.v),backgroundColor:topLocs.map(l=>l.t==='High Adventure'?'rgba(200,72,32,.75)':l.t==='Summer Camp'?'rgba(200,160,40,.75)':l.t==='Backpacking'?'rgba(74,124,154,.75)':'rgba(124,144,112,.75)'),borderRadius:2}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:C.grid},ticks:{color:C.tick,font:tFont},beginAtZero:true},y:{grid:{display:false},ticks:{color:'#3D332A',font:{family:"'DM Mono',monospace",size:10}}}}}});
@@ -931,10 +920,10 @@ const YEAR_DETAIL = {
     {y:'2023',c:20,txt:'<strong>Florida Sea Base Coral Reef Sailing</strong> + <strong>National Jamboree</strong> in the same year. First Sea Base adventure. Three May outings including Henry Coe backpacking.'},
     {y:'2024',c:16,txt:'<strong>Northern Tier High Adventure</strong> returns (Ely, MN). Heaviest backpacking year: 6 backcountry trips. 50-Miler planning begins.'},
     {y:'2025',c:13,txt:'<strong>Philmont 2025</strong> (sold out). Desolation Wilderness 20-mile advanced route. Troop shifts decisively to backpacking: 7 backcountry trips, only 1 day outing.'},
-    {y:'2026',c:10,txt:'<strong>High Sierra 50-Miler</strong> planned July. Sea Base 2027 confirmed. Angel Island and Sunset State Beach added. Sep–Nov gaps filled per historical patterns.'},
+    {y:'2026',c:10,txt:'<strong><a href="High_Sierra_Itinerary.html" style="color:inherit;text-decoration:underline;">High Sierra 50-Miler</a></strong> planned July. Sea Base 2027 confirmed. Angel Island and Sunset State Beach added. Sep–Nov gaps filled per historical patterns.'},
   ];
 
-  HIGHLIGHTS_DATA.forEach(h => {
+  [...HIGHLIGHTS_DATA].reverse().forEach(h => {
     const d = YEAR_DETAIL[h.y];
     const div = document.createElement('div');
     div.className = 'tl-item';
@@ -1053,7 +1042,14 @@ function renderMapMarkers(filter) {
   mapMarkers.forEach(m => leafletMap.removeLayer(m));
   mapMarkers = [];
 
-  const filtered = filter === 'all' ? MAP_LOCS : MAP_LOCS.filter(l => l.type === filter);
+    const filtered = filter === 'all' ? MAP_LOCS : MAP_LOCS.filter(l => {
+    if(filter === 'Backpacking') return l.type.includes('Backpacking');
+    if(filter === 'Overnight') return l.type === 'Overnight Outing';
+    if(filter === 'Day') return l.type === 'Day Outing';
+    if(filter === 'Summer') return l.type === 'Summer Camp';
+    if(filter === 'High Adventure') return l.type === 'High Adventure';
+    return l.type.includes(filter);
+  });
 
   filtered.forEach(loc => {
     const color = TYPE_COLOR_MAP[loc.type] || '#7C9070';
@@ -1081,16 +1077,6 @@ function renderMapMarkers(filter) {
   });
 }
 
-document.getElementById('map-filters').addEventListener('click', e => {
-  const btn = e.target.closest('.filter-btn');
-  if (!btn) return;
-  const f = btn.dataset.mf;
-  document.querySelectorAll('#map-filters .filter-btn').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  renderMapMarkers(f);
-});
-
-
 // ── TABS ──
 document.getElementById('main-nav').addEventListener('click',e=>{
   const btn=e.target.closest('.nav-btn');if(!btn)return;
@@ -1098,7 +1084,7 @@ document.getElementById('main-nav').addEventListener('click',e=>{
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
   btn.classList.add('active');
-  if(btn.dataset.tab==='map'){setTimeout(()=>{initMap();if(leafletMap)leafletMap.invalidateSize();},50);}
+  if(btn.dataset.tab==='locations'){setTimeout(()=>{initMap();if(leafletMap)leafletMap.invalidateSize();},50);}
 });
 </script>
 </body>
