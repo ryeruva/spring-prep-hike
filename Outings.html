@@ -28,8 +28,8 @@ body::before{
 
 /* ── HERO ── */
 .hero{
-  min-height:80vh;display:flex;flex-direction:column;justify-content:flex-end;
-  padding:3rem 0 3.5rem;position:relative;overflow:hidden;
+  min-height:auto;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:2rem 0 1.5rem;position:relative;overflow:hidden;
 }
 .hero-bg{position:absolute;inset:0;z-index:-1;background:linear-gradient(175deg,#1A2830 0%,#2D4030 30%,#3D5040 60%,var(--bg) 100%);}
 .hero-topo{
@@ -325,6 +325,7 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;display
 
 <!-- NAV -->
 <nav class="nav" id="main-nav">
+  <a href="T222_2026_50Miler.html" class="nav-btn" style="text-decoration:none;">← Home</a>
   <button class="nav-btn active" data-tab="overview">Overview</button>
   <button class="nav-btn" data-tab="types">Outing Types</button>
   <button class="nav-btn" data-tab="monthly">Monthly Patterns</button>
@@ -346,7 +347,26 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;display
   </div>
   <div class="chart-row">
     <div class="chart-box"><h3>Outings per Year</h3><div class="sub">2017–2026 · 2026 is partial</div><div class="chart-wrap h240"><canvas id="c-yearly"></canvas></div></div>
-    <div class="chart-box"><h3>Type Breakdown</h3><div class="sub">All 161 outings by category</div><div class="chart-wrap h240"><canvas id="c-donut"></canvas></div></div>
+    <div class="chart-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.2rem">
+        <h3 style="margin-bottom:0">Type Breakdown</h3>
+        <select id="donut-year" style="background:var(--cream);border:1px solid var(--border);border-radius:2px;padding:2px 6px;color:var(--bark);font-family:'DM Mono',monospace;font-size:.65rem;outline:none;cursor:pointer;">
+          <option value="all">All Years</option>
+          <option value="2017">2017</option>
+          <option value="2018">2018</option>
+          <option value="2019">2019</option>
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+          <option value="2024">2024</option>
+          <option value="2025">2025</option>
+          <option value="2026">2026</option>
+        </select>
+      </div>
+      <div class="sub" id="donut-sub">All 161 outings by category</div>
+      <div class="chart-wrap h240"><canvas id="c-donut"></canvas></div>
+    </div>
   </div>
   <div class="chart-row full">
     <div class="chart-box"><h3>Outing Mix Over Time</h3><div class="sub">How outing types have evolved year over year</div><div class="chart-wrap h280"><canvas id="c-stacked"></canvas></div></div>
@@ -394,9 +414,8 @@ footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;display
 <div id="tab-monthly" class="section">
   <p class="section-label">Seasonal Rhythms</p>
   <h2>Monthly Patterns</h2>
-  <div class="chart-row">
+  <div class="chart-row full">
     <div class="chart-box"><h3>Avg Outings per Month</h3><div class="sub">Based on 2017–2026 data</div><div class="chart-wrap h260"><canvas id="c-mavg"></canvas></div></div>
-    <div class="chart-box"><h3>Total Outings per Month</h3><div class="sub">All years combined</div><div class="chart-wrap h260"><canvas id="c-mtotal"></canvas></div></div>
   </div>
   <div class="chart-box">
     <h3>Heatmap — Outings per Month × Year</h3><div class="sub">Hover any cell to see which trips · Darker green = more outings</div>
@@ -535,7 +554,20 @@ function mc(id,type,labels,datasets,extra={}){
 
 // ── OVERVIEW ──
 mc('c-yearly','bar',YEARS,[{data:yTotal,backgroundColor:YEARS.map((_,i)=>i===9?'rgba(124,144,112,.4)':'rgba(124,144,112,.8)'),borderColor:YEARS.map((_,i)=>i===9?C.sage:'#5a7050'),borderWidth:1,borderRadius:2}]);
-new Chart(document.getElementById('c-donut'),{type:'doughnut',data:{labels:['Day Outings','Overnight/Car Camp','Backpacking','Summer Camp','High Adventure'],datasets:[{data:[63,43,34,9,12],backgroundColor:['#7C9070','#4A7C9A','#8A9A50','#C8A028','#C84820'],borderColor:['#F5EDD8'],borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:true,position:'right',labels:{color:C.tick,font:{family:"'DM Mono',monospace",size:10},boxWidth:10,padding:10}}}}});
+const donutChart = new Chart(document.getElementById('c-donut'),{type:'doughnut',data:{labels:['Day Outings','Overnight/Car Camp','Backpacking','Summer Camp','High Adventure'],datasets:[{data:[63,43,34,9,12],backgroundColor:['#7C9070','#4A7C9A','#8A9A50','#C8A028','#C84820'],borderColor:['#F5EDD8'],borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:true,position:'right',labels:{color:C.tick,font:{family:"'DM Mono',monospace",size:10},boxWidth:10,padding:10}}}}});
+document.getElementById('donut-year').addEventListener('change', (e) => {
+  const val = e.target.value;
+  if (val === 'all') {
+    donutChart.data.datasets[0].data = [63, 43, 34, 9, 12];
+    document.getElementById('donut-sub').textContent = 'All 161 outings by category';
+  } else {
+    const idx = YEARS.indexOf(val);
+    const dDay = yDay[idx], dCamp = yCamp[idx], dAdv = yAdv[idx], dBP = yBP[idx], dON = yON[idx] - yBP[idx];
+    donutChart.data.datasets[0].data = [dDay, dON, dBP, dCamp, dAdv];
+    document.getElementById('donut-sub').textContent = `${dDay+dCamp+dAdv+dBP+dON} outings in ${val}`;
+  }
+  donutChart.update();
+});
 mc('c-stacked','bar',YEARS,[
   {label:'Day',data:yDay,backgroundColor:'rgba(124,144,112,.85)',borderRadius:2},
   {label:'Overnight',data:yON.map((v,i)=>v-yBP[i]),backgroundColor:'rgba(74,124,154,.85)',borderRadius:2},
@@ -553,7 +585,6 @@ mc('c-bppct','line',YEARS,[{data:yBP.map((v,i)=>yON[i]>0?Math.round(v/yON[i]*100
 const mTotals=mData.map(r=>r.reduce((a,b)=>a+b,0));
 const mAvgs=mTotals.map(t=>parseFloat((t/10).toFixed(1)));
 mc('c-mavg','bar',MONTHS,[{data:mAvgs,backgroundColor:mAvgs.map(v=>v>=2?'rgba(74,124,154,.8)':v>=1.5?'rgba(124,144,112,.8)':v>=1?'rgba(124,144,112,.5)':'rgba(100,80,50,.15)'),borderRadius:2}]);
-mc('c-mtotal','bar',MONTHS,[{data:mTotals,backgroundColor:'rgba(124,144,112,.75)',borderColor:'#5a7050',borderWidth:1,borderRadius:2}]);
 
 // ── HEATMAP ──
 const TRIPS={'2017-Jan':['Half Moon Bay State Park'],'2017-Feb':['Point Reyes \u2013 Wildcat Camp'],'2017-Mar':['Snow Camping \u2013 Yosemite','Kayaking \u2013 Tomales Bay'],'2017-Apr':['Camporee \u2013 Cutter Scout Reservation'],'2017-Jun':['River Rafting \u2013 Cache Creek'],'2017-Jul':['Summer Camp \u2013 Camp Oljato','National Jamboree \u2013 WV','YNP Hetch Hetchy Loop'],'2017-Sep':['Camp Cutter Overnight'],'2017-Oct':['May Lake Backpacking'],'2017-Dec':['Memorial Park Campout'],'2018-Jan':['Ski Trip \u2013 Squaw Valley','Rock Climbing \u2013 Planet Granite'],'2018-Feb':['Overnight Rock Climbing \u2013 Davis'],'2018-Mar':['Point Reyes Kayak Campout'],'2018-Apr':['All-District Camporee','Urban Hike SF','Cycling Outing'],'2018-May':['Henry Coe SP Backpack Trip','Shotgun & Rifle Practice'],'2018-Jul':['Windy Hill Hike (Camp Prep)','Summer Camp \u2013 Camp Wente','Mount Whitney 50-Miler'],'2018-Aug':['Cache Creek Whitewater Rafting'],'2018-Sep':['Cooking MB & Advancement Campout'],'2018-Oct':['May Lake / Mt. Hoffman'],'2018-Nov':['Council TTFC Campout'],'2018-Dec':['Pinnacles Day Hike'],'2019-Jan':['Ski Trip \u2013 Squaw Valley'],'2019-Feb':['Indoor Rock Climbing \u2013 Planet Granite'],'2019-Mar':['Boulder Creek Camp Out','PacSky Camporee'],'2019-Apr':['OA Spring Ordeal'],'2019-May':['Windy Hill Philmont Prep Hike','Butano Overnight Camping'],'2019-Jun':['Summer Camp \u2013 John C. Mensinger'],'2019-Jul':['Philmont 2019'],'2019-Aug':['Cache Creek Rafting'],'2019-Sep':['Gold Country Camping'],'2019-Oct':['Black Diamond Mines Backpacking'],'2019-Nov':['Trail to First Class Campout','K-1 Speed'],'2020-Jan':['Ski Trip \u2013 Squaw Valley'],'2020-Feb':['Camping MB Overnight','Ropes Course \u2013 Mt. Hermon','Cycling & Camping \u2013 Coyote Lake','Point Reyes Backpacking'],'2020-Mar':['TTFC Spring Campout'],'2020-Jul':['Bayfront Trail Bike Ride','Virtual Camporee II'],'2020-Aug':['Purisima Creek Redwoods Hike','Overnight Camping (Magruder)','Rancho San Antonio Hike','Alex Waitz Campout'],'2020-Sep':['Virtual Campout \u2013 Waitz House','Tour de Menlo Bike Ride','May Lake Backpacking'],'2020-Oct':['Urban Hike \u2013 Chinatown SF','Overnight Campout (Magruders)','Livermore Camping'],'2020-Nov':['Bike Outing','Boulder Creek Conservation Project','Local Campout'],'2021-Feb':['NT Crew Kayaking \u2013 Elkhorn Slough'],'2021-Mar':['Edgewood Park Hike'],'2021-Apr':['SF Urban Hike'],'2021-May':['Director\u2019s Cabin \u2013 Boulder Creek','Cycling MB \u2013 50 Mile Ride'],'2021-Jun':['Pinnacles Camping'],'2021-Jul':['Half Moon Bay Camping','Northern Tier Trek \u2013 Boundary Waters','Summer Camp \u2013 Camp Chawanakee'],'2021-Sep':['Memorial Park Overnight'],'2021-Oct':['Gold Country Camping','Elkhorn Slough Kayaking'],'2021-Nov':['Camping \u2013 Boulder Creek','Indoor Overnight Rock Climbing'],'2021-Dec':['K-1 Speed','Black Diamond Mines Campout'],'2022-Jan':['Ski & Snowboard Trip \u2013 Squaw Valley','Urban Hike \u2013 Chinatown SF','Wunderlich Park Hike'],'2022-Feb':['Philmont Prep Hike #2 \u2013 Corte de Madera'],'2022-Mar':['High Meadow Trail Loop Hike','Philmont Prep Hike #3 \u2013 Windy Hill'],'2022-Apr':['Star Gazing / Mt. Hamilton Campout'],'2022-May':['American River Rafting'],'2022-Jun':['Philmont Backpacking \u2013 Portola Redwoods','Philmont Backpacking \u2013 Castle Rock','Summer Camp \u2013 Camp Wente'],'2022-Jul':['NYLT 2022','Philmont 2022'],'2022-Aug':['Bedwell Bayfront Clean-up'],'2022-Sep':['Huddart Park Hiking'],'2022-Oct':['Urban Hike \u2013 San Francisco','Overnight \u2013 New Brighton State Beach','OA Fall Ordeal','Kayaking \u2013 Elkhorn Slough'],'2022-Nov':['Gold Country Camping / Moaning Caverns'],'2022-Dec':['K-1 Speed'],'2023-Jan':['Corte Madera Hike','Shooting Sports'],'2023-Feb':['Coyote Lake Campout'],'2023-Mar':['Astronomy / Star Gazing \u2013 Mt. Hamilton','Coyote Lake Harvey Bear Ranch Campout'],'2023-Apr':['Mt. Diablo Hike','Pinnacles Camping'],'2023-May':['Whitewater Rafting \u2013 American River','San Bruno Mountain Hike','Backpacking \u2013 Henry Coe'],'2023-Jul':['Florida Sea Base \u2013 Coral Reef Sailing','BSA National Jamboree \u2013 WV','Summer Camp \u2013 Camp Marin-Sierra'],'2023-Sep':['California Coastal Cleanup Day'],'2023-Oct':['Yosemite Camping w/ Pack 565','Santa Cruz Beach Boardwalk Overnight','Canoe Skills \u2013 Pine Mountain Lake'],'2023-Nov':['Urban Hike \u2013 Golden Gate Bridge','Boulder Creek Campout'],'2023-Dec':['Hike Windy Hill'],'2024-Jan':['Coyote Lake Car Camping','Foothills Nature Reserve Hike'],'2024-Mar':['Shoreline Lake Canoeing','Henry Coe Backpacking'],'2024-Apr':['Star Gazing / Mt. Hamilton Campout','Black Diamond Mines Camping'],'2024-May':['Caswell Memorial State Park Campout'],'2024-Jul':['Northern Tier High Adventure \u2013 MN','Summer Camp \u2013 Camp Oljato'],'2024-Sep':['Arroyo Seco Car Camping \u2013 Los Padres NF','Gold Country Car Camping'],'2024-Oct':['Rock Climbing \u2013 Castle Rock','May Lake Backpacking Trip','Marshall Beach Tomales Bay Canoe-in','Big Sur Camping & Wilderness Skills'],'2024-Nov':['Backpacking \u2013 Henry Coe'],'2025-Jan':['Ski & Snowboard Trip \u2013 Northstar'],'2025-Feb':['Point Reyes Wildcat Camp Backpacking','Purisima Creek Redwoods Hike'],'2025-Mar':['Santa Cruz Beach Boardwalk Overnight'],'2025-May':['Pinnacles Overnight','Philmont Backpacking Prep \u2013 Castle Rock','Big Sur Backpacking Trip'],'2025-Jul':['Philmont 2025','Summer Camp \u2013 Camp Wente'],'2025-Sep':['Sam McDonald Park Overnight'],'2025-Oct':['Desolation Wilderness Advanced Backpacking','Black Mountain Backpacking'],'2025-Dec':['Memorial Park Car Camping'],'2026-Jan':['Ski & Snowboard Trip \u2013 Northstar'],'2026-Feb':['Point Reyes Backpacking (50-Miler Prep)'],'2026-Mar':['Black Diamond Mines Backpacking'],'2026-Apr':['50-Miler Prep \u2013 Ohlone Wilderness','50-Miler Prep \u2013 Big Sur','Sunset State Beach Camping'],'2026-May':['50-Miler Prep \u2013 La Honda','Angel Island Camping'],'2026-Jul':['Camp Hi-Sierra','High Sierra 50-Miler']};
