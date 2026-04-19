@@ -3,293 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Troop T222 · Outing Insights</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+<title>Troop 222 — Outing Insights</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Spectral:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --ink:#1A1410;--stone:#3D332A;--bark:#6B5040;--sand:#C4A882;--cream:#F5EDD8;
   --sage:#7C9070;--sky:#4A7C9A;--gold:#C8A028;--ember:#C84820;--bg:#F0E8D5;
+  --border:rgba(100,80,50,.18);
 }
-body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(100,80,50,.05) 40px),
-  repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(100,80,50,.03) 40px);
-  background-size:40px 40px}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Spectral',Georgia,serif;overflow-x:hidden;font-size:15px;line-height:1.7}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(100,80,50,.06) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(100,80,50,.04) 40px);
+  background-size:40px 40px;
+}
+.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 1.5rem 5rem}
 
-nav{background:var(--ink);padding:.55rem 1.5rem;font-family:'DM Mono',monospace;font-size:.68rem;
-  letter-spacing:.1em;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
-  position:sticky;top:0;z-index:100}
-nav a{color:var(--sand);text-decoration:none;text-transform:uppercase;transition:color .15s}
-nav a:hover{color:var(--gold)}
-nav a.home{color:var(--gold);font-weight:500}
-nav .sep{color:var(--stone);font-size:.5rem}
-nav .current{color:var(--bark);text-transform:uppercase}
+/* ── HERO ── */
+.hero{
+  min-height:80vh;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:3rem 0 3.5rem;position:relative;overflow:hidden;
+}
+.hero-bg{position:absolute;inset:0;z-index:-1;background:linear-gradient(175deg,#1A2830 0%,#2D4030 30%,#3D5040 60%,var(--bg) 100%);}
+.hero-topo{
+  position:absolute;inset:0;z-index:0;opacity:.1;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cellipse cx='200' cy='200' rx='180' ry='120' fill='none' stroke='%23fff' stroke-width='1'/%3E%3Cellipse cx='200' cy='200' rx='150' ry='95' fill='none' stroke='%23fff' stroke-width='1'/%3E%3Cellipse cx='200' cy='200' rx='120' ry='70' fill='none' stroke='%23fff' stroke-width='1'/%3E%3Cellipse cx='200' cy='200' rx='90' ry='48' fill='none' stroke='%23fff' stroke-width='1'/%3E%3Cellipse cx='200' cy='200' rx='60' ry='28' fill='none' stroke='%23fff' stroke-width='1'/%3E%3Cellipse cx='200' cy='200' rx='30' ry='12' fill='none' stroke='%23fff' stroke-width='1'/%3E%3C/svg%3E");
+  background-size:400px 400px;background-position:70% 40%;background-repeat:no-repeat;
+}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand);margin-bottom:1.2rem;opacity:.85;}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,11vw,8rem);line-height:.9;color:#fff;text-shadow:3px 4px 0 rgba(0,0,0,.25);margin-bottom:.6rem;animation:fadeUp .8s ease both;}
+.hero h1 span{color:var(--gold)}
+.hero-sub{font-family:'Spectral',serif;font-size:clamp(.95rem,2.5vw,1.2rem);color:var(--sand);font-style:italic;margin-bottom:2rem;opacity:.9;animation:fadeUp .8s .15s ease both;}
+.hero-stats{display:flex;flex-wrap:wrap;gap:2rem;margin-bottom:2.5rem;animation:fadeUp .8s .3s ease both;}
+.stat{border-left:2px solid var(--gold);padding-left:1rem}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:#fff;line-height:1}
+.stat-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.15em;color:var(--sand);text-transform:uppercase;margin-top:.2rem}
 
-.hero{position:relative;padding:56px 48px 48px;
-  background:linear-gradient(175deg,#1A2830 0%,#2D4030 30%,#3D5040 60%,var(--bg) 100%);
-  border-bottom:2px solid var(--gold);overflow:hidden}
-.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;
-  background:radial-gradient(circle,rgba(200,160,40,.12) 0%,transparent 70%);pointer-events:none}
-.hero::after{content:'T222';position:absolute;bottom:-20px;right:40px;
-  font-family:'Bebas Neue',sans-serif;font-size:180px;color:rgba(255,255,255,0.05);pointer-events:none;line-height:1}
-.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(200,160,40,.15);
-  border:1px solid rgba(200,160,40,.3);border-radius:100px;padding:5px 14px;
-  font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--sand);margin-bottom:20px}
-.badge span{width:6px;height:6px;background:var(--gold);border-radius:50%;display:inline-block}
-.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8vw,88px);line-height:.92;color:#fff;margin-bottom:16px}
-.hero h1 em{color:var(--gold);font-style:normal}
-.hero p{font-size:16px;color:var(--sand);max-width:520px;font-weight:300}
-.hero-stats{display:flex;gap:40px;margin-top:36px;flex-wrap:wrap}
-.hstat{display:flex;flex-direction:column;gap:2px}
-.hstat-n{font-family:'Bebas Neue',sans-serif;font-size:42px;color:#fff;line-height:1}
-.hstat-n em{color:var(--gold);font-style:normal}
-.hstat-l{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--sand);font-weight:500}
+/* ── NAV ── */
+.nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin:3.5rem 0 0;overflow-x:auto;scrollbar-width:none;}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{
+  font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:.8rem 1.2rem;border:none;background:transparent;color:var(--bark);
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;
+  transition:color .15s,border-color .15s;
+}
+.nav-btn:hover{color:var(--stone)}
+.nav-btn.active{color:var(--stone);border-bottom-color:var(--gold);font-weight:500}
 
-.nav-tabs{background:var(--ink);border-bottom:1px solid rgba(196,168,130,.15);
-  padding:0 48px;display:flex;overflow-x:auto;scrollbar-width:none}
-.nav-tabs::-webkit-scrollbar{display:none}
-.tab-btn{padding:14px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
-  letter-spacing:.04em;text-transform:uppercase;color:var(--sand);background:none;border:none;
-  border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .2s}
-.tab-btn:hover{color:var(--cream)}
-.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+/* ── SECTION LABEL ── */
+.section-label{
+  font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--bark);margin-bottom:.5rem;display:flex;align-items:center;gap:.75rem;
+}
+.section-label::before{content:'';flex:none;width:32px;height:1px;background:var(--bark)}
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,6vw,3rem);color:var(--stone);line-height:1;margin-bottom:1.5rem;}
 
-.main{position:relative;z-index:1;padding:40px 48px;max-width:1200px}
-.section{display:none}
+/* ── SECTIONS ── */
+.section{display:none;padding:3rem 0}
 .section.active{display:block}
 
-.sec-header{margin-bottom:28px}
-.sec-header h2{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--stone);letter-spacing:.02em}
-.sec-header p{font-size:14px;color:var(--bark);margin-top:4px;font-weight:300}
+/* ── STAT CARDS ── */
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:2.5rem}
+.stat-card{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:1.2rem;border-left:3px solid var(--gold)}
+.stat-card-n{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--stone);line-height:1}
+.stat-card-n.sage{color:var(--sage)} .stat-card-n.sky{color:var(--sky)} .stat-card-n.ember{color:var(--ember)} .stat-card-n.gold{color:var(--gold)}
+.stat-card-l{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bark);margin-top:.3rem}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:36px}
-.card{background:#fff;border:1px solid rgba(100,80,50,.18);border-radius:4px;padding:20px;transition:border-color .2s,box-shadow .2s}
-.card:hover{border-color:var(--sand);box-shadow:0 4px 16px rgba(0,0,0,.08)}
-.card-n{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--stone);line-height:1}
-.card-n.amber{color:var(--ember)} .card-n.ember{color:var(--ember)} .card-n.sky{color:var(--sky)} .card-n.fern{color:var(--sage)}
-.card-l{font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--bark);margin-top:4px;font-weight:500}
-
-.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+/* ── CHART BOXES ── */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
 .chart-row.full{grid-template-columns:1fr}
-.chart-box{background:#fff;border:1px solid rgba(100,80,50,.15);border-radius:4px;padding:24px}
-.chart-box h3{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--stone);letter-spacing:.05em;margin-bottom:4px}
-.chart-box .sub{font-size:12px;color:var(--bark);margin-bottom:18px;font-weight:300}
+.chart-box{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:1.5rem}
+.chart-box h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--stone);letter-spacing:.03em;margin-bottom:.2rem}
+.chart-box .sub{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark);margin-bottom:1.2rem}
 .chart-wrap{position:relative;width:100%}
-.chart-wrap.h240{height:240px} .chart-wrap.h260{height:260px} .chart-wrap.h280{height:280px} .chart-wrap.h320{height:320px}
+.h200{height:200px} .h240{height:240px} .h260{height:260px} .h280{height:280px} .h300{height:300px}
 
-/* Heatmap */
-.heatmap{width:100%;overflow-x:auto}
-.heatmap table{border-collapse:collapse;width:100%;min-width:580px;font-size:11px}
-.heatmap th{padding:6px 8px;text-align:center;color:var(--bark);font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:500}
+/* ── HEATMAP ── */
+.heatmap{overflow-x:auto}
+.heatmap table{border-collapse:collapse;width:100%;min-width:560px;font-size:.7rem}
+.heatmap th{padding:5px 7px;text-align:center;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark)}
 .heatmap th.left{text-align:left;padding-left:0}
-.heatmap td{padding:5px 8px;text-align:center;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;min-width:36px}
-.heatmap td.ml{text-align:left;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--bark);padding-left:0;padding-right:12px}
-.heatmap td.tc{font-weight:600;color:var(--gold);font-family:'DM Mono',monospace}
-.h0{color:rgba(100,80,50,.3)}
+.heatmap td{padding:5px 7px;text-align:center;border-radius:3px;font-family:'DM Mono',monospace;font-size:.68rem;min-width:34px}
+.heatmap td.ml{text-align:left;font-family:'DM Mono',monospace;font-size:.7rem;font-weight:500;color:var(--bark);padding-left:0;padding-right:10px}
+.heatmap td.tc{font-weight:600;color:var(--stone)}
+.h0{color:rgba(100,80,50,.25)}
 .h1{background:rgba(124,144,112,.2);color:var(--sage)}
-.h2{background:rgba(124,144,112,.4);color:#4a6040}
-.h3{background:rgba(124,144,112,.65);color:#2e4028}
-.h4{background:rgba(124,144,112,.9);color:var(--cream);font-weight:700}
+.h2{background:rgba(124,144,112,.45);color:#3a5a30}
+.h3{background:rgba(124,144,112,.7);color:#1a3a10}
+.h4{background:rgba(74,124,89,.9);color:#fff;font-weight:700}
 
-/* Location table */
-.loc-table{width:100%;border-collapse:collapse}
-.loc-table th{text-align:left;padding:10px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--bark);font-weight:500;border-bottom:1px solid rgba(100,80,50,.15)}
-.loc-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid rgba(100,80,50,.08);color:var(--stone)}
-.loc-table tr:hover td{background:rgba(100,80,50,.04)}
-.loc-table td.loc-name{font-weight:500}
-.loc-table td.loc-count{font-family:'DM Mono',monospace;color:var(--gold);font-weight:600}
-.loc-table td.loc-last{color:var(--bark);font-size:12px}
-.loc-tag{display:inline-block;padding:2px 8px;border-radius:2px;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-left:4px}
-.tag-day{background:rgba(124,144,112,.18);color:var(--sage)}
-.tag-bp{background:rgba(74,124,154,.2);color:var(--sky)}
-.tag-camp{background:rgba(200,160,40,.2);color:#7a5800}
-.tag-adv{background:rgba(200,72,32,.15);color:var(--ember)}
-
-/* Bar meters */
-.bar-meter{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.bm-label{font-size:12px;color:var(--stone);min-width:200px}
-.bm-track{flex:1;height:8px;background:rgba(100,80,50,.1);border-radius:4px;overflow:hidden}
-.bm-fill{height:100%;border-radius:4px}
-.bm-val{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);min-width:28px;text-align:right}
-
-/* Filters */
-.filter-row{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
-.filter-btn{padding:6px 14px;border-radius:2px;font-size:12px;font-weight:500;border:1px solid rgba(100,80,50,.2);background:transparent;color:var(--bark);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
-.filter-btn:hover{border-color:var(--bark);color:var(--stone)}
-.filter-btn.on{background:var(--stone);border-color:var(--stone);color:var(--cream);font-weight:600}
-
-/* Timeline */
-.timeline{position:relative;padding-left:20px}
-.timeline::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:rgba(100,80,50,.2)}
-.tl-item{position:relative;margin-bottom:20px;padding-left:20px}
-.tl-item::before{content:'';position:absolute;left:-24px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
-.tl-year{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--stone);letter-spacing:.05em}
-.tl-highlight{font-size:13px;color:var(--stone);margin-top:2px;font-weight:300;line-height:1.6}
-.tl-highlight strong{color:var(--ember);font-weight:500}
-.tl-expand-btn{font-family:'DM Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--sky);background:none;border:1px solid rgba(74,124,154,.3);border-radius:3px;
-  padding:2px 8px;cursor:pointer;margin-left:10px;vertical-align:middle;transition:all .15s}
-.tl-expand-btn:hover{background:rgba(74,124,154,.1);border-color:var(--sky)}
-.tl-events{display:none;margin-top:14px;padding-top:12px;border-top:1px solid rgba(100,80,50,.12)}
-.tl-events.open{display:block}
-.tl-month-group{margin-bottom:12px}
-.tl-month-label{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;
-  color:var(--bark);font-weight:500;margin-bottom:5px}
-.tl-event-item{display:flex;align-items:baseline;gap:8px;padding:3px 0;font-size:12px;color:var(--stone);
-  border-bottom:1px solid rgba(100,80,50,.06)}
-.tl-event-item:last-child{border-bottom:none}
-.tl-event-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:3px}
-.tl-event-name{flex:1;font-weight:400}
-.tl-event-type{font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.06em;opacity:.65}
-.dot-day{background:#4a7c59}.dot-overnight{background:#2e6b9e}.dot-backpack{background:#4a9ed4}
-.dot-camp{background:#c8872a}.dot-adventure{background:#d94f2e}
-
-/* Camp cards */
-.camp-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-.camp-card{background:rgba(200,160,40,.1);border:1px solid rgba(200,160,40,.3);border-radius:4px;padding:12px 16px}
-.camp-card-label{font-size:11px;color:#7a5800;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-.camp-card-years{font-size:24px;font-family:'Bebas Neue',sans-serif;color:var(--stone)}
-
-/* Calendar */
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.cal-nav h3{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--stone);letter-spacing:.05em}
-.cal-nav-btn{background:rgba(100,80,50,.08);border:1px solid rgba(100,80,50,.2);color:var(--bark);font-size:18px;width:36px;height:36px;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:'DM Sans',sans-serif}
-.cal-nav-btn:hover{background:rgba(100,80,50,.18);color:var(--stone)}
-.cal-year-select{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.cal-year-btn{padding:5px 14px;border-radius:2px;font-size:12px;font-weight:500;border:1px solid rgba(100,80,50,.2);background:transparent;color:var(--bark);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
-.cal-year-btn:hover{border-color:var(--bark);color:var(--stone)}
-.cal-year-btn.on{background:var(--stone);border-color:var(--stone);color:var(--cream);font-weight:600}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:rgba(100,80,50,.12);border-radius:4px;overflow:hidden}
-.cal-dow{background:var(--cream);padding:8px 4px;text-align:center;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--bark);font-weight:500}
-.cal-day{background:#fff;min-height:80px;padding:6px;position:relative;transition:background .15s}
-.cal-day:hover{background:var(--cream)}
-.cal-day.other-month{background:#f5f0e5}
-.cal-day.other-month .cal-day-num{color:rgba(100,80,50,.3)}
-.cal-day.today{background:rgba(200,160,40,.08);outline:1px solid rgba(200,160,40,.4);outline-offset:-1px}
-.cal-day-num{font-size:11px;font-weight:500;color:var(--bark);margin-bottom:4px;line-height:1}
-.cal-day.today .cal-day-num{color:var(--gold);font-weight:700}
-.cal-event{font-size:10px;padding:2px 5px;border-radius:2px;margin-bottom:2px;cursor:pointer;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .15s}
-.cal-event:hover{opacity:.8}
-.cal-event.type-day      {background:rgba(124,144,112,.3);color:#2e4028}
-.cal-event.type-overnight{background:rgba(74,124,154,.25);color:#1F4E79}
-.cal-event.type-backpack {background:rgba(74,124,154,.4);color:#1F4E79}
-.cal-event.type-camp     {background:rgba(200,160,40,.3);color:#5a3c00}
-.cal-event.type-adventure{background:rgba(200,72,32,.3);color:#6e1a00}
-.cal-more{font-size:9px;color:var(--bark);margin-top:2px;cursor:pointer}
-.cal-more:hover{color:var(--stone)}
-.cal-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
-.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--bark)}
-.cal-legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.cal-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:10000;align-items:center;justify-content:center}
-.cal-modal-overlay.open{display:flex}
-.cal-modal{background:#fff;border:1px solid rgba(100,80,50,.2);border-radius:4px;padding:28px;max-width:400px;width:90%;position:relative;box-shadow:0 12px 40px rgba(0,0,0,.15)}
-.cal-modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--bark);font-size:20px;cursor:pointer;line-height:1}
-.cal-modal-close:hover{color:var(--stone)}
-.cal-modal-type{display:inline-block;padding:3px 10px;border-radius:2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
-.cal-modal-title{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--stone);letter-spacing:.02em;margin-bottom:8px;line-height:1.1}
-.cal-modal-date{font-size:13px;color:var(--bark);margin-bottom:16px}
-.cal-modal-loc{font-size:13px;color:var(--stone);display:flex;gap:8px;align-items:flex-start}
-.cal-modal-loc::before{content:'📍';font-size:14px;flex-shrink:0}
-.cal-modal-nights{font-size:13px;color:var(--bark);margin-top:8px}
-
-/* Heatmap tooltip */
+/* ── HEATMAP TOOLTIP ── */
 .hm-cell{position:relative;cursor:default}
 .hm-cell.has-data{cursor:pointer}
-.hm-tooltip{display:none;position:fixed;z-index:9999;background:#fff;border:1px solid rgba(100,80,50,.25);border-radius:4px;padding:12px 14px;min-width:200px;max-width:280px;box-shadow:0 8px 24px rgba(0,0,0,.12);pointer-events:none}
-.hm-tooltip.visible{display:block}
-.hm-tooltip-header{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--stone);letter-spacing:.05em;margin-bottom:8px;border-bottom:1px solid rgba(100,80,50,.12);padding-bottom:6px}
-.hm-tooltip-item{font-size:12px;color:var(--stone);padding:3px 0;display:flex;align-items:flex-start;gap:6px;line-height:1.4}
-.hm-tooltip-item::before{content:'›';color:var(--gold);flex-shrink:0;font-size:13px}
-.hm-tooltip-empty{font-size:12px;color:var(--bark);font-style:italic}
-
-/* Map View */
-#map{width:100%;height:600px;border-radius:4px;border:1px solid rgba(100,80,50,.15)}
-.map-info-panel{background:#fff;border:1px solid rgba(100,80,50,.18);border-radius:4px;padding:20px;margin-top:20px;max-width:100%;overflow-y:auto;max-height:400px}
-.map-info-title{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--stone);margin-bottom:12px}
-.map-event-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid rgba(100,80,50,.08);font-size:13px}
-.map-event-row:last-child{border-bottom:none}
-.map-event-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.map-event-text{flex:1}
-.map-event-name{color:var(--stone);font-weight:500;line-height:1.3}
-.map-event-date{font-size:11px;color:var(--bark);margin-top:2px}
-
-footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem;
-  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
-  position:relative;z-index:1}
-.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--bark);letter-spacing:.05em}
-.footer-note{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--bark);opacity:.6;letter-spacing:.08em}
-
-@media(max-width:700px){
-  .hero,.nav-tabs,.main{padding-left:20px;padding-right:20px}
-  .chart-row{grid-template-columns:1fr}
-  .hero h1{font-size:52px}
-  .bm-label{min-width:140px}
-  footer{padding-left:20px;padding-right:20px}
+.hm-tooltip{
+  display:none;position:fixed;z-index:9999;
+  background:var(--stone);border:1px solid var(--sand);border-radius:4px;
+  padding:10px 14px;min-width:190px;max-width:270px;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none;
 }
+.hm-tooltip.visible{display:block}
+.hm-tooltip-header{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--gold);letter-spacing:.05em;margin-bottom:6px;border-bottom:1px solid rgba(196,168,130,.2);padding-bottom:5px}
+.hm-tooltip-item{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--sand);padding:2px 0;line-height:1.4;display:flex;gap:5px}
+.hm-tooltip-item::before{content:'›';color:var(--gold);flex-shrink:0}
+
+/* ── LOCATION TABLE ── */
+.loc-table{width:100%;border-collapse:collapse}
+.loc-table th{text-align:left;padding:8px 10px;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--bark);border-bottom:1px solid var(--border)}
+.loc-table td{padding:9px 10px;font-size:.85rem;border-bottom:1px solid rgba(100,80,50,.08);color:var(--ink)}
+.loc-table tr:hover td{background:rgba(196,168,130,.1)}
+.loc-table td.loc-name{font-weight:600;font-family:'Spectral',serif}
+.loc-table td.loc-count{font-family:'DM Mono',monospace;color:var(--sage);font-weight:600;font-size:.8rem}
+.loc-table td.loc-last{color:var(--bark);font-family:'DM Mono',monospace;font-size:.7rem}
+
+/* ── TAGS ── */
+.tag{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;padding:.18rem .5rem;border-radius:2px;background:var(--cream);color:var(--bark);border:1px solid var(--border)}
+.tag-bp{background:#D8E8F5;color:#1A3A5A;border-color:rgba(74,124,154,.2)}
+.tag-camp{background:#FFF3D0;color:#5A3A00;border-color:rgba(200,160,40,.25)}
+.tag-adv{background:#FDE8D8;color:#8C2A00;border-color:rgba(200,72,32,.2)}
+.tag-day{background:var(--cream);color:var(--bark);border-color:var(--border)}
+.tag-on{background:#E8F0E0;color:#2A4A20;border-color:rgba(124,144,112,.25)}
+
+/* ── BAR METERS ── */
+.bar-meter{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bm-label{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--stone);min-width:190px;letter-spacing:.04em}
+.bm-track{flex:1;height:6px;background:rgba(100,80,50,.12);border-radius:3px;overflow:hidden}
+.bm-fill{height:100%;border-radius:3px}
+.bm-val{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--bark);min-width:24px;text-align:right}
+
+/* ── CAMP CARDS ── */
+.camp-grid{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1rem}
+.camp-card{background:var(--cream);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:4px;padding:10px 14px}
+.camp-card-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark);margin-bottom:2px}
+.camp-card-years{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--stone)}
+
+/* ── TIMELINE ── */
+.tl{position:relative;padding-left:1.5rem}
+.tl::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:rgba(100,80,50,.2)}
+.tl-item{position:relative;margin-bottom:1.5rem;padding-left:1.5rem}
+.tl-item::before{content:'';position:absolute;left:-4px;top:8px;width:9px;height:9px;border-radius:50%;background:var(--sand);border:2px solid var(--bg)}
+.tl-year{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--stone)}
+.tl-detail{font-size:.82rem;color:var(--bark);font-style:italic;margin-top:1px}
+.tl-detail strong{color:var(--ember);font-style:normal;font-weight:600}
+
+/* ── FILTERS ── */
+.filter-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter-btn{
+  font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.4rem .9rem;border-radius:2px;border:1px solid var(--border);background:transparent;
+  color:var(--bark);cursor:pointer;transition:all .15s;
+}
+.filter-btn:hover{border-color:var(--stone);color:var(--stone)}
+.filter-btn.on{background:var(--stone);border-color:var(--stone);color:var(--cream)}
+
+/* ── CALENDAR ── */
+.cal-year-select{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.cal-year-btn{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .9rem;border-radius:2px;border:1px solid var(--border);background:transparent;color:var(--bark);cursor:pointer;transition:all .15s}
+.cal-year-btn:hover{border-color:var(--stone);color:var(--stone)}
+.cal-year-btn.on{background:var(--stone);border-color:var(--stone);color:var(--cream)}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.cal-nav h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--stone);letter-spacing:.04em}
+.cal-nav-btn{background:var(--cream);border:1px solid var(--border);color:var(--bark);font-size:1rem;width:32px;height:32px;border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav-btn:hover{background:var(--stone);color:var(--cream)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border-radius:4px;overflow:hidden}
+.cal-dow{background:var(--stone);padding:6px 4px;text-align:center;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sand)}
+.cal-day{background:var(--cream);min-height:74px;padding:5px;transition:background .12s}
+.cal-day:hover{background:#EDE4CC}
+.cal-day.other-month{background:rgba(240,232,213,.5)}
+.cal-day.other-month .cal-day-num{color:rgba(100,80,50,.25)}
+.cal-day.today{background:#FFF8E8;outline:2px solid var(--gold);outline-offset:-2px}
+.cal-day-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--bark);margin-bottom:3px;line-height:1}
+.cal-day.today .cal-day-num{color:var(--gold);font-weight:500}
+.cal-event{font-family:'DM Mono',monospace;font-size:.56rem;padding:1px 4px;border-radius:2px;margin-bottom:1px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .12s;line-height:1.5}
+.cal-event:hover{opacity:.75}
+.cal-event.type-day{background:#D4E8D4;color:#1A4A1A;border-left:2px solid var(--sage)}
+.cal-event.type-overnight{background:#D8E8F5;color:#1A3A5A;border-left:2px solid var(--sky)}
+.cal-event.type-backpack{background:#E8F0D0;color:#2A4A10;border-left:2px solid #8A9A50}
+.cal-event.type-camp{background:#FFF3D0;color:#5A3A00;border-left:2px solid var(--gold)}
+.cal-event.type-adventure{background:#FDE8D8;color:#8C2A00;border-left:2px solid var(--ember)}
+.cal-more{font-family:'DM Mono',monospace;font-size:.55rem;color:var(--bark);opacity:.7;cursor:pointer;padding:0 4px}
+.cal-cont{height:3px;border-radius:1px;margin-bottom:1px;opacity:.4}
+.cal-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--bark);letter-spacing:.06em}
+.cal-legend-dot{width:10px;height:10px;border-radius:1px;flex-shrink:0}
+
+/* ── MODAL ── */
+.cal-modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,20,16,.6);z-index:10000;align-items:center;justify-content:center}
+.cal-modal-overlay.open{display:flex}
+.cal-modal{background:var(--bg);border:1px solid var(--sand);border-radius:4px;padding:2rem;max-width:380px;width:90%;position:relative;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.cal-modal-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--bark);font-size:1.2rem;cursor:pointer;font-family:'DM Mono',monospace}
+.cal-modal-type{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--bark);margin-bottom:.6rem}
+.cal-modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--stone);line-height:1;margin-bottom:.5rem}
+.cal-modal-date{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--bark);margin-bottom:.75rem;letter-spacing:.05em}
+.cal-modal-loc{font-size:.85rem;color:var(--stone);font-style:italic;margin-bottom:.5rem}
+.cal-modal-nights{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--bark);letter-spacing:.06em}
+
+/* ── PLANNING HUB ── */
+.plan-search{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+.plan-search input{flex:1;min-width:200px;background:var(--cream);border:1px solid var(--border);border-radius:2px;padding:8px 12px;color:var(--ink);font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.05em;outline:none;transition:border-color .15s}
+.plan-search input::placeholder{color:var(--bark);opacity:.6}
+.plan-search input:focus{border-color:var(--stone)}
+.plan-search select{background:var(--cream);border:1px solid var(--border);border-radius:2px;padding:8px 12px;color:var(--ink);font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.05em;cursor:pointer;outline:none}
+.plan-search select option{background:var(--cream)}
+.plan-count{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--bark);white-space:nowrap}
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
+.plan-card{background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:1.2rem;border-left:3px solid var(--bark);transition:border-color .15s,transform .15s;cursor:pointer}
+.plan-card:hover{border-left-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.plan-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:.5rem}
+.plan-card-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--stone);letter-spacing:.02em;line-height:1.1}
+.plan-card-type{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;border-radius:2px;white-space:nowrap;flex-shrink:0}
+.plan-card-loc{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);margin-bottom:.6rem;letter-spacing:.04em}
+.plan-card-notes{font-size:.82rem;color:var(--stone);line-height:1.6;margin-bottom:.6rem;font-style:italic}
+.plan-booking{background:rgba(200,160,40,.1);border:1px solid rgba(200,160,40,.25);border-radius:3px;padding:6px 9px;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--stone);line-height:1.5;margin-bottom:.5rem}
+.plan-booking::before{content:'📋  '}
+.plan-warning{background:rgba(200,72,32,.08);border:1px solid rgba(200,72,32,.2);border-radius:3px;padding:5px 9px;font-family:'DM Mono',monospace;font-size:.62rem;color:var(--ember);line-height:1.5;margin-bottom:.5rem}
+.plan-warning::before{content:'⚠  '}
+.plan-card-footer{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(100,80,50,.1)}
+.plan-card-visits{font-family:'DM Mono',monospace;font-size:.6rem;color:var(--bark);flex:1;letter-spacing:.04em}
+.plan-card-visits strong{color:var(--sage)}
+.plan-years{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--bark);opacity:.7;margin-top:2px}
+.plan-card-link{display:inline-flex;align-items:center;gap:3px;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;color:var(--sky);text-decoration:none;border:1px solid rgba(74,124,154,.3);border-radius:2px;padding:3px 8px;transition:all .12s}
+.plan-card-link:hover{background:var(--stone);color:var(--cream);border-color:var(--stone)}
+.plan-card-phone{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);letter-spacing:.04em}
+.plan-no-results{text-align:center;padding:4rem 1rem;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--bark);letter-spacing:.08em}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:2rem 0;margin-top:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--bark);letter-spacing:.05em}
+.footer-note{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--bark);opacity:.6;letter-spacing:.08em}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  .hero h1{font-size:4rem}
+  .chart-row{grid-template-columns:1fr}
+  .hero-stats{gap:1.2rem}
+  .stat-val{font-size:1.6rem}
+}
+
+/* ── EXPANDED CHRONICLE ── */
+.tl-item{cursor:pointer}
+.tl-item:hover .tl-year{color:var(--gold)}
+.tl-expand-btn{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--bark);border:1px solid var(--border);border-radius:2px;
+  padding:.15rem .5rem;margin-top:.5rem;background:var(--cream);cursor:pointer;
+  transition:all .15s;
+}
+.tl-expand-btn:hover{background:var(--stone);color:var(--cream);border-color:var(--stone)}
+.tl-expand-btn .arrow{transition:transform .2s;display:inline-block}
+.tl-item.open .tl-expand-btn .arrow{transform:rotate(180deg)}
+.tl-expanded{
+  display:none;margin-top:.8rem;padding:.8rem 1rem;
+  background:var(--cream);border:1px solid var(--border);border-radius:4px;border-left:3px solid var(--gold);
+}
+.tl-item.open .tl-expanded{display:block}
+.tl-exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem;margin-bottom:.6rem}
+.tl-exp-stat{border-left:2px solid var(--sand);padding-left:.6rem}
+.tl-exp-stat-n{font-family:'Bebas Neue',Impact,sans-serif;font-size:1.4rem;color:var(--stone);line-height:1}
+.tl-exp-stat-l{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark)}
+.tl-exp-trips{margin-top:.6rem}
+.tl-exp-trip-label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark);margin-bottom:.4rem}
+.tl-exp-trip{
+  display:inline-flex;align-items:center;gap:.3rem;
+  font-family:'DM Mono',monospace;font-size:.6rem;padding:.2rem .5rem;
+  border-radius:2px;border:1px solid var(--border);background:var(--bg);
+  color:var(--stone);margin:.15rem .15rem .15rem 0;
+}
+.tl-exp-trip.type-adv{border-color:rgba(200,72,32,.3);color:var(--ember);background:rgba(200,72,32,.05)}
+.tl-exp-trip.type-camp{border-color:rgba(200,160,40,.3);color:#7a5a00;background:rgba(200,160,40,.06)}
+.tl-exp-trip.type-bp{border-color:rgba(74,124,154,.25);color:var(--sky);background:rgba(74,124,154,.05)}
+
+/* ── MAP VIEW ── */
+.map-wrap{
+  width:100%;height:440px;border-radius:4px;border:1px solid var(--border);
+  overflow:hidden;position:relative;background:#e8e0d0;margin-top:1rem;
+}
+.map-filter-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem;align-items:center}
+.map-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.75rem}
+.map-legend-item{display:flex;align-items:center;gap:.4rem;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--bark);letter-spacing:.06em}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:1.5px solid rgba(0,0,0,.2)}
+/* Map popup styling */
+.leaflet-popup-content-wrapper{border-radius:4px!important;box-shadow:0 4px 20px rgba(0,0,0,.2)!important;background:var(--bg)!important;border:1px solid var(--sand)!important}
+.leaflet-popup-tip{background:var(--bg)!important}
+.leaflet-popup-content{font-family:'DM Mono',monospace!important;font-size:.68rem!important;color:var(--stone)!important;margin:.6rem .8rem!important}
+.map-popup-title{font-family:'Bebas Neue',Impact,sans-serif!important;font-size:1rem!important;color:var(--stone)!important;display:block;margin-bottom:.2rem}
+.map-popup-type{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--bark);display:block;margin-bottom:.3rem}
+.map-popup-visits{color:var(--sage);font-weight:500}
+
 </style>
 </head>
 <body>
+<div class="page">
 
-<nav>
-  <a href="index.html" class="home">Troop 222</a>
-  <span class="sep">▸</span>
-  <span class="current">Outing Insights</span>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-topo"></div>
+  <p class="hero-eyebrow">BSA Troop 222 &nbsp;·&nbsp; Menlo Park, California &nbsp;·&nbsp; 2017–2026</p>
+  <h1>OUTING<br><span>INSIGHTS</span></h1>
+  <p class="hero-sub">9 years of adventures · 161 outings · from backpacking Yosemite to sailing the Florida Keys</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-val">161</div><div class="stat-label">Outings</div></div>
+    <div class="stat"><div class="stat-val">9</div><div class="stat-label">Years</div></div>
+    <div class="stat"><div class="stat-val">35+</div><div class="stat-label">Locations</div></div>
+    <div class="stat"><div class="stat-val">6</div><div class="stat-label">High Adventures</div></div>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="nav" id="main-nav">
+  <button class="nav-btn active" data-tab="overview">Overview</button>
+  <button class="nav-btn" data-tab="types">Outing Types</button>
+  <button class="nav-btn" data-tab="monthly">Monthly Patterns</button>
+  <button class="nav-btn" data-tab="locations">Locations</button>
+  <button class="nav-btn" data-tab="highlights">Year Highlights</button>
+  <button class="nav-btn" data-tab="calendar">Calendar</button>
+  <button class="nav-btn" data-tab="map">Map View</button>
+  <button class="nav-btn" data-tab="planning">Planning Hub</button>
 </nav>
 
-<div class="hero">
-  <div class="badge"><span></span>Menlo Park, CA · BSA Pacific Skyline Council</div>
-  <h1>Troop <em>T222</em><br>Outing Insights</h1>
-  <p>9 years of adventures — 161 outings, 30+ unique locations, from backpacking Yosemite to sailing the Florida Keys.</p>
-  <div class="hero-stats">
-    <div class="hstat"><div class="hstat-n">161</div><div class="hstat-l">Total Outings</div></div>
-    <div class="hstat"><div class="hstat-n"><em>9</em></div><div class="hstat-l">Years of Data</div></div>
-    <div class="hstat"><div class="hstat-n">35<em>+</em></div><div class="hstat-l">Unique Locations</div></div>
-    <div class="hstat"><div class="hstat-n"><em>6</em></div><div class="hstat-l">High Adventures</div></div>
-    <div class="hstat"><div class="hstat-n">17<em>.9</em></div><div class="hstat-l">Avg Outings / Year</div></div>
-  </div>
-</div>
-
-<div class="nav-tabs">
-  <button class="tab-btn active" data-tab="overview">Overview</button>
-  <button class="tab-btn" data-tab="types">Outing Types</button>
-  <button class="tab-btn" data-tab="monthly">Monthly Patterns</button>
-  <button class="tab-btn" data-tab="locations">Locations</button>
-  <button class="tab-btn" data-tab="map">Map View</button>
-  <button class="tab-btn" data-tab="highlights">Year Highlights</button>
-  <button class="tab-btn" data-tab="calendar">Calendar View</button>
-</div>
-
-<div class="main">
-
-<!-- OVERVIEW -->
+<!-- ══ OVERVIEW ══ -->
 <div id="tab-overview" class="section active">
-  <div class="sec-header"><h2>10-Year Overview</h2><p>Outing volume and composition across every scout year since 2017</p></div>
-  <div class="cards">
-    <div class="card"><div class="card-n fern">161</div><div class="card-l">Total Outings</div></div>
-    <div class="card"><div class="card-n">63</div><div class="card-l">Day Outings</div></div>
-    <div class="card"><div class="card-n sky">77</div><div class="card-l">Overnight / Backpacking</div></div>
-    <div class="card"><div class="card-n amber">9</div><div class="card-l">Summer Camps</div></div>
-    <div class="card"><div class="card-n ember">12</div><div class="card-l">High Adventures</div></div>
+  <p class="section-label">Ten Years of Scouting</p>
+  <h2>At a Glance</h2>
+  <div class="stat-cards">
+    <div class="stat-card"><div class="stat-card-n sage">161</div><div class="stat-card-l">Total Outings</div></div>
+    <div class="stat-card"><div class="stat-card-n">63</div><div class="stat-card-l">Day Outings</div></div>
+    <div class="stat-card"><div class="stat-card-n sky">77</div><div class="stat-card-l">Overnight / Backpacking</div></div>
+    <div class="stat-card"><div class="stat-card-n gold">9</div><div class="stat-card-l">Summer Camps</div></div>
+    <div class="stat-card"><div class="stat-card-n ember">12</div><div class="stat-card-l">High Adventures</div></div>
   </div>
   <div class="chart-row">
-    <div class="chart-box"><h3>Outings per Year</h3><div class="sub">2017 – 2026 (2026 partial)</div><div class="chart-wrap h240"><canvas id="c-yearly"></canvas></div></div>
+    <div class="chart-box"><h3>Outings per Year</h3><div class="sub">2017–2026 · 2026 is partial</div><div class="chart-wrap h240"><canvas id="c-yearly"></canvas></div></div>
     <div class="chart-box"><h3>Type Breakdown</h3><div class="sub">All 161 outings by category</div><div class="chart-wrap h240"><canvas id="c-donut"></canvas></div></div>
   </div>
   <div class="chart-row full">
-    <div class="chart-box"><h3>Outing Mix Over Time</h3><div class="sub">Stacked view of how outing types have evolved year over year</div><div class="chart-wrap h280"><canvas id="c-stacked"></canvas></div></div>
+    <div class="chart-box"><h3>Outing Mix Over Time</h3><div class="sub">How outing types have evolved year over year</div><div class="chart-wrap h280"><canvas id="c-stacked"></canvas></div></div>
   </div>
 </div>
 
-<!-- TYPES -->
+<!-- ══ TYPES ══ -->
 <div id="tab-types" class="section">
-  <div class="sec-header"><h2>Outing Types Deep Dive</h2><p>How T222's outing mix has shifted — and what each category looks like</p></div>
+  <p class="section-label">Category Deep Dive</p>
+  <h2>Outing Types</h2>
   <div class="chart-row">
     <div class="chart-box"><h3>Day Outings by Year</h3><div class="sub">Hikes, ski trips, rafting, urban adventures</div><div class="chart-wrap h240"><canvas id="c-day"></canvas></div></div>
     <div class="chart-box"><h3>Overnight & Backpacking</h3><div class="sub">Car camping + backcountry combined</div><div class="chart-wrap h240"><canvas id="c-overnight"></canvas></div></div>
@@ -297,20 +361,20 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem
   <div class="chart-row">
     <div class="chart-box"><h3>Backpacking % of Overnight</h3><div class="sub">Shift toward backcountry over the years</div><div class="chart-wrap h240"><canvas id="c-bppct"></canvas></div></div>
     <div class="chart-box">
-      <h3>High Adventure Cadence</h3><div class="sub">Philmont, Sea Base, Northern Tier, Jamboree, 50-Miler</div>
-      <div style="margin-top:16px;">
-        <div class="bar-meter"><div class="bm-label">Philmont (2019, 2022, 2025)</div><div class="bm-track"><div class="bm-fill" style="width:60%;background:#e88060;"></div></div><div class="bm-val">3</div></div>
-        <div class="bar-meter"><div class="bm-label">Northern Tier (2021, 2024)</div><div class="bm-track"><div class="bm-fill" style="width:40%;background:#6bb3e6;"></div></div><div class="bm-val">2</div></div>
-        <div class="bar-meter"><div class="bm-label">National Jamboree (2017, 2023)</div><div class="bm-track"><div class="bm-fill" style="width:40%;background:#f0c060;"></div></div><div class="bm-val">2</div></div>
-        <div class="bar-meter"><div class="bm-label">Florida Sea Base (2023)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:#4ab8c8;"></div></div><div class="bm-val">1</div></div>
-        <div class="bar-meter"><div class="bm-label">Mt Whitney 50-Miler (2018)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:#a870c0;"></div></div><div class="bm-val">1</div></div>
-        <div class="bar-meter"><div class="bm-label">High Sierra 50-Miler (2026 ↗)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:#80c870;"></div></div><div class="bm-val">1</div></div>
-        <div class="bar-meter"><div class="bm-label">Sea Base 2027 (planned ↗)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:#4ab8c8;opacity:0.4;"></div></div><div class="bm-val">↗</div></div>
+      <h3>High Adventure Cadence</h3><div class="sub">Philmont · Sea Base · Northern Tier · Jamboree · 50-Miler</div>
+      <div style="margin-top:1rem">
+        <div class="bar-meter"><div class="bm-label">Philmont (2019, 2022, 2025)</div><div class="bm-track"><div class="bm-fill" style="width:60%;background:var(--ember)"></div></div><div class="bm-val">3</div></div>
+        <div class="bar-meter"><div class="bm-label">Northern Tier (2021, 2024)</div><div class="bm-track"><div class="bm-fill" style="width:40%;background:var(--sky)"></div></div><div class="bm-val">2</div></div>
+        <div class="bar-meter"><div class="bm-label">National Jamboree (2017, 2023)</div><div class="bm-track"><div class="bm-fill" style="width:40%;background:var(--gold)"></div></div><div class="bm-val">2</div></div>
+        <div class="bar-meter"><div class="bm-label">Florida Sea Base (2023)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:var(--sage)"></div></div><div class="bm-val">1</div></div>
+        <div class="bar-meter"><div class="bm-label">Mt Whitney 50-Miler (2018)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:var(--bark)"></div></div><div class="bm-val">1</div></div>
+        <div class="bar-meter"><div class="bm-label">High Sierra 50-Miler (2026 ↗)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:var(--sage)"></div></div><div class="bm-val">1</div></div>
+        <div class="bar-meter"><div class="bm-label">Sea Base 2027 (planned ↗)</div><div class="bm-track"><div class="bm-fill" style="width:20%;background:var(--sky);opacity:.4"></div></div><div class="bm-val">↗</div></div>
       </div>
     </div>
   </div>
-  <div class="chart-box" style="margin-bottom:28px;">
-    <h3>Summer Camp History</h3><div class="sub">BSA camp programs — no camp in COVID year 2020</div>
+  <div class="chart-box">
+    <h3>Summer Camp History</h3><div class="sub">BSA camps attended each year · No camp in 2020 (COVID)</div>
     <div class="camp-grid">
       <div class="camp-card"><div class="camp-card-label">Camp Oljato</div><div class="camp-card-years">2017, 2024</div></div>
       <div class="camp-card"><div class="camp-card-label">Camp Wente</div><div class="camp-card-years">2018, 2022, 2025</div></div>
@@ -322,27 +386,31 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem
   </div>
 </div>
 
-<!-- MONTHLY -->
+<!-- ══ MONTHLY ══ -->
 <div id="tab-monthly" class="section">
-  <div class="sec-header"><h2>Monthly Patterns</h2><p>When does T222 go out? Every month, every year — mapped.</p></div>
+  <p class="section-label">Seasonal Rhythms</p>
+  <h2>Monthly Patterns</h2>
   <div class="chart-row">
     <div class="chart-box"><h3>Avg Outings per Month</h3><div class="sub">Based on 2017–2026 data</div><div class="chart-wrap h260"><canvas id="c-mavg"></canvas></div></div>
     <div class="chart-box"><h3>Total Outings per Month</h3><div class="sub">All years combined</div><div class="chart-wrap h260"><canvas id="c-mtotal"></canvas></div></div>
   </div>
-  <div class="chart-box" style="margin-bottom:28px;">
-    <h3>Heatmap — Outings per Month × Year</h3><div class="sub">Darker = more outings · — = none</div>
-    <div class="heatmap" style="margin-top:16px;"><table><thead><tr>
-      <th class="left">Month</th>
-      <th>2017</th><th>2018</th><th>2019</th><th>2020</th><th>2021</th>
-      <th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th>
-      <th>Total</th>
-    </tr></thead><tbody id="hm-body"></tbody></table></div>
+  <div class="chart-box">
+    <h3>Heatmap — Outings per Month × Year</h3><div class="sub">Hover any cell to see which trips · Darker green = more outings</div>
+    <div class="heatmap" style="margin-top:1rem">
+      <table><thead><tr>
+        <th class="left">Month</th>
+        <th>2017</th><th>2018</th><th>2019</th><th>2020</th><th>2021</th>
+        <th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th>
+        <th>Total</th>
+      </tr></thead><tbody id="hm-body"></tbody></table>
+    </div>
   </div>
 </div>
 
-<!-- LOCATIONS -->
+<!-- ══ LOCATIONS ══ -->
 <div id="tab-locations" class="section">
-  <div class="sec-header"><h2>Locations Explorer</h2><p>Every place T222 has visited — filter by type</p></div>
+  <p class="section-label">Where We've Been</p>
+  <h2>Locations Explorer</h2>
   <div class="filter-row" id="loc-filters">
     <button class="filter-btn on" data-f="all">All</button>
     <button class="filter-btn" data-f="Backpacking">Backpacking</button>
@@ -351,40 +419,35 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem
     <button class="filter-btn" data-f="High Adventure">High Adventure</button>
     <button class="filter-btn" data-f="Summer">Summer Camp</button>
   </div>
-  <div class="chart-box" style="margin-bottom:24px;"><h3>Most Visited Locations</h3><div class="sub">Repeat visits show strong T222 traditions</div><div class="chart-wrap h300" style="height:300px;"><canvas id="c-locbar"></canvas></div></div>
-  <div class="chart-box"><h3>Full Location Directory</h3><div class="sub" style="margin-bottom:14px;">All unique locations visited by T222</div>
-    <table class="loc-table"><thead><tr><th>#</th><th>Location</th><th>Type</th><th>Visits</th><th>Last Visit</th></tr></thead><tbody id="loc-body"></tbody></table>
+  <div class="chart-box" style="margin-bottom:1.5rem"><h3>Most Visited Locations</h3><div class="sub">Repeat visits = strong T222 traditions</div><div class="chart-wrap h300" style="height:300px"><canvas id="c-locbar"></canvas></div></div>
+  <div class="chart-box"><h3>Full Directory</h3><div class="sub" style="margin-bottom:1rem">All unique locations visited by T222</div>
+    <table class="loc-table"><thead><tr><th>#</th><th>Location</th><th>Type</th><th>Visits</th><th>Last</th></tr></thead><tbody id="loc-body"></tbody></table>
   </div>
 </div>
 
-<!-- MAP VIEW -->
-<div id="tab-map" class="section">
-  <div class="sec-header"><h2>Location Map</h2><p>All 161 outings across 40+ unique locations — click clusters to see nearby places</p></div>
-  <div id="map"></div>
-  <div class="map-info-panel" style="display:none;" id="map-info">
-    <div class="map-info-title" id="map-info-title"></div>
-    <div id="map-info-events"></div>
-  </div>
-</div>
-
-<!-- HIGHLIGHTS -->
+<!-- ══ HIGHLIGHTS ══ -->
 <div id="tab-highlights" class="section">
-  <div class="sec-header"><h2>Year by Year Highlights</h2><p>The standout moments from each scouting year</p></div>
+  <p class="section-label">Year by Year</p>
+  <h2>Annual Chronicle</h2>
   <div class="chart-row">
-    <div class="chart-box"><h3>Outing Volume Trend</h3><div class="sub">2017–2026 trajectory</div><div class="chart-wrap h240"><canvas id="c-trend"></canvas></div></div>
-    <div class="chart-box"><h3>Season Distribution</h3><div class="sub">All years combined — when outings happen</div><div class="chart-wrap h240"><canvas id="c-season"></canvas></div></div>
+    <div class="chart-box"><h3>Volume Trend</h3><div class="sub">2017–2026 trajectory</div><div class="chart-wrap h240"><canvas id="c-trend"></canvas></div></div>
+    <div class="chart-box"><h3>Season Distribution</h3><div class="sub">All years combined</div><div class="chart-wrap h240"><canvas id="c-season"></canvas></div></div>
   </div>
-  <div class="chart-box" style="margin-bottom:28px;"><h3>Annual Chronicle</h3><div class="sub">Key milestones by year</div><div class="timeline" style="margin-top:24px;" id="tl-body"></div></div>
+  <div class="chart-box" style="margin-bottom:1.5rem">
+    <h3>Year by Year Highlights</h3><div class="sub">Key milestones from each scouting year</div>
+    <div class="tl" style="margin-top:1.5rem" id="tl-body"></div>
+  </div>
   <div class="chart-row">
-    <div class="chart-box"><h3>Estimated Nights in the Field</h3><div class="sub">Per year (overnight + high adventure nights)</div><div class="chart-wrap h240"><canvas id="c-nights"></canvas></div></div>
+    <div class="chart-box"><h3>Nights in the Field</h3><div class="sub">Estimated overnight nights per year</div><div class="chart-wrap h240"><canvas id="c-nights"></canvas></div></div>
     <div class="chart-box"><h3>Active Months per Year</h3><div class="sub">Months with at least 1 outing</div><div class="chart-wrap h240"><canvas id="c-active"></canvas></div></div>
   </div>
 </div>
 
-
-<!-- CALENDAR -->
+<!-- ══ CALENDAR ══ -->
 <div id="tab-calendar" class="section">
-  <div class="sec-header"><h2>Calendar View</h2><p>All 161 outings across 9 years — click any event for details</p></div>
+  <p class="section-label">Full History</p>
+  <h2>Calendar View</h2>
+  <p style="font-family:'Spectral',serif;font-style:italic;color:var(--bark);font-size:.88rem;margin-bottom:1.5rem">All 161 outings plotted on their actual dates. Click any event for details.</p>
   <div class="cal-year-select" id="cal-year-select"></div>
   <div class="cal-nav">
     <button class="cal-nav-btn" id="cal-prev">&#8249;</button>
@@ -394,17 +457,37 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem
   <div class="cal-grid" id="cal-grid">
     <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div>
     <div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
-    <div id="cal-days"></div>
   </div>
   <div class="cal-legend">
-    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(74,124,89,0.6);"></div>Day Outing</div>
-    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(46,107,158,0.6);"></div>Overnight/Car Camp</div>
-    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(74,158,212,0.6);"></div>Backpacking</div>
-    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(200,135,42,0.6);"></div>Summer Camp</div>
-    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(217,79,46,0.6);"></div>High Adventure</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#A8C8A8;border:1px solid #5a8a5a"></div>Day Outing</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#A8C8E0;border:1px solid #4A7C9A"></div>Overnight</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#C8D8A0;border:1px solid #8A9A50"></div>Backpacking</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#F0D888;border:1px solid #C8A028"></div>Summer Camp</div>
+    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#F0C0A0;border:1px solid #C84820"></div>High Adventure</div>
   </div>
 </div>
-<!-- Event Modal -->
+
+<!-- ══ PLANNING HUB ══ -->
+<div id="tab-planning" class="section">
+  <p class="section-label">For the Outing Coordinator</p>
+  <h2>Planning Hub</h2>
+  <p style="font-family:'Spectral',serif;font-style:italic;color:var(--bark);font-size:.88rem;margin-bottom:1.5rem">Every location T222 has visited — with booking links, reservation notes, and phone numbers sourced from 2016–2027 records.</p>
+  <div class="plan-search">
+    <input type="text" id="plan-search-input" placeholder="Search locations, notes, type...">
+    <select id="plan-type-filter">
+      <option value="all">All types</option>
+      <option value="Overnight Backpacking">Backpacking</option>
+      <option value="Overnight Outing">Overnight / Car Camp</option>
+      <option value="Day Outing">Day Outing</option>
+      <option value="Summer Camp">Summer Camp</option>
+      <option value="High Adventure">High Adventure</option>
+    </select>
+    <div class="plan-count" id="plan-count"></div>
+  </div>
+  <div class="plan-grid" id="plan-grid"></div>
+</div>
+
+<!-- MODAL -->
 <div class="cal-modal-overlay" id="cal-modal-overlay">
   <div class="cal-modal">
     <button class="cal-modal-close" id="cal-modal-close">&#215;</button>
@@ -416,882 +499,682 @@ footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 48px;margin-top:2rem
   </div>
 </div>
 
-</div><!-- .main -->
+<!-- HEATMAP TOOLTIP -->
+<div class="hm-tooltip" id="hm-tooltip">
+  <div class="hm-tooltip-header" id="hm-tt-header"></div>
+  <div id="hm-tt-body"></div>
+</div>
 
 <footer>
   <span class="footer-brand">Troop 222</span>
-  <span class="footer-note">BSA · Outing Insights · 2017–2026</span>
+  <span class="footer-note">BSA · Pacific Skyline Council · Menlo Park · 2017–2026</span>
 </footer>
 
+
+<!-- ══ MAP VIEW ══ -->
+<div id="tab-map" class="section">
+  <p class="section-label">Locations Mapped</p>
+  <h2>Where We've Gone</h2>
+  <p style="font-family:'Spectral',serif;font-style:italic;color:var(--bark);font-size:.88rem;margin-bottom:1.2rem">Every T222 location plotted on the map. Click any marker for visit history and booking info.</p>
+  <div class="map-filter-row" id="map-filters">
+    <button class="filter-btn on" data-mf="all">All</button>
+    <button class="filter-btn" data-mf="Overnight Backpacking">Backpacking</button>
+    <button class="filter-btn" data-mf="Overnight Outing">Car Camping</button>
+    <button class="filter-btn" data-mf="Day Outing">Day Outings</button>
+    <button class="filter-btn" data-mf="High Adventure">High Adventure</button>
+    <button class="filter-btn" data-mf="Summer Camp">Summer Camp</button>
+  </div>
+  <div class="map-wrap" id="map-container"></div>
+  <div class="map-legend">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#7C9070"></div>Day Outing</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#4A7C9A"></div>Overnight / Car Camp</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#6A8A40"></div>Backpacking</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#C8A028"></div>Summer Camp</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#C84820"></div>High Adventure</div>
+  </div>
+</div>
+
+</div><!-- .page -->
+
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────
-const YEARS   = ['2017','2018','2019','2020','2021','2022','2023','2024','2025','2026'];
-const MONTHS  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+// ── DATA ──
+const YEARS=['2017','2018','2019','2020','2021','2022','2023','2024','2025','2026'];
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const yTotal=[12,17,15,21,16,21,20,16,13,10];
+const yDay=[3,8,6,10,6,11,9,3,1,0];
+const yON=[7,7,7,11,8,7,8,11,10,8];
+const yBP=[2,2,3,3,3,4,4,6,7,7];
+const yCamp=[1,1,1,0,1,1,1,1,1,1];
+const yAdv=[1,1,1,0,1,2,2,1,1,1];
+const yNights=[28,35,32,25,30,38,36,42,38,35];
+const mData=[[1,2,1,1,0,3,2,2,1,1],[1,1,1,4,1,1,1,0,2,1],[2,1,2,1,1,2,2,2,1,1],[1,3,1,0,1,1,2,2,0,3],[0,2,2,0,2,1,3,1,3,2],[1,0,1,0,1,3,0,0,0,0],[3,3,1,2,3,2,3,2,2,2],[0,1,1,4,0,1,0,0,0,0],[1,1,1,3,1,1,1,2,1,0],[1,1,1,3,2,4,3,4,2,0],[0,1,2,3,2,1,2,1,0,0],[1,1,1,0,2,1,1,0,1,0]];
 
-const yTotal  = [12,17,15,21,16,21,20,16,13,10];
-const yDay    = [3, 8, 6, 10,6, 11,9, 3, 1, 0];
-const yON     = [7, 7, 7, 11,8, 7, 8, 11,10,8];
-const yBP     = [2, 2, 3, 3, 3, 4, 4, 6, 7, 7];
-const yCamp   = [1, 1, 1, 0, 1, 1, 1, 1, 1, 1];
-const yAdv    = [1, 1, 1, 0, 1, 2, 2, 1, 1, 1];
-const yNights = [28,35,32,25,30,38,36,42,38,35];
+// Chart palette — warm tones matching the site
+const C={sage:'#7C9070',sky:'#4A7C9A',gold:'#C8A028',ember:'#C84820',bark:'rgba(107,80,64,.5)',grid:'rgba(100,80,50,.1)',tick:'#6B5040'};
+const tFont={family:"'DM Mono',monospace",size:10};
+const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:C.grid},ticks:{color:C.tick,font:tFont}},y:{grid:{color:C.grid},ticks:{color:C.tick,font:tFont},beginAtZero:true}}};
 
-const mData = [
-  [1,2,1,1,0,3,2,2,1,1], // Jan
-  [1,1,1,4,1,1,1,0,2,1], // Feb
-  [2,1,2,1,1,2,2,2,1,1], // Mar
-  [1,3,1,0,1,1,2,2,0,3], // Apr
-  [0,2,2,0,2,1,3,1,3,2], // May
-  [1,0,1,0,1,3,0,0,0,0], // Jun
-  [3,3,1,2,3,2,3,2,2,2], // Jul
-  [0,1,1,4,0,1,0,0,0,0], // Aug
-  [1,1,1,3,1,1,1,2,1,0], // Sep
-  [1,1,1,3,2,4,3,4,2,0], // Oct
-  [0,1,2,3,2,1,2,1,0,0], // Nov
-  [1,1,1,0,2,1,1,0,1,0], // Dec
-];
-
-const LOCS = [
-  {n:'Henry Coe State Park',          t:'Backpacking',    v:4, l:'2024'},
-  {n:'May Lake / Yosemite',            t:'Backpacking',    v:4, l:'2024'},
-  {n:'Point Reyes Nat\'l Seashore',    t:'Backpacking',    v:4, l:'2026'},
-  {n:'Black Diamond Mines RP',         t:'Backpacking',    v:4, l:'2026'},
-  {n:'Castle Rock State Park',         t:'Backpacking',    v:3, l:'2025'},
-  {n:'Boulder Creek Scout Reservation',t:'Overnight',     v:4, l:'2022'},
-  {n:'Gold Country / Tuolumne',        t:'Overnight',     v:4, l:'2024'},
-  {n:'Pinnacles National Park',        t:'Overnight',     v:3, l:'2025'},
-  {n:'Coyote Lake',                    t:'Overnight',     v:3, l:'2024'},
-  {n:'Memorial Park, San Mateo Co.',   t:'Overnight',     v:3, l:'2025'},
-  {n:'Big Sur / Los Padres NF',        t:'Backpacking',    v:2, l:'2025'},
-  {n:'Desolation Wilderness',          t:'Backpacking',    v:2, l:'2025'},
-  {n:'Monte Bello / Black Mountain',   t:'Backpacking',    v:2, l:'2025'},
-  {n:'Santa Cruz Beach Boardwalk',     t:'Overnight',     v:2, l:'2025'},
-  {n:'Half Moon Bay State Park',       t:'Overnight',     v:2, l:'2021'},
-  {n:'Ohlone Wilderness',              t:'Backpacking',    v:2, l:'2026'},
-  {n:'Arroyo Seco / Los Padres NF',    t:'Overnight',     v:2, l:'2024'},
-  {n:'Windy Hill Open Space',          t:'Day',           v:4, l:'2025'},
-  {n:'Palisades Tahoe (Squaw Valley)', t:'Day',           v:4, l:'2022'},
-  {n:'Cache Creek / American River',   t:'Day',           v:4, l:'2022'},
-  {n:'SF Urban Hike (Chinatown)',      t:'Day',           v:4, l:'2023'},
-  {n:'Elkhorn Slough, Moss Landing',   t:'Day',           v:3, l:'2022'},
-  {n:'Northstar California Resort',    t:'Day',           v:2, l:'2026'},
-  {n:'Philmont Scout Ranch, NM',       t:'High Adventure',v:3, l:'2025'},
-  {n:'Northern Tier BSA (Boundary Waters)',t:'High Adventure',v:2,l:'2024'},
-  {n:'Summit Bechtel Reserve, WV',     t:'High Adventure',v:2, l:'2023'},
-  {n:'Florida Sea Base, FL Keys',      t:'High Adventure',v:1, l:'2023'},
-  {n:'Mt Whitney / Inyo NF',           t:'High Adventure',v:2, l:'2026'},
-  {n:'Camp Wente',                     t:'Summer Camp',   v:3, l:'2025'},
-  {n:'Camp Oljato',                    t:'Summer Camp',   v:2, l:'2024'},
-  {n:'Camp Chawanakee',                t:'Summer Camp',   v:1, l:'2021'},
-  {n:'Camp Marin-Sierra',              t:'Summer Camp',   v:1, l:'2023'},
-  {n:'Camp Hi-Sierra',                 t:'Summer Camp',   v:1, l:'2026'},
-  {n:'Angel Island State Park',        t:'Overnight',     v:1, l:'2026'},
-  {n:'Marshall Beach, Tomales Bay',    t:'Overnight',     v:1, l:'2024'},
-];
-
-const HIGHLIGHTS = [
-  {y:'2017',c:12,txt:'Troop returns to the <strong>National Jamboree</strong> at Bechtel Reserve. Three July outings including the Hetch Hetchy loop. Strong start: 12 outings across 8 active months.'},
-  {y:'2018',c:17,txt:'Most active pre-COVID year with 17 outings. <strong>Mount Whitney 50-Miler</strong> marks T222\'s first major high adventure. 8 day trips — the strongest day outing year in troop history.'},
-  {y:'2019',c:15,txt:'<strong>Philmont 2019</strong> — the troop\'s first Philmont expedition. Cache Creek rafting, Butano overnight, and Gold Country camping. Solid backcountry foundation building.'},
-  {y:'2020',c:21,txt:'COVID year: highest total (21) includes virtual events and socially-distanced outings. Point Reyes and Coyote Lake completed before shutdown. Virtual Camporee and backyard campouts kept scouts connected.'},
-  {y:'2021',c:16,txt:'Return to in-person! <strong>Northern Tier Trek</strong> (Boundary Waters, MN). Pinnacles, Half Moon Bay, and Gold Country all return. Boulder Creek re-opens.'},
-  {y:'2022',c:21,txt:'Tied all-time high: 21 outings. <strong>Philmont 2022</strong> expedition. Strongest day outing year (11). October saw 4 outings — a record single month. Kayaking at Elkhorn Slough added.'},
-  {y:'2023',c:20,txt:'<strong>Florida Sea Base Coral Reef Sailing</strong> + <strong>National Jamboree</strong> — two high adventures in one year. First Sea Base adventure. Three May outings including Henry Coe backpacking.'},
-  {y:'2024',c:16,txt:'<strong>Northern Tier High Adventure</strong> returns (Ely, MN). Heaviest backpacking year: 6 backcountry trips. 50-Miler planning begins. First Arroyo Seco outing in Los Padres NF.'},
-  {y:'2025',c:13,txt:'<strong>Philmont 2025</strong> (sold out). Desolation Wilderness 20-mile advanced route with 5 miles off-trail. Troop shifts decisively to backpacking: 7 backcountry trips, only 1 day outing.'},
-  {y:'2026',c:10,txt:'<strong>High Sierra 50-Miler</strong> planned July. Sea Base 2027 planning active. Angel Island and Sunset State Beach confirmed. 4 outings added Sep–Nov to match historical patterns.'},
-];
-
-// ── CHART DEFAULTS ──────────────────────────────────────────────────────
-const G = 'rgba(100,80,50,.05)';
-const M = '#6B5040';
-const tickFont = {family:"'DM Sans',sans-serif", size:11};
-const baseOpts = {
-  responsive:true, maintainAspectRatio:false,
-  plugins:{legend:{display:false}},
-  scales:{
-    x:{grid:{color:G}, ticks:{color:M, font:tickFont}},
-    y:{grid:{color:G}, ticks:{color:M, font:tickFont}, beginAtZero:true}
-  }
-};
-
-function mc(id, type, labels, datasets, extra={}) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const opts = JSON.parse(JSON.stringify(baseOpts));
-  // deep merge extra
-  function merge(a, b) { for (const k in b) { if (b[k] && typeof b[k]==='object' && !Array.isArray(b[k])) { a[k]=a[k]||{}; merge(a[k],b[k]); } else { a[k]=b[k]; } } }
-  merge(opts, extra);
-  return new Chart(el, {type, data:{labels, datasets}, options:opts});
+function mc(id,type,labels,datasets,extra={}){
+  const el=document.getElementById(id);if(!el)return;
+  function merge(a,b){for(const k in b){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k])){a[k]=a[k]||{};merge(a[k],b[k])}else{a[k]=b[k]}}}
+  const opts=JSON.parse(JSON.stringify(baseOpts));merge(opts,extra);
+  return new Chart(el,{type,data:{labels,datasets},options:opts});
 }
 
-// ── OVERVIEW ──────────────────────────────────────────────────────────────
-mc('c-yearly','bar',YEARS,[{
-  data:yTotal,
-  backgroundColor:YEARS.map((_,i)=>i===9?'rgba(107,158,120,0.45)':'rgba(107,158,120,0.8)'),
-  borderColor:YEARS.map((_,i)=>i===9?'rgba(74,124,89,0.6)':'#6b9e78'),
-  borderWidth:1, borderRadius:4,
-}]);
-
-new Chart(document.getElementById('c-donut'),{
-  type:'doughnut',
-  data:{
-    labels:['Day Outings','Overnight/Car Camp','Backpacking','Summer Camp','High Adventure'],
-    datasets:[{
-      data:[63,43,34,9,12],
-      backgroundColor:['#4a7c59','#2e6b9e','#4a9ed4','#c8872a','#d94f2e'],
-      borderColor:'#F0E8D5', borderWidth:3,
-    }]
-  },
-  options:{responsive:true, maintainAspectRatio:false, cutout:'65%',
-    plugins:{legend:{display:true, position:'right',
-      labels:{color:'#6B5040', font:{family:"'DM Sans',sans-serif", size:11}, boxWidth:12, padding:12}
-    }}
-  }
-});
-
+// ── OVERVIEW ──
+mc('c-yearly','bar',YEARS,[{data:yTotal,backgroundColor:YEARS.map((_,i)=>i===9?'rgba(124,144,112,.4)':'rgba(124,144,112,.8)'),borderColor:YEARS.map((_,i)=>i===9?C.sage:'#5a7050'),borderWidth:1,borderRadius:2}]);
+new Chart(document.getElementById('c-donut'),{type:'doughnut',data:{labels:['Day Outings','Overnight/Car Camp','Backpacking','Summer Camp','High Adventure'],datasets:[{data:[63,43,34,9,12],backgroundColor:['#7C9070','#4A7C9A','#8A9A50','#C8A028','#C84820'],borderColor:['#F5EDD8'],borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:true,position:'right',labels:{color:C.tick,font:{family:"'DM Mono',monospace",size:10},boxWidth:10,padding:10}}}}});
 mc('c-stacked','bar',YEARS,[
-  {label:'Day',              data:yDay,                          backgroundColor:'rgba(74,124,89,0.85)', borderRadius:2},
-  {label:'Overnight',        data:yON.map((v,i)=>v-yBP[i]),     backgroundColor:'rgba(46,107,158,0.85)', borderRadius:2},
-  {label:'Backpacking',      data:yBP,                          backgroundColor:'rgba(74,158,212,0.85)', borderRadius:2},
-  {label:'Summer Camp',      data:yCamp,                        backgroundColor:'rgba(200,135,42,0.85)', borderRadius:2},
-  {label:'High Adventure',   data:yAdv,                         backgroundColor:'rgba(217,79,46,0.85)', borderRadius:2},
-],{
-  plugins:{legend:{display:true, labels:{color:'#6B5040', font:{family:"'DM Sans',sans-serif", size:11}, boxWidth:12, padding:10}}},
-  scales:{x:{stacked:true, grid:{color:G}, ticks:{color:M, font:tickFont}}, y:{stacked:true, grid:{color:G}, ticks:{color:M, font:tickFont}, beginAtZero:true}}
-});
+  {label:'Day',data:yDay,backgroundColor:'rgba(124,144,112,.85)',borderRadius:2},
+  {label:'Overnight',data:yON.map((v,i)=>v-yBP[i]),backgroundColor:'rgba(74,124,154,.85)',borderRadius:2},
+  {label:'Backpacking',data:yBP,backgroundColor:'rgba(138,154,80,.85)',borderRadius:2},
+  {label:'Summer Camp',data:yCamp,backgroundColor:'rgba(200,160,40,.85)',borderRadius:2},
+  {label:'High Adv.',data:yAdv,backgroundColor:'rgba(200,72,32,.85)',borderRadius:2},
+],{plugins:{legend:{display:true,labels:{color:C.tick,font:{family:"'DM Mono',monospace",size:10},boxWidth:10,padding:8}}},scales:{x:{stacked:true,grid:{color:C.grid},ticks:{color:C.tick,font:tFont}},y:{stacked:true,grid:{color:C.grid},ticks:{color:C.tick,font:tFont},beginAtZero:true}}});
 
-// ── TYPES ────────────────────────────────────────────────────────────────
-mc('c-day','bar',YEARS,[{data:yDay, backgroundColor:'rgba(74,124,89,0.7)', borderColor:'#6b9e78', borderWidth:1, borderRadius:4}]);
-mc('c-overnight','bar',YEARS,[{data:yON, backgroundColor:'rgba(46,107,158,0.7)', borderColor:'#2e6b9e', borderWidth:1, borderRadius:4}]);
-mc('c-bppct','line',YEARS,[{
-  data:yBP.map((v,i)=>yON[i]>0?Math.round(v/yON[i]*100):0),
-  borderColor:'#4a9ed4', backgroundColor:'rgba(74,158,212,0.12)',
-  pointBackgroundColor:'#4a9ed4', pointRadius:5, tension:0.35, fill:true
-}],{scales:{y:{grid:{color:G}, ticks:{color:M, font:tickFont, callback:v=>v+'%'}, beginAtZero:true, max:100}, x:{grid:{color:G}, ticks:{color:M, font:tickFont}}}});
+// ── TYPES ──
+mc('c-day','bar',YEARS,[{data:yDay,backgroundColor:'rgba(124,144,112,.75)',borderColor:'#5a7050',borderWidth:1,borderRadius:2}]);
+mc('c-overnight','bar',YEARS,[{data:yON,backgroundColor:'rgba(74,124,154,.75)',borderColor:'#2a5a7a',borderWidth:1,borderRadius:2}]);
+mc('c-bppct','line',YEARS,[{data:yBP.map((v,i)=>yON[i]>0?Math.round(v/yON[i]*100):0),borderColor:C.sage,backgroundColor:'rgba(124,144,112,.1)',pointBackgroundColor:C.sage,pointRadius:4,tension:.35,fill:true}],{scales:{y:{grid:{color:C.grid},ticks:{color:C.tick,font:tFont,callback:v=>v+'%'},beginAtZero:true,max:100},x:{grid:{color:C.grid},ticks:{color:C.tick,font:tFont}}}});
 
+// ── MONTHLY ──
+const mTotals=mData.map(r=>r.reduce((a,b)=>a+b,0));
+const mAvgs=mTotals.map(t=>parseFloat((t/10).toFixed(1)));
+mc('c-mavg','bar',MONTHS,[{data:mAvgs,backgroundColor:mAvgs.map(v=>v>=2?'rgba(74,124,154,.8)':v>=1.5?'rgba(124,144,112,.8)':v>=1?'rgba(124,144,112,.5)':'rgba(100,80,50,.15)'),borderRadius:2}]);
+mc('c-mtotal','bar',MONTHS,[{data:mTotals,backgroundColor:'rgba(124,144,112,.75)',borderColor:'#5a7050',borderWidth:1,borderRadius:2}]);
 
-// ── TRIP LOOKUP BY MONTH+YEAR ─────────────────────────────────────────────
-const TRIPS = {
-  '2017-Jan': ['Half Moon Bay State Park'],
-  '2017-Feb': ['Point Reyes – Wildcat Camp'],
-  '2017-Mar': ['Snow Camping – Snowshoeing (Yosemite)', 'Kayaking – Tomales Bay'],
-  '2017-Apr': ['Camporee – Cutter Scout Reservation'],
-  '2017-Jun': ['River Rafting – Cache Creek'],
-  '2017-Jul': ['Summer Camp – Camp Oljato', 'National Jamboree – WV', 'YNP Hetch Hetchy Loop'],
-  '2017-Sep': ['Camp Cutter Overnight'],
-  '2017-Oct': ['May Lake Backpacking'],
-  '2017-Dec': ['Memorial Park Campout'],
+// ── HEATMAP ──
+const TRIPS={'2017-Jan':['Half Moon Bay State Park'],'2017-Feb':['Point Reyes \u2013 Wildcat Camp'],'2017-Mar':['Snow Camping \u2013 Yosemite','Kayaking \u2013 Tomales Bay'],'2017-Apr':['Camporee \u2013 Cutter Scout Reservation'],'2017-Jun':['River Rafting \u2013 Cache Creek'],'2017-Jul':['Summer Camp \u2013 Camp Oljato','National Jamboree \u2013 WV','YNP Hetch Hetchy Loop'],'2017-Sep':['Camp Cutter Overnight'],'2017-Oct':['May Lake Backpacking'],'2017-Dec':['Memorial Park Campout'],'2018-Jan':['Ski Trip \u2013 Squaw Valley','Rock Climbing \u2013 Planet Granite'],'2018-Feb':['Overnight Rock Climbing \u2013 Davis'],'2018-Mar':['Point Reyes Kayak Campout'],'2018-Apr':['All-District Camporee','Urban Hike SF','Cycling Outing'],'2018-May':['Henry Coe SP Backpack Trip','Shotgun & Rifle Practice'],'2018-Jul':['Windy Hill Hike (Camp Prep)','Summer Camp \u2013 Camp Wente','Mount Whitney 50-Miler'],'2018-Aug':['Cache Creek Whitewater Rafting'],'2018-Sep':['Cooking MB & Advancement Campout'],'2018-Oct':['May Lake / Mt. Hoffman'],'2018-Nov':['Council TTFC Campout'],'2018-Dec':['Pinnacles Day Hike'],'2019-Jan':['Ski Trip \u2013 Squaw Valley'],'2019-Feb':['Indoor Rock Climbing \u2013 Planet Granite'],'2019-Mar':['Boulder Creek Camp Out','PacSky Camporee'],'2019-Apr':['OA Spring Ordeal'],'2019-May':['Windy Hill Philmont Prep Hike','Butano Overnight Camping'],'2019-Jun':['Summer Camp \u2013 John C. Mensinger'],'2019-Jul':['Philmont 2019'],'2019-Aug':['Cache Creek Rafting'],'2019-Sep':['Gold Country Camping'],'2019-Oct':['Black Diamond Mines Backpacking'],'2019-Nov':['Trail to First Class Campout','K-1 Speed'],'2020-Jan':['Ski Trip \u2013 Squaw Valley'],'2020-Feb':['Camping MB Overnight','Ropes Course \u2013 Mt. Hermon','Cycling & Camping \u2013 Coyote Lake','Point Reyes Backpacking'],'2020-Mar':['TTFC Spring Campout'],'2020-Jul':['Bayfront Trail Bike Ride','Virtual Camporee II'],'2020-Aug':['Purisima Creek Redwoods Hike','Overnight Camping (Magruder)','Rancho San Antonio Hike','Alex Waitz Campout'],'2020-Sep':['Virtual Campout \u2013 Waitz House','Tour de Menlo Bike Ride','May Lake Backpacking'],'2020-Oct':['Urban Hike \u2013 Chinatown SF','Overnight Campout (Magruders)','Livermore Camping'],'2020-Nov':['Bike Outing','Boulder Creek Conservation Project','Local Campout'],'2021-Feb':['NT Crew Kayaking \u2013 Elkhorn Slough'],'2021-Mar':['Edgewood Park Hike'],'2021-Apr':['SF Urban Hike'],'2021-May':['Director\u2019s Cabin \u2013 Boulder Creek','Cycling MB \u2013 50 Mile Ride'],'2021-Jun':['Pinnacles Camping'],'2021-Jul':['Half Moon Bay Camping','Northern Tier Trek \u2013 Boundary Waters','Summer Camp \u2013 Camp Chawanakee'],'2021-Sep':['Memorial Park Overnight'],'2021-Oct':['Gold Country Camping','Elkhorn Slough Kayaking'],'2021-Nov':['Camping \u2013 Boulder Creek','Indoor Overnight Rock Climbing'],'2021-Dec':['K-1 Speed','Black Diamond Mines Campout'],'2022-Jan':['Ski & Snowboard Trip \u2013 Squaw Valley','Urban Hike \u2013 Chinatown SF','Wunderlich Park Hike'],'2022-Feb':['Philmont Prep Hike #2 \u2013 Corte de Madera'],'2022-Mar':['High Meadow Trail Loop Hike','Philmont Prep Hike #3 \u2013 Windy Hill'],'2022-Apr':['Star Gazing / Mt. Hamilton Campout'],'2022-May':['American River Rafting'],'2022-Jun':['Philmont Backpacking \u2013 Portola Redwoods','Philmont Backpacking \u2013 Castle Rock','Summer Camp \u2013 Camp Wente'],'2022-Jul':['NYLT 2022','Philmont 2022'],'2022-Aug':['Bedwell Bayfront Clean-up'],'2022-Sep':['Huddart Park Hiking'],'2022-Oct':['Urban Hike \u2013 San Francisco','Overnight \u2013 New Brighton State Beach','OA Fall Ordeal','Kayaking \u2013 Elkhorn Slough'],'2022-Nov':['Gold Country Camping / Moaning Caverns'],'2022-Dec':['K-1 Speed'],'2023-Jan':['Corte Madera Hike','Shooting Sports'],'2023-Feb':['Coyote Lake Campout'],'2023-Mar':['Astronomy / Star Gazing \u2013 Mt. Hamilton','Coyote Lake Harvey Bear Ranch Campout'],'2023-Apr':['Mt. Diablo Hike','Pinnacles Camping'],'2023-May':['Whitewater Rafting \u2013 American River','San Bruno Mountain Hike','Backpacking \u2013 Henry Coe'],'2023-Jul':['Florida Sea Base \u2013 Coral Reef Sailing','BSA National Jamboree \u2013 WV','Summer Camp \u2013 Camp Marin-Sierra'],'2023-Sep':['California Coastal Cleanup Day'],'2023-Oct':['Yosemite Camping w/ Pack 565','Santa Cruz Beach Boardwalk Overnight','Canoe Skills \u2013 Pine Mountain Lake'],'2023-Nov':['Urban Hike \u2013 Golden Gate Bridge','Boulder Creek Campout'],'2023-Dec':['Hike Windy Hill'],'2024-Jan':['Coyote Lake Car Camping','Foothills Nature Reserve Hike'],'2024-Mar':['Shoreline Lake Canoeing','Henry Coe Backpacking'],'2024-Apr':['Star Gazing / Mt. Hamilton Campout','Black Diamond Mines Camping'],'2024-May':['Caswell Memorial State Park Campout'],'2024-Jul':['Northern Tier High Adventure \u2013 MN','Summer Camp \u2013 Camp Oljato'],'2024-Sep':['Arroyo Seco Car Camping \u2013 Los Padres NF','Gold Country Car Camping'],'2024-Oct':['Rock Climbing \u2013 Castle Rock','May Lake Backpacking Trip','Marshall Beach Tomales Bay Canoe-in','Big Sur Camping & Wilderness Skills'],'2024-Nov':['Backpacking \u2013 Henry Coe'],'2025-Jan':['Ski & Snowboard Trip \u2013 Northstar'],'2025-Feb':['Point Reyes Wildcat Camp Backpacking','Purisima Creek Redwoods Hike'],'2025-Mar':['Santa Cruz Beach Boardwalk Overnight'],'2025-May':['Pinnacles Overnight','Philmont Backpacking Prep \u2013 Castle Rock','Big Sur Backpacking Trip'],'2025-Jul':['Philmont 2025','Summer Camp \u2013 Camp Wente'],'2025-Sep':['Sam McDonald Park Overnight'],'2025-Oct':['Desolation Wilderness Advanced Backpacking','Black Mountain Backpacking'],'2025-Dec':['Memorial Park Car Camping'],'2026-Jan':['Ski & Snowboard Trip \u2013 Northstar'],'2026-Feb':['Point Reyes Backpacking (50-Miler Prep)'],'2026-Mar':['Black Diamond Mines Backpacking'],'2026-Apr':['50-Miler Prep \u2013 Ohlone Wilderness','50-Miler Prep \u2013 Big Sur','Sunset State Beach Camping'],'2026-May':['50-Miler Prep \u2013 La Honda','Angel Island Camping'],'2026-Jul':['Camp Hi-Sierra','High Sierra 50-Miler']};
 
-  '2018-Jan': ['Ski Trip – Squaw Valley', 'Rock Climbing – Planet Granite'],
-  '2018-Feb': ['Overnight Rock Climbing – Davis'],
-  '2018-Mar': ['Point Reyes Kayak Campout'],
-  '2018-Apr': ['All-District Camporee', 'Urban Hike SF', 'Cycling Outing'],
-  '2018-May': ['Henry Coe SP Backpack Trip', 'Shotgun & Rifle Practice'],
-  '2018-Jul': ['Windy Hill Hike (Camp Prep)', 'Summer Camp – Camp Wente', 'Mount Whitney 50-Miler'],
-  '2018-Aug': ['Cache Creek Whitewater Rafting'],
-  '2018-Sep': ['Cooking MB & Advancement Campout'],
-  '2018-Oct': ['May Lake / Mt. Hoffman'],
-  '2018-Nov': ['Council TTFC Campout'],
-  '2018-Dec': ['Pinnacles Day Hike'],
-
-  '2019-Jan': ['Ski Trip – Squaw Valley'],
-  '2019-Feb': ['Indoor Rock Climbing – Planet Granite'],
-  '2019-Mar': ['Boulder Creek Camp Out', 'PacSky Camporee'],
-  '2019-Apr': ['OA Spring Ordeal'],
-  '2019-May': ['Windy Hill Philmont Prep Hike', 'Butano Overnight Camping'],
-  '2019-Jun': ['Summer Camp – John C. Mensinger'],
-  '2019-Jul': ['Philmont 2019'],
-  '2019-Aug': ['Cache Creek Rafting'],
-  '2019-Sep': ['Gold Country Camping'],
-  '2019-Oct': ['Black Diamond Mines Backpacking'],
-  '2019-Nov': ['Trail to First Class Campout', 'K-1 Speed'],
-
-  '2020-Jan': ['Ski Trip – Squaw Valley'],
-  '2020-Feb': ['Camping MB Overnight', 'Ropes Course – Mt. Hermon', 'Cycling & Camping – Coyote Lake', 'Point Reyes Backpacking'],
-  '2020-Mar': ['TTFC Spring Campout'],
-  '2020-Jul': ['Bayfront Trail Bike Ride', 'Virtual Camporee II'],
-  '2020-Aug': ['Purisima Creek Redwoods Hike', 'Overnight Camping (Magruder)', 'Rancho San Antonio Hike', 'Alex Waitz Campout'],
-  '2020-Sep': ['Virtual Campout – Waitz House', 'Tour de Menlo Bike Ride', 'May Lake Backpacking'],
-  '2020-Oct': ['Urban Hike – Chinatown SF', 'Overnight Campout (Magruders)', 'Livermore Camping'],
-  '2020-Nov': ['Bike Outing', 'Boulder Creek Conservation Project', 'Local Campout'],
-
-  '2021-Feb': ['NT Crew Kayaking – Elkhorn Slough'],
-  '2021-Mar': ['Edgewood Park Hike'],
-  '2021-Apr': ['SF Urban Hike'],
-  '2021-May': ['Director\'s Cabin – Boulder Creek', 'Cycling MB – 50 Mile Ride'],
-  '2021-Jun': ['Pinnacles Camping'],
-  '2021-Jul': ['Half Moon Bay Camping', 'Northern Tier Trek – Boundary Waters', 'Summer Camp – Camp Chawanakee'],
-  '2021-Sep': ['Memorial Park Overnight'],
-  '2021-Oct': ['Gold Country Camping', 'Elkhorn Slough Kayaking'],
-  '2021-Nov': ['Camping – Boulder Creek', 'Indoor Overnight Rock Climbing'],
-  '2021-Dec': ['K-1 Speed', 'Black Diamond Mines Campout'],
-
-  '2022-Jan': ['Ski & Snowboard Trip – Squaw Valley', 'Urban Hike – Chinatown SF', 'Wunderlich Park Hike'],
-  '2022-Feb': ['Philmont Prep Hike #2 – Corte de Madera'],
-  '2022-Mar': ['High Meadow Trail Loop Hike', 'Philmont Prep Hike #3 – Windy Hill'],
-  '2022-Apr': ['Star Gazing / Mt. Hamilton Campout'],
-  '2022-May': ['American River Rafting'],
-  '2022-Jun': ['Philmont Backpacking – Portola Redwoods', 'Philmont Backpacking – Castle Rock', 'Summer Camp – Camp Wente'],
-  '2022-Jul': ['NYLT 2022', 'Philmont 2022'],
-  '2022-Aug': ['Bedwell Bayfront Clean-up'],
-  '2022-Sep': ['Huddart Park Hiking'],
-  '2022-Oct': ['Urban Hike – San Francisco', 'Overnight – New Brighton State Beach', 'OA Fall Ordeal', 'Kayaking – Elkhorn Slough'],
-  '2022-Nov': ['Gold Country Camping / Moaning Caverns'],
-  '2022-Dec': ['K-1 Speed'],
-
-  '2023-Jan': ['Corte Madera Hike', 'Shooting Sports'],
-  '2023-Feb': ['Coyote Lake Campout'],
-  '2023-Mar': ['Astronomy / Star Gazing – Mt. Hamilton', 'Coyote Lake Harvey Bear Ranch Campout'],
-  '2023-Apr': ['Mt. Diablo Hike', 'Pinnacles Camping'],
-  '2023-May': ['Whitewater Rafting – American River', 'San Bruno Mountain Hike', 'Backpacking – Henry Coe'],
-  '2023-Jul': ['Florida Sea Base – Coral Reef Sailing', 'BSA National Jamboree – WV', 'Summer Camp – Camp Marin-Sierra'],
-  '2023-Sep': ['California Coastal Cleanup Day'],
-  '2023-Oct': ['Yosemite Camping w/ Pack 565', 'Santa Cruz Beach Boardwalk Overnight', 'Canoe Skills – Pine Mountain Lake'],
-  '2023-Nov': ['Urban Hike – Golden Gate Bridge', 'Boulder Creek Campout'],
-  '2023-Dec': ['Hike Windy Hill'],
-
-  '2024-Jan': ['Coyote Lake Car Camping', 'Foothills Nature Reserve Hike'],
-  '2024-Mar': ['Shoreline Lake Canoeing', 'Henry Coe Backpacking'],
-  '2024-Apr': ['Star Gazing / Mt. Hamilton Campout', 'Black Diamond Mines Camping'],
-  '2024-May': ['Caswell Memorial State Park Campout'],
-  '2024-Jul': ['Northern Tier High Adventure – MN', 'Summer Camp – Camp Oljato'],
-  '2024-Sep': ['Arroyo Seco Car Camping – Los Padres NF', 'Gold Country Car Camping'],
-  '2024-Oct': ['Rock Climbing – Castle Rock', 'May Lake Backpacking Trip', 'Marshall Beach Tomales Bay Canoe-in', 'Big Sur Camping & Wilderness Skills'],
-  '2024-Nov': ['Backpacking – Henry Coe'],
-
-  '2025-Jan': ['Ski & Snowboard Trip – Northstar'],
-  '2025-Feb': ['Point Reyes Wildcat Camp Backpacking', 'Purisima Creek Redwoods Hike'],
-  '2025-Mar': ['Santa Cruz Beach Boardwalk Overnight'],
-  '2025-May': ['Pinnacles Overnight', 'Philmont Backpacking Prep – Castle Rock', 'Big Sur Backpacking Trip'],
-  '2025-Jul': ['Philmont 2025', 'Summer Camp – Camp Wente'],
-  '2025-Sep': ['Sam McDonald Park Overnight'],
-  '2025-Oct': ['Desolation Wilderness Advanced Backpacking', 'Black Mountain Backpacking'],
-  '2025-Dec': ['Memorial Park Car Camping'],
-
-  '2026-Jan': ['Ski & Snowboard Trip – Northstar'],
-  '2026-Feb': ['Point Reyes Backpacking (50-Miler Prep)'],
-  '2026-Mar': ['Black Diamond Mines Backpacking'],
-  '2026-Apr': ['50-Miler Prep – Ohlone Wilderness', '50-Miler Prep – Big Sur', 'Sunset State Beach Camping'],
-  '2026-May': ['50-Miler Prep – La Honda', 'Angel Island Camping'],
-  '2026-Jul': ['Camp Hi-Sierra', 'High Sierra 50-Miler'],
-};
-
-// ── MONTHLY ──────────────────────────────────────────────────────────────
-const mTotals = mData.map(r=>r.reduce((a,b)=>a+b,0));
-const mAvgs   = mTotals.map(t=>parseFloat((t/10).toFixed(1)));
-const mColors = mAvgs.map(v=> v>=2?'rgba(74,158,212,0.85)': v>=1.5?'rgba(74,124,89,0.85)': v>=1?'rgba(74,124,89,0.55)':'rgba(168,197,160,0.18)');
-
-mc('c-mavg','bar',MONTHS,[{data:mAvgs, backgroundColor:mColors, borderRadius:4}]);
-mc('c-mtotal','bar',MONTHS,[{data:mTotals, backgroundColor:'rgba(107,158,120,0.7)', borderColor:'#6b9e78', borderWidth:1, borderRadius:4}]);
-
-// Heatmap with tooltips
-const hmBody = document.getElementById('hm-body');
-const tooltip = document.getElementById('hm-tooltip');
-const ttHeader = document.getElementById('hm-tooltip-header');
-const ttBody = document.getElementById('hm-tooltip-body');
-
+const hmBody=document.getElementById('hm-body');
+const tooltip=document.getElementById('hm-tooltip');
 mData.forEach((row,mi)=>{
-  const total = row.reduce((a,b)=>a+b,0);
-  const tr = document.createElement('tr');
-  const tdM = document.createElement('td'); tdM.className='ml'; tdM.textContent=MONTHS[mi]; tr.appendChild(tdM);
+  const total=row.reduce((a,b)=>a+b,0);
+  const tr=document.createElement('tr');
+  const tdM=document.createElement('td');tdM.className='ml';tdM.textContent=MONTHS[mi];tr.appendChild(tdM);
   row.forEach((v,yi)=>{
-    const td = document.createElement('td');
-    td.className = 'hm-cell ' + (v===0?'h0':v===1?'h1':v===2?'h2':v===3?'h3':'h4');
-    if (v > 0) td.classList.add('has-data');
-    td.textContent = v===0?'—':v;
-    td.dataset.month = MONTHS[mi];
-    td.dataset.year = YEARS[yi];
+    const td=document.createElement('td');
+    td.className='hm-cell '+(v===0?'h0':v===1?'h1':v===2?'h2':v===3?'h3':'h4');
+    if(v>0)td.classList.add('has-data');
+    td.textContent=v===0?'\u2014':v;
+    td.dataset.month=MONTHS[mi];td.dataset.year=YEARS[yi];
     tr.appendChild(td);
   });
-  const tdT = document.createElement('td'); tdT.className='tc'; tdT.textContent=total; tr.appendChild(tdT);
+  const tdT=document.createElement('td');tdT.className='tc';tdT.textContent=total;tr.appendChild(tdT);
   hmBody.appendChild(tr);
 });
-
-// Tooltip logic
-document.getElementById('hm-body').addEventListener('mousemove', e => {
-  const cell = e.target.closest('.hm-cell.has-data');
-  if (!cell) { tooltip.classList.remove('visible'); return; }
-  const key = cell.dataset.year + '-' + cell.dataset.month;
-  const trips = TRIPS[key] || [];
-  ttHeader.textContent = cell.dataset.month + ' ' + cell.dataset.year + ' · ' + trips.length + ' outing' + (trips.length!==1?'s':'');
-  ttBody.innerHTML = trips.length
-    ? trips.map(t=>`<div class="hm-tooltip-item">${t}</div>`).join('')
-    : '<div class="hm-tooltip-empty">No details available</div>';
+document.getElementById('hm-body').addEventListener('mousemove',e=>{
+  const cell=e.target.closest('.hm-cell.has-data');
+  if(!cell){tooltip.classList.remove('visible');return;}
+  const key=cell.dataset.year+'-'+cell.dataset.month;
+  const trips=TRIPS[key]||[];
+  document.getElementById('hm-tt-header').textContent=cell.dataset.month+' '+cell.dataset.year+' \u00b7 '+trips.length+' outing'+(trips.length!==1?'s':'');
+  document.getElementById('hm-tt-body').innerHTML=trips.map(t=>`<div class="hm-tooltip-item">${t}</div>`).join('');
   tooltip.classList.add('visible');
-  // Position tooltip
-  const pad = 14;
-  let left = e.clientX + pad;
-  let top  = e.clientY + pad;
-  const tw = 280, th = 40 + trips.length * 28;
-  if (left + tw > window.innerWidth - 10) left = e.clientX - tw - pad;
-  if (top  + th > window.innerHeight - 10) top  = e.clientY - th - pad;
-  tooltip.style.left = left + 'px';
-  tooltip.style.top  = top  + 'px';
+  const pad=12,tw=270,th=40+trips.length*22;
+  let left=e.clientX+pad,top=e.clientY+pad;
+  if(left+tw>window.innerWidth-10)left=e.clientX-tw-pad;
+  if(top+th>window.innerHeight-10)top=e.clientY-th-pad;
+  tooltip.style.left=left+'px';tooltip.style.top=top+'px';
 });
+document.getElementById('hm-body').addEventListener('mouseleave',()=>tooltip.classList.remove('visible'));
 
-document.getElementById('hm-body').addEventListener('mouseleave', () => {
-  tooltip.classList.remove('visible');
-});
-
-// ── LOCATIONS ────────────────────────────────────────────────────────────
-let currentFilter = 'all';
-
-function tagClass(t) {
-  if(t==='Backpacking') return 'tag-bp';
-  if(t==='High Adventure') return 'tag-adv';
-  if(t==='Summer Camp') return 'tag-camp';
-  return 'tag-day';
-}
-
-function renderLocs() {
-  const body = document.getElementById('loc-body');
-  body.innerHTML = '';
-  const filtered = currentFilter==='all' ? LOCS : LOCS.filter(l=>l.t.includes(currentFilter));
-  const sorted = [...filtered].sort((a,b)=>b.v-a.v);
+// ── LOCATIONS ──
+const LOCS=[
+  {n:'Henry Coe State Park',t:'Backpacking',v:4,l:'2024'},{n:'May Lake / Yosemite',t:'Backpacking',v:4,l:'2024'},
+  {n:'Point Reyes Nat\'l Seashore',t:'Backpacking',v:4,l:'2026'},{n:'Black Diamond Mines RP',t:'Backpacking',v:4,l:'2026'},
+  {n:'Castle Rock State Park',t:'Backpacking',v:3,l:'2025'},{n:'Boulder Creek Scout Reservation',t:'Overnight',v:4,l:'2022'},
+  {n:'Gold Country / Tuolumne',t:'Overnight',v:4,l:'2024'},{n:'Pinnacles National Park',t:'Overnight',v:3,l:'2025'},
+  {n:'Coyote Lake Harvey Bear Ranch',t:'Overnight',v:3,l:'2024'},{n:'Memorial Park, San Mateo Co.',t:'Overnight',v:3,l:'2025'},
+  {n:'Big Sur / Los Padres NF',t:'Backpacking',v:2,l:'2025'},{n:'Desolation Wilderness',t:'Backpacking',v:2,l:'2025'},
+  {n:'Monte Bello / Black Mountain',t:'Backpacking',v:2,l:'2025'},{n:'Santa Cruz Beach Boardwalk',t:'Overnight',v:2,l:'2025'},
+  {n:'Half Moon Bay State Park',t:'Overnight',v:2,l:'2021'},{n:'Ohlone Wilderness',t:'Backpacking',v:2,l:'2026'},
+  {n:'Arroyo Seco / Los Padres NF',t:'Overnight',v:2,l:'2024'},{n:'Windy Hill Open Space',t:'Day',v:4,l:'2025'},
+  {n:'Palisades Tahoe (Squaw Valley)',t:'Day',v:4,l:'2022'},{n:'Cache Creek / American River',t:'Day',v:4,l:'2022'},
+  {n:'SF Urban Hike (Chinatown/GGB)',t:'Day',v:4,l:'2023'},{n:'Elkhorn Slough, Moss Landing',t:'Day',v:3,l:'2022'},
+  {n:'Northstar California Resort',t:'Day',v:2,l:'2026'},{n:'Philmont Scout Ranch, NM',t:'High Adventure',v:3,l:'2025'},
+  {n:'Northern Tier BSA (Boundary Waters)',t:'High Adventure',v:2,l:'2024'},{n:'Summit Bechtel Reserve, WV',t:'High Adventure',v:2,l:'2023'},
+  {n:'Florida Sea Base, FL Keys',t:'High Adventure',v:1,l:'2023'},{n:'Mt Whitney / Inyo NF',t:'High Adventure',v:2,l:'2026'},
+  {n:'Camp Wente',t:'Summer Camp',v:3,l:'2025'},{n:'Camp Oljato',t:'Summer Camp',v:2,l:'2024'},
+  {n:'Camp Chawanakee',t:'Summer Camp',v:1,l:'2021'},{n:'Camp Marin-Sierra',t:'Summer Camp',v:1,l:'2023'},
+  {n:'Camp Hi-Sierra',t:'Summer Camp',v:1,l:'2026'},{n:'Angel Island State Park',t:'Overnight',v:1,l:'2026'},
+  {n:'Marshall Beach, Tomales Bay',t:'Overnight',v:1,l:'2024'},
+];
+let locFilter='all';
+function tagCls(t){if(t==='Backpacking')return 'tag-bp';if(t==='High Adventure')return 'tag-adv';if(t==='Summer Camp')return 'tag-camp';if(t==='Overnight')return 'tag-on';return 'tag-day';}
+function renderLocs(){
+  const body=document.getElementById('loc-body');body.innerHTML='';
+  const f=locFilter;
+  const filtered=f==='all'?LOCS:LOCS.filter(l=>l.t.includes(f));
+  const sorted=[...filtered].sort((a,b)=>b.v-a.v);
   sorted.forEach((l,i)=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td style="color:var(--mist);font-size:11px;font-family:'DM Mono',monospace;">${String(i+1).padStart(2,'0')}</td>
-      <td class="loc-name">${l.n}</td>
-      <td><span class="loc-tag ${tagClass(l.t)}">${l.t}</span></td>
-      <td class="loc-count">${l.v}×</td>
-      <td class="loc-last">${l.l}</td>`;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--bark)">${String(i+1).padStart(2,'0')}</td><td class="loc-name">${l.n}</td><td><span class="tag ${tagCls(l.t)}" style="font-size:.58rem">${l.t}</span></td><td class="loc-count">${l.v}\u00d7</td><td class="loc-last">${l.l}</td>`;
     body.appendChild(tr);
   });
 }
 renderLocs();
-
-document.getElementById('loc-filters').addEventListener('click', e=>{
-  const btn = e.target.closest('.filter-btn');
-  if (!btn) return;
-  currentFilter = btn.dataset.f;
+document.getElementById('loc-filters').addEventListener('click',e=>{
+  const btn=e.target.closest('.filter-btn');if(!btn)return;
+  locFilter=btn.dataset.f;
   document.querySelectorAll('#loc-filters .filter-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  renderLocs();
+  btn.classList.add('on');renderLocs();
 });
+const topLocs=[...LOCS].sort((a,b)=>b.v-a.v).slice(0,12);
+new Chart(document.getElementById('c-locbar'),{type:'bar',data:{labels:topLocs.map(l=>l.n.length>24?l.n.slice(0,24)+'\u2026':l.n),datasets:[{data:topLocs.map(l=>l.v),backgroundColor:topLocs.map(l=>l.t==='High Adventure'?'rgba(200,72,32,.75)':l.t==='Summer Camp'?'rgba(200,160,40,.75)':l.t==='Backpacking'?'rgba(74,124,154,.75)':'rgba(124,144,112,.75)'),borderRadius:2}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:C.grid},ticks:{color:C.tick,font:tFont},beginAtZero:true},y:{grid:{display:false},ticks:{color:'#3D332A',font:{family:"'DM Mono',monospace",size:10}}}}}});
 
-// Location bar chart (top 12)
-const topLocs = [...LOCS].sort((a,b)=>b.v-a.v).slice(0,12);
-new Chart(document.getElementById('c-locbar'),{
-  type:'bar',
-  data:{
-    labels:topLocs.map(l=>l.n.length>24?l.n.slice(0,24)+'…':l.n),
-    datasets:[{
-      data:topLocs.map(l=>l.v),
-      backgroundColor:topLocs.map(l=>l.t==='High Adventure'?'rgba(217,79,46,0.8)':l.t==='Summer Camp'?'rgba(200,135,42,0.8)':l.t==='Backpacking'?'rgba(74,158,212,0.8)':'rgba(74,124,89,0.8)'),
-      borderRadius:4,
-    }]
-  },
-  options:{
-    indexAxis:'y', responsive:true, maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
-    scales:{
-      x:{grid:{color:G}, ticks:{color:M, font:tickFont}, beginAtZero:true},
-      y:{grid:{display:false}, ticks:{color:'#3D332A', font:tickFont}}
-    }
-  }
-});
+// ── HIGHLIGHTS ──
+mc('c-trend','line',YEARS,[{data:yTotal,borderColor:C.sage,backgroundColor:'rgba(124,144,112,.1)',pointBackgroundColor:YEARS.map((_,i)=>i===9?'rgba(124,144,112,.4)':C.sage),pointRadius:5,tension:.3,fill:true}]);
+new Chart(document.getElementById('c-season'),{type:'doughnut',data:{labels:['Winter (Dec\u2013Feb)','Spring (Mar\u2013May)','Summer (Jun\u2013Aug)','Fall (Sep\u2013Nov)'],datasets:[{data:[35,46,30,45],backgroundColor:['rgba(74,124,154,.8)','rgba(124,144,112,.8)','rgba(200,160,40,.8)','rgba(200,72,32,.8)'],borderColor:['#F5EDD8'],borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:true,position:'right',labels:{color:C.tick,font:{family:"'DM Mono',monospace",size:10},boxWidth:10,padding:10}}}}});
+mc('c-nights','bar',YEARS,[{data:yNights,backgroundColor:'rgba(74,124,154,.7)',borderColor:'#2a5a7a',borderWidth:1,borderRadius:2}]);
+const activeMonths=YEARS.map((_,yi)=>mData.filter(row=>row[yi]>0).length);
+mc('c-active','bar',YEARS,[{data:activeMonths,backgroundColor:'rgba(124,144,112,.7)',borderColor:'#5a7050',borderWidth:1,borderRadius:2}],{scales:{y:{grid:{color:C.grid},ticks:{color:C.tick,font:tFont},beginAtZero:true,max:12},x:{grid:{color:C.grid},ticks:{color:C.tick,font:tFont}}}});
 
-// ── HIGHLIGHTS ────────────────────────────────────────────────────────────
-mc('c-trend','line',YEARS,[{
-  data:yTotal, borderColor:'#6b9e78', backgroundColor:'rgba(74,124,89,0.12)',
-  pointBackgroundColor:YEARS.map((_,i)=>i===9?'rgba(107,158,120,0.5)':'#6b9e78'),
-  pointRadius:6, tension:0.3, fill:true,
-}]);
-
-new Chart(document.getElementById('c-season'),{
-  type:'doughnut',
-  data:{
-    labels:['Winter (Dec–Feb)','Spring (Mar–May)','Summer (Jun–Aug)','Fall (Sep–Nov)'],
-    datasets:[{
-      data:[35,46,30,45],
-      backgroundColor:['rgba(74,158,212,0.8)','rgba(74,124,89,0.8)','rgba(200,135,42,0.8)','rgba(217,79,46,0.8)'],
-      borderColor:'#F0E8D5', borderWidth:3
-    }]
-  },
-  options:{responsive:true, maintainAspectRatio:false, cutout:'60%',
-    plugins:{legend:{display:true, position:'right', labels:{color:'#6B5040', font:{family:"'DM Sans',sans-serif",size:11}, boxWidth:12, padding:10}}}
-  }
-});
-
-mc('c-nights','bar',YEARS,[{data:yNights, backgroundColor:'rgba(74,158,212,0.65)', borderColor:'#2e6b9e', borderWidth:1, borderRadius:4}]);
-
-const activeMonths = YEARS.map((_,yi)=>mData.filter(row=>row[yi]>0).length);
-mc('c-active','bar',YEARS,[{
-  data:activeMonths, backgroundColor:'rgba(107,158,120,0.7)', borderColor:'#6b9e78', borderWidth:1, borderRadius:4
-}],{scales:{y:{grid:{color:G}, ticks:{color:M, font:tickFont}, beginAtZero:true, max:12}, x:{grid:{color:G}, ticks:{color:M, font:tickFont}}}});
-
-// ── CALENDAR VIEW ─────────────────────────────────────────────────────────
-const ALL_EVENTS = [
-  // 2017
-  {name:'Half Moon Bay State Park', date:'2017-01-21', end:'2017-01-22', type:'day', loc:'Half Moon Bay State Park, CA', nights:0},
-  {name:'Point Reyes – Wildcat Camp', date:'2017-02-18', end:'2017-02-20', type:'backpack', loc:'Point Reyes National Seashore, CA', nights:2},
-  {name:'Snow Camping – Yosemite', date:'2017-03-11', end:'2017-03-12', type:'overnight', loc:'Yosemite National Park, CA', nights:1},
-  {name:'Kayaking – Tomales Bay', date:'2017-03-19', end:'2017-03-19', type:'day', loc:'Tomales Bay, CA', nights:0},
-  {name:'Camporee – Cutter Scout Reservation', date:'2017-04-07', end:'2017-04-09', type:'overnight', loc:'Cutter Scout Reservation, CA', nights:2},
-  {name:'River Rafting – Cache Creek', date:'2017-06-10', end:'2017-06-11', type:'day', loc:'Cache Creek, CA', nights:0},
-  {name:'Summer Camp – Camp Oljato', date:'2017-07-09', end:'2017-07-15', type:'camp', loc:'Camp Oljato, CA', nights:7},
-  {name:'National Boy Scout Jamboree', date:'2017-07-15', end:'2017-07-28', type:'adventure', loc:'Summit Bechtel Reserve, WV', nights:13},
-  {name:'YNP – Hetch Hetchy Loop', date:'2017-07-22', end:'2017-07-29', type:'backpack', loc:'Yosemite National Park, CA', nights:7},
-  {name:'Camp Cutter Overnight', date:'2017-09-23', end:'2017-09-24', type:'overnight', loc:'Cutter BSA Reserve, CA', nights:1},
-  {name:'May Lake Backpacking', date:'2017-10-14', end:'2017-10-15', type:'backpack', loc:'May Lake, Yosemite, CA', nights:1},
-  {name:'Memorial Park Campout', date:'2017-12-09', end:'2017-12-10', type:'overnight', loc:'Memorial Park, Loma Mar, CA', nights:1},
-  // 2018
-  {name:'Ski Trip – Squaw Valley', date:'2018-01-12', end:'2018-01-15', type:'day', loc:'Palisades Tahoe, CA', nights:0},
-  {name:'Rock Climbing – Planet Granite', date:'2018-01-24', end:'2018-01-24', type:'day', loc:'Planet Granite, Belmont, CA', nights:0},
-  {name:'Overnight Rock Climbing', date:'2018-02-10', end:'2018-02-11', type:'overnight', loc:'Davis, CA', nights:1},
-  {name:'Point Reyes Kayak Campout', date:'2018-03-10', end:'2018-03-11', type:'overnight', loc:'Point Reyes National Seashore, CA', nights:1},
-  {name:'All-District Camporee', date:'2018-04-06', end:'2018-04-08', type:'overnight', loc:'Cutter Scout Reservation, CA', nights:2},
-  {name:'Urban Hike SF', date:'2018-04-21', end:'2018-04-21', type:'day', loc:'San Francisco, CA', nights:0},
-  {name:'Cycling Outing', date:'2018-04-28', end:'2018-04-28', type:'day', loc:'Menlo Park, CA', nights:0},
-  {name:'Henry Coe Backpack Trip', date:'2018-05-05', end:'2018-05-06', type:'backpack', loc:'Henry Coe State Park, CA', nights:1},
-  {name:'Shotgun & Rifle Practice', date:'2018-05-12', end:'2018-05-12', type:'day', loc:'Los Altos Rod & Gun, CA', nights:0},
-  {name:'Windy Hill Hike (Camp Prep)', date:'2018-07-01', end:'2018-07-01', type:'day', loc:'Windy Hill Open Space, CA', nights:0},
-  {name:'Summer Camp – Camp Wente', date:'2018-07-08', end:'2018-07-14', type:'camp', loc:'Camp Wente, Willits, CA', nights:7},
-  {name:'Mount Whitney 50-Miler', date:'2018-07-26', end:'2018-08-03', type:'adventure', loc:'Inyo National Forest, CA', nights:8},
-  {name:'Cache Creek Whitewater Rafting', date:'2018-08-04', end:'2018-08-05', type:'day', loc:'Cache Creek, CA', nights:0},
-  {name:'Cooking MB & Advancement Campout', date:'2018-09-21', end:'2018-09-23', type:'overnight', loc:'Cutter Scout Reservation, CA', nights:2},
-  {name:'May Lake / Mt. Hoffman', date:'2018-10-13', end:'2018-10-14', type:'backpack', loc:'May Lake, Yosemite, CA', nights:1},
-  {name:'Council TTFC Campout', date:'2018-11-02', end:'2018-11-04', type:'overnight', loc:'Cutter Scout Reservation, CA', nights:2},
-  {name:'Pinnacles Day Hike', date:'2018-12-08', end:'2018-12-08', type:'day', loc:'Pinnacles National Park, CA', nights:0},
-  // 2019
-  {name:'Ski Trip – Squaw Valley', date:'2019-01-19', end:'2019-01-21', type:'day', loc:'Palisades Tahoe, CA', nights:0},
-  {name:'Indoor Rock Climbing – Planet Granite', date:'2019-02-13', end:'2019-02-13', type:'day', loc:'Planet Granite, Belmont, CA', nights:0},
-  {name:'Boulder Creek Camp Out', date:'2019-03-09', end:'2019-03-10', type:'overnight', loc:'Boulder Creek Scout Reservation, CA', nights:1},
-  {name:'PacSky Camporee', date:'2019-03-29', end:'2019-03-31', type:'overnight', loc:'Cutter Scout Reserve, CA', nights:2},
-  {name:'OA Spring Ordeal', date:'2019-04-05', end:'2019-04-07', type:'overnight', loc:'Cutter Scout Reserve, CA', nights:2},
-  {name:'Windy Hill Philmont Prep Hike', date:'2019-05-04', end:'2019-05-04', type:'day', loc:'Windy Hill Open Space, CA', nights:0},
-  {name:'Butano Overnight Camping', date:'2019-05-18', end:'2019-05-19', type:'overnight', loc:'Butano State Park, CA', nights:1},
-  {name:'Summer Camp – John C. Mensinger', date:'2019-06-23', end:'2019-06-29', type:'camp', loc:'Camp Mensinger, CA', nights:6},
-  {name:'Philmont 2019', date:'2019-07-15', end:'2019-07-28', type:'adventure', loc:'Philmont Scout Ranch, NM', nights:13},
-  {name:'Cache Creek Rafting', date:'2019-08-03', end:'2019-08-04', type:'day', loc:'Cache Creek, CA', nights:0},
-  {name:'Gold Country Camping', date:'2019-09-14', end:'2019-09-15', type:'overnight', loc:'Tuttletown Recreation Area, CA', nights:1},
-  {name:'Black Diamond Mines Backpacking', date:'2019-10-19', end:'2019-10-20', type:'backpack', loc:'Black Diamond Mines RP, Antioch, CA', nights:1},
-  {name:'Trail to First Class Campout', date:'2019-11-02', end:'2019-11-03', type:'overnight', loc:'Boulder Creek Scout Reservation, CA', nights:1},
-  {name:'K-1 Speed', date:'2019-11-23', end:'2019-11-23', type:'day', loc:'K-1 Speed, Santa Clara, CA', nights:0},
-  // 2020
-  {name:'Ski Trip – Squaw Valley', date:'2020-01-18', end:'2020-01-20', type:'day', loc:'Palisades Tahoe, CA', nights:0},
-  {name:'Camping MB Overnight', date:'2020-02-01', end:'2020-02-02', type:'overnight', loc:'TBD', nights:1},
-  {name:'Ropes Course – Mt. Hermon', date:'2020-02-15', end:'2020-02-15', type:'day', loc:'Mt. Hermon Adventures, Felton, CA', nights:0},
-  {name:'Cycling & Camping – Coyote Lake', date:'2020-02-21', end:'2020-02-23', type:'overnight', loc:'Coyote Lake Campground, CA', nights:2},
-  {name:'Point Reyes Backpacking', date:'2020-02-29', end:'2020-03-01', type:'backpack', loc:'Coast Camp, Point Reyes, CA', nights:1},
-  {name:'TTFC Spring Campout', date:'2020-03-13', end:'2020-03-15', type:'overnight', loc:'Atherton Scout Site, CA', nights:2},
-  {name:'Bayfront Trail Bike Ride', date:'2020-07-25', end:'2020-07-25', type:'day', loc:'Embarcadero Rd, Palo Alto, CA', nights:0},
-  {name:'Overnight Camping (Magruder)', date:'2020-08-07', end:'2020-08-09', type:'overnight', loc:'Magruder House, CA', nights:1},
-  {name:'Rancho San Antonio Hike', date:'2020-08-08', end:'2020-08-08', type:'day', loc:'Rancho San Antonio Open Space, CA', nights:0},
-  {name:'Alex Waitz Campout', date:'2020-08-14', end:'2020-08-16', type:'overnight', loc:'22 Holbrook Lane, Atherton, CA', nights:1},
-  {name:'Virtual Campout – Waitz House', date:'2020-09-11', end:'2020-09-13', type:'overnight', loc:'22 Holbrook Lane, Atherton, CA', nights:1},
-  {name:'Tour de Menlo Bike Ride', date:'2020-09-12', end:'2020-09-12', type:'day', loc:'Menlo Park / Atherton, CA', nights:0},
-  {name:'May Lake Backpacking', date:'2020-09-26', end:'2020-09-27', type:'backpack', loc:'May Lake, Yosemite, CA', nights:1},
-  {name:'Urban Hike – Chinatown SF', date:'2020-10-10', end:'2020-10-10', type:'day', loc:'San Francisco, CA', nights:0},
-  {name:'Overnight Campout (Magruders)', date:'2020-10-16', end:'2020-10-18', type:'overnight', loc:'Magruder House, CA', nights:2},
-  {name:'Livermore Camping', date:'2020-10-24', end:'2020-10-25', type:'overnight', loc:'Greenville Rd, Livermore, CA', nights:1},
-  {name:'Bike Outing', date:'2020-11-07', end:'2020-11-07', type:'day', loc:'Palo Alto, CA', nights:0},
-  {name:'Boulder Creek Conservation Project', date:'2020-11-14', end:'2020-11-14', type:'day', loc:'Boulder Creek Scout Reservation, CA', nights:0},
-  {name:'Local Campout', date:'2020-11-20', end:'2020-11-22', type:'overnight', loc:'Local Site, CA', nights:2},
-  // 2021
-  {name:'NT Crew Kayaking – Elkhorn Slough', date:'2021-02-27', end:'2021-02-27', type:'day', loc:'Elkhorn Slough, Moss Landing, CA', nights:0},
-  {name:'Edgewood Park Hike', date:'2021-03-20', end:'2021-03-20', type:'day', loc:'Edgewood Park, Redwood City, CA', nights:0},
-  {name:'SF Urban Hike', date:'2021-04-11', end:'2021-04-11', type:'day', loc:'Chinatown, San Francisco, CA', nights:0},
-  {name:'Director\u2019s Cabin – Boulder Creek', date:'2021-05-01', end:'2021-05-02', type:'overnight', loc:'Boulder Creek Scout Reservation, CA', nights:2},
-  {name:'Cycling MB – 50 Mile Ride', date:'2021-05-23', end:'2021-05-23', type:'day', loc:'Menlo Park area, CA', nights:0},
-  {name:'Pinnacles Camping', date:'2021-06-04', end:'2021-06-06', type:'overnight', loc:'Pinnacles National Park, CA', nights:2},
-  {name:'Half Moon Bay Camping', date:'2021-07-01', end:'2021-07-02', type:'overnight', loc:'Sweetwood Group Camp, Half Moon Bay, CA', nights:1},
-  {name:'Northern Tier Trek – Boundary Waters', date:'2021-07-06', end:'2021-07-16', type:'adventure', loc:'Northern Tier BSA, MN', nights:10},
-  {name:'Summer Camp – Camp Chawanakee', date:'2021-07-18', end:'2021-07-24', type:'camp', loc:'Camp Chawanakee, Shaver Lake, CA', nights:6},
-  {name:'Memorial Park Overnight', date:'2021-09-18', end:'2021-09-19', type:'overnight', loc:'Memorial Park Sequoia Campground, CA', nights:1},
-  {name:'Gold Country Camping', date:'2021-10-02', end:'2021-10-03', type:'overnight', loc:'Tuttle Town Recreation Area, CA', nights:1},
-  {name:'Elkhorn Slough Kayaking', date:'2021-10-16', end:'2021-10-16', type:'day', loc:'Monterey Bay Kayaks, Moss Landing, CA', nights:0},
-  {name:'Camping – Boulder Creek', date:'2021-11-06', end:'2021-11-07', type:'overnight', loc:'Boulder Creek Scout Reservation, CA', nights:1},
-  {name:'Indoor Overnight Rock Climbing', date:'2021-11-13', end:'2021-11-14', type:'overnight', loc:'Rocknasium, Davis, CA', nights:1},
-  {name:'K-1 Speed', date:'2021-12-04', end:'2021-12-04', type:'day', loc:'K-1 Speed, Santa Clara, CA', nights:0},
-  {name:'Black Diamond Mines Campout', date:'2021-12-11', end:'2021-12-12', type:'backpack', loc:'Black Diamond Mines RP, CA', nights:1},
-  // 2022
-  {name:'Ski & Snowboard Trip – Squaw Valley', date:'2022-01-15', end:'2022-01-17', type:'day', loc:'Palisades Tahoe, CA', nights:0},
-  {name:'Urban Hike – Chinatown SF', date:'2022-01-22', end:'2022-01-22', type:'day', loc:'San Francisco, CA', nights:0},
-  {name:'Wunderlich Park Hike', date:'2022-01-29', end:'2022-01-29', type:'day', loc:'Wunderlich County Park, Woodside, CA', nights:0},
-  {name:'Philmont Prep Hike #2 – Corte de Madera', date:'2022-02-19', end:'2022-02-19', type:'day', loc:'Corte de Madera OS, CA', nights:0},
-  {name:'High Meadow Trail Loop Hike', date:'2022-03-12', end:'2022-03-12', type:'day', loc:'TBD, CA', nights:0},
-  {name:'Philmont Prep Hike #3 – Windy Hill', date:'2022-03-19', end:'2022-03-19', type:'day', loc:'Windy Hill Open Space, CA', nights:0},
-  {name:'Star Gazing / Mt. Hamilton Campout', date:'2022-04-09', end:'2022-04-10', type:'overnight', loc:'Joseph D Grant Park, CA', nights:1},
-  {name:'American River Rafting', date:'2022-05-21', end:'2022-05-22', type:'overnight', loc:'American River, CA', nights:1},
-  {name:'Philmont Backpacking – Portola Redwoods', date:'2022-06-11', end:'2022-06-12', type:'backpack', loc:'Portola State Park, CA', nights:1},
-  {name:'Philmont Backpacking – Castle Rock', date:'2022-06-18', end:'2022-06-19', type:'backpack', loc:'Castle Rock State Park, CA', nights:1},
-  {name:'Summer Camp – Camp Wente', date:'2022-06-26', end:'2022-07-02', type:'camp', loc:'Camp Wente, Willits, CA', nights:7},
-  {name:'NYLT 2022', date:'2022-07-10', end:'2022-07-16', type:'adventure', loc:'TBD, CA', nights:7},
-  {name:'Philmont 2022', date:'2022-07-18', end:'2022-07-31', type:'adventure', loc:'Philmont Scout Ranch, NM', nights:13},
-  {name:'Bedwell Bayfront Clean-up', date:'2022-08-13', end:'2022-08-13', type:'day', loc:'Bedwell Bayfront Park, Menlo Park, CA', nights:0},
-  {name:'Huddart Park Hiking', date:'2022-09-18', end:'2022-09-18', type:'day', loc:'Huddart Park, Woodside, CA', nights:0},
-  {name:'Urban Hike – San Francisco', date:'2022-10-01', end:'2022-10-01', type:'day', loc:'San Francisco, CA', nights:0},
-  {name:'Overnight – New Brighton State Beach', date:'2022-10-07', end:'2022-10-08', type:'overnight', loc:'Santa Cruz / New Brighton, CA', nights:1},
-  {name:'OA Fall Ordeal', date:'2022-10-14', end:'2022-10-16', type:'overnight', loc:'Boulder Creek Scout Reservation, CA', nights:2},
-  {name:'Kayaking – Elkhorn Slough', date:'2022-10-22', end:'2022-10-22', type:'day', loc:'Moss Landing, CA', nights:0},
-  {name:'Gold Country / Moaning Caverns', date:'2022-11-05', end:'2022-11-06', type:'overnight', loc:'Moaning Caverns, CA', nights:1},
-  {name:'K-1 Speed', date:'2022-12-17', end:'2022-12-17', type:'day', loc:'K-1 Speed, Santa Clara, CA', nights:0},
-  // 2023
-  {name:'Corte Madera Hike', date:'2023-01-21', end:'2023-01-21', type:'day', loc:'El Corte Madera Creek OS, CA', nights:0},
-  {name:'Shooting Sports', date:'2023-01-28', end:'2023-01-28', type:'day', loc:'Los Altos Rod & Gun, CA', nights:0},
-  {name:'Coyote Lake Campout', date:'2023-02-24', end:'2023-02-26', type:'overnight', loc:'Coyote Lake, CA', nights:1},
-  {name:'Astronomy / Star Gazing – Mt. Hamilton', date:'2023-03-11', end:'2023-03-12', type:'day', loc:'Mt. Hamilton, CA', nights:0},
-  {name:'Coyote Lake Harvey Bear Ranch Campout', date:'2023-03-24', end:'2023-03-26', type:'overnight', loc:'Coyote Lake Harvey Bear Ranch, CA', nights:2},
-  {name:'Mt. Diablo Hike', date:'2023-04-01', end:'2023-04-01', type:'day', loc:'Mt. Diablo State Park, CA', nights:0},
-  {name:'Pinnacles Camping', date:'2023-04-21', end:'2023-04-23', type:'overnight', loc:'Pinnacles National Park, CA', nights:2},
-  {name:'Whitewater Rafting – American River', date:'2023-05-06', end:'2023-05-07', type:'day', loc:'South Fork American River, CA', nights:0},
-  {name:'San Bruno Mountain Hike', date:'2023-05-20', end:'2023-05-20', type:'day', loc:'San Bruno Mountain State Park, CA', nights:0},
-  {name:'Backpacking – Henry Coe', date:'2023-05-27', end:'2023-05-29', type:'backpack', loc:'Henry Coe State Park, CA', nights:2},
-  {name:'Florida Sea Base – Coral Reef Sailing', date:'2023-07-06', end:'2023-07-12', type:'adventure', loc:'Florida Sea Base, Florida Keys, FL', nights:6},
-  {name:'BSA National Jamboree', date:'2023-07-19', end:'2023-07-28', type:'adventure', loc:'Summit Bechtel Reserve, WV', nights:9},
-  {name:'Summer Camp – Camp Marin-Sierra', date:'2023-07-23', end:'2023-07-29', type:'camp', loc:'Camp Marin-Sierra, CA', nights:6},
-  {name:'California Coastal Cleanup Day', date:'2023-09-23', end:'2023-09-23', type:'day', loc:'Cooley Landing, East Palo Alto, CA', nights:0},
-  {name:'Yosemite Camping w/ Pack 565', date:'2023-10-06', end:'2023-10-09', type:'overnight', loc:'Yosemite National Park, CA', nights:3},
-  {name:'Santa Cruz Beach Boardwalk Overnight', date:'2023-10-13', end:'2023-10-14', type:'overnight', loc:'Santa Cruz Beach Boardwalk, CA', nights:1},
-  {name:'Canoe Skills – Pine Mountain Lake', date:'2023-10-27', end:'2023-10-29', type:'overnight', loc:'Pine Mountain Lake, CA', nights:2},
-  {name:'Urban Hike – Golden Gate Bridge', date:'2023-11-11', end:'2023-11-11', type:'day', loc:'San Francisco, CA', nights:0},
-  {name:'Boulder Creek Campout', date:'2023-11-18', end:'2023-11-19', type:'overnight', loc:'Boulder Creek Scout Reservation, CA', nights:1},
-  {name:'Hike Windy Hill', date:'2023-12-09', end:'2023-12-09', type:'day', loc:'Windy Hill Open Space, Portola Valley, CA', nights:0},
-  // 2024
-  {name:'Coyote Lake Car Camping', date:'2024-01-13', end:'2024-01-15', type:'overnight', loc:'Coyote Lake, CA', nights:2},
-  {name:'Foothills Nature Reserve Hike', date:'2024-01-20', end:'2024-01-20', type:'day', loc:'Foothills Nature Preserve, Los Altos Hills, CA', nights:0},
-  {name:'Shoreline Lake Canoeing', date:'2024-03-17', end:'2024-03-17', type:'day', loc:'Shoreline Lake, Mountain View, CA', nights:0},
-  {name:'Henry Coe Backpacking', date:'2024-03-22', end:'2024-03-24', type:'backpack', loc:'Henry Coe State Park, CA', nights:2},
-  {name:'Star Gazing / Mt. Hamilton Campout', date:'2024-04-09', end:'2024-04-10', type:'overnight', loc:'Joseph D Grant Park, CA', nights:1},
-  {name:'Black Diamond Mines Camping', date:'2024-04-26', end:'2024-04-28', type:'backpack', loc:'Black Diamond Mines RP, CA', nights:2},
-  {name:'Caswell Memorial State Park Campout', date:'2024-05-17', end:'2024-05-19', type:'overnight', loc:'Caswell Memorial State Park, CA', nights:2},
-  {name:'Northern Tier High Adventure – MN', date:'2024-07-08', end:'2024-07-16', type:'adventure', loc:'Northern Tier BSA, Ely, MN', nights:8},
-  {name:'Summer Camp – Camp Oljato', date:'2024-07-21', end:'2024-07-27', type:'camp', loc:'Camp Oljato, CA', nights:6},
-  {name:'Arroyo Seco Car Camping – Los Padres NF', date:'2024-09-06', end:'2024-09-08', type:'overnight', loc:'Los Padres National Forest, CA', nights:2},
-  {name:'Gold Country Car Camping', date:'2024-09-14', end:'2024-09-15', type:'overnight', loc:'Gold Country, CA', nights:1},
-  {name:'Rock Climbing – Castle Rock', date:'2024-10-05', end:'2024-10-05', type:'day', loc:'Castle Rock State Park, CA', nights:0},
-  {name:'May Lake Backpacking Trip', date:'2024-10-12', end:'2024-10-14', type:'backpack', loc:'May Lake, Yosemite, CA', nights:2},
-  {name:'Marshall Beach Tomales Bay Canoe-in', date:'2024-10-19', end:'2024-10-20', type:'overnight', loc:'Marshall Beach, Tomales Bay, CA', nights:1},
-  {name:'Big Sur Camping & Wilderness Skills', date:'2024-10-25', end:'2024-10-27', type:'overnight', loc:'Big Sur, Los Padres NF, CA', nights:2},
-  {name:'Backpacking – Henry Coe', date:'2024-11-09', end:'2024-11-11', type:'backpack', loc:'Henry Coe State Park, CA', nights:2},
-  // 2025
-  {name:'Ski & Snowboard Trip – Northstar', date:'2025-01-18', end:'2025-01-20', type:'overnight', loc:'Northstar California Resort, Truckee, CA', nights:2},
-  {name:'Point Reyes Wildcat Camp Backpacking', date:'2025-02-01', end:'2025-02-02', type:'backpack', loc:'Point Reyes National Seashore, CA', nights:1},
-  {name:'Purisima Creek Redwoods Hike', date:'2025-02-08', end:'2025-02-08', type:'day', loc:'13184 Skyline Blvd, Redwood City, CA', nights:0},
-  {name:'Santa Cruz Beach Boardwalk Overnight', date:'2025-03-21', end:'2025-03-22', type:'overnight', loc:'Santa Cruz Beach Boardwalk, CA', nights:1},
-  {name:'Pinnacles Overnight', date:'2025-05-09', end:'2025-05-11', type:'overnight', loc:'Pinnacles National Park, CA', nights:2},
-  {name:'Philmont Backpacking Prep – Castle Rock', date:'2025-05-17', end:'2025-05-18', type:'backpack', loc:'Castle Rock State Park, CA', nights:1},
-  {name:'Big Sur Backpacking Trip', date:'2025-05-24', end:'2025-05-26', type:'backpack', loc:'Los Padres NF, Big Sur, CA', nights:2},
-  {name:'Philmont 2025', date:'2025-07-01', end:'2025-07-06', type:'adventure', loc:'Philmont Scout Ranch, NM', nights:6},
-  {name:'Summer Camp – Camp Wente', date:'2025-07-13', end:'2025-07-19', type:'camp', loc:'Wente Scout Reservation, CA', nights:7},
-  {name:'Sam McDonald Park Overnight', date:'2025-09-27', end:'2025-09-28', type:'overnight', loc:'Sam McDonald Park, CA', nights:1},
-  {name:'Desolation Wilderness Advanced Backpacking', date:'2025-10-10', end:'2025-10-13', type:'backpack', loc:'Desolation Wilderness, Lake Tahoe, CA', nights:3},
-  {name:'Black Mountain Backpacking', date:'2025-10-25', end:'2025-10-26', type:'backpack', loc:'Monte Bello Open Space Preserve, CA', nights:1},
-  {name:'Memorial Park Car Camping', date:'2025-12-05', end:'2025-12-07', type:'overnight', loc:'Memorial Park, San Mateo County, CA', nights:2},
-  // 2026
-  {name:'Ski & Snowboard Trip – Northstar 2026', date:'2026-01-17', end:'2026-01-19', type:'overnight', loc:'Northstar California Resort, Truckee, CA', nights:2},
-  {name:'Point Reyes Backpacking (50-Miler Prep)', date:'2026-02-14', end:'2026-02-16', type:'backpack', loc:'Point Reyes National Seashore, CA', nights:2},
-  {name:'Black Diamond Mines Backpacking', date:'2026-03-14', end:'2026-03-15', type:'backpack', loc:'Black Diamond Mines RP, Antioch, CA', nights:1},
-  {name:'50-Miler Prep – Ohlone Wilderness', date:'2026-04-04', end:'2026-04-06', type:'backpack', loc:'Ohlone Wilderness Trail, East Bay, CA', nights:2},
-  {name:'50-Miler Prep – Big Sur', date:'2026-04-04', end:'2026-04-06', type:'backpack', loc:'Big Sur, Los Padres NF, CA', nights:2},
-  {name:'Sunset State Beach Camping', date:'2026-04-24', end:'2026-04-26', type:'overnight', loc:'Sunset State Beach, Santa Cruz County, CA', nights:2},
-  {name:'50-Miler Prep – La Honda', date:'2026-05-08', end:'2026-05-10', type:'backpack', loc:'La Honda area, CA', nights:2},
-  {name:'Angel Island Camping', date:'2026-05-23', end:'2026-05-25', type:'overnight', loc:'Angel Island State Park, SF Bay, CA', nights:2},
-  {name:'Summer Camp – Camp Hi-Sierra', date:'2026-07-12', end:'2026-07-18', type:'camp', loc:'Camp Hi-Sierra, Long Barn, CA', nights:7},
-  {name:'High Sierra 50-Miler', date:'2026-07-26', end:'2026-08-02', type:'adventure', loc:'Inyo National Forest, CA', nights:7},
+const HIGHLIGHTS=[
+  {y:'2017',c:12,txt:'Troop returns to the <strong>National Jamboree</strong> at Bechtel Reserve. Three July outings including the Hetch Hetchy loop. 12 outings across 8 active months.'},
+  {y:'2018',c:17,txt:'Most active pre-COVID year. <strong>Mount Whitney 50-Miler</strong> marks the troop\u2019s first major high adventure. 8 day trips \u2014 strongest day outing year in troop history.'},
+  {y:'2019',c:15,txt:'<strong>Philmont 2019</strong> \u2014 the troop\u2019s first Philmont expedition. Cache Creek rafting, Butano overnight, and Gold Country camping.'},
+  {y:'2020',c:21,txt:'COVID year: highest total (21) includes virtual events. Point Reyes and Coyote Lake completed before shutdown. Virtual Camporee and backyard campouts kept scouts connected.'},
+  {y:'2021',c:16,txt:'Return to in-person scouting! <strong>Northern Tier Trek</strong> (Boundary Waters, MN). Pinnacles, Half Moon Bay, and Gold Country all return.'},
+  {y:'2022',c:21,txt:'Tied all-time high. <strong>Philmont 2022</strong> expedition. 11 day trips. October saw 4 outings \u2014 a single-month record. Elkhorn Slough kayaking added.'},
+  {y:'2023',c:20,txt:'<strong>Florida Sea Base Coral Reef Sailing</strong> + <strong>National Jamboree</strong> in the same year. First Sea Base adventure. Three May outings including Henry Coe backpacking.'},
+  {y:'2024',c:16,txt:'<strong>Northern Tier High Adventure</strong> returns (Ely, MN). Heaviest backpacking year: 6 backcountry trips. 50-Miler planning begins.'},
+  {y:'2025',c:13,txt:'<strong>Philmont 2025</strong> (sold out). Desolation Wilderness 20-mile advanced route. Troop shifts decisively to backpacking: 7 backcountry trips, only 1 day outing.'},
+  {y:'2026',c:10,txt:'<strong>High Sierra 50-Miler</strong> planned July. Sea Base 2027 confirmed. Angel Island and Sunset State Beach added. Sep\u2013Nov outings filled based on historical patterns.'},
 ];
-
-// Timeline
-const tlBody = document.getElementById('tl-body');
-const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const TYPE_LABELS = {day:'Day',overnight:'Overnight',backpack:'Backpack',camp:'Summer Camp',adventure:'High Adv'};
-
+const tlBody=document.getElementById('tl-body');
 HIGHLIGHTS.forEach(h=>{
-  const yearEvents = ALL_EVENTS.filter(e=>e.date.startsWith(h.y));
-  const byMonth = {};
-  yearEvents.forEach(e=>{
-    const m = parseInt(e.date.split('-')[1],10)-1;
-    if(!byMonth[m]) byMonth[m]=[];
-    byMonth[m].push(e);
-  });
-  const monthsHtml = Object.keys(byMonth).sort((a,b)=>a-b).map(m=>{
-    const evHtml = byMonth[m].map(e=>`<div class="tl-event-item">
-      <div class="tl-event-dot dot-${e.type}"></div>
-      <span class="tl-event-name">${e.name}</span>
-      <span class="tl-event-type">${TYPE_LABELS[e.type]||e.type}</span>
-    </div>`).join('');
-    return `<div class="tl-month-group"><div class="tl-month-label">${MONTH_NAMES[m]}</div>${evHtml}</div>`;
-  }).join('');
-
-  const div = document.createElement('div');
-  div.className='tl-item';
-  div.innerHTML=`<div class="tl-year">${h.y} <span style="font-size:14px;font-family:'DM Sans',sans-serif;color:var(--bark);font-weight:300;">${h.c} outings</span><button class="tl-expand-btn" data-year="${h.y}">&#9656; Show Events</button></div><div class="tl-highlight">${h.txt}</div><div class="tl-events" id="tl-ev-${h.y}">${monthsHtml}</div>`;
+  const div=document.createElement('div');div.className='tl-item';
+  div.innerHTML=`<div class="tl-year">${h.y} <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--bark);font-weight:400">\u00b7 ${h.c} outings</span></div><div class="tl-detail">${h.txt}</div>`;
   tlBody.appendChild(div);
 });
 
-tlBody.addEventListener('click', e=>{
-  const btn = e.target.closest('.tl-expand-btn');
-  if(!btn) return;
-  const yr = btn.dataset.year;
-  const panel = document.getElementById('tl-ev-'+yr);
-  const open = panel.classList.toggle('open');
-  btn.innerHTML = open ? '&#9662; Hide Events' : '&#9656; Show Events';
-});
-
-// Build lookup: 'YYYY-MM-DD' -> events[]
-const eventByDate = {};
-ALL_EVENTS.forEach(ev => {
-  const startD = new Date(ev.date + 'T12:00:00');
-  const endD   = new Date(ev.end  + 'T12:00:00');
-  let cur = new Date(startD);
-  while (cur <= endD) {
-    const key = cur.toISOString().slice(0,10);
-    if (!eventByDate[key]) eventByDate[key] = [];
-    eventByDate[key].push(ev);
-    cur.setDate(cur.getDate() + 1);
+// ── CALENDAR ──
+const ALL_EVENTS=[
+  {name:'Half Moon Bay State Park',date:'2017-01-21',end:'2017-01-22',type:'overnight',loc:'Half Moon Bay State Beach, CA',nights:1},
+  {name:'Point Reyes \u2013 Wildcat Camp',date:'2017-02-18',end:'2017-02-20',type:'backpack',loc:'Point Reyes National Seashore, CA',nights:2},
+  {name:'Snow Camping \u2013 Yosemite',date:'2017-03-11',end:'2017-03-12',type:'overnight',loc:'Yosemite National Park, CA',nights:1},
+  {name:'Kayaking \u2013 Tomales Bay',date:'2017-03-19',end:'2017-03-19',type:'day',loc:'Tomales Bay, CA',nights:0},
+  {name:'Camporee \u2013 Cutter Scout Reservation',date:'2017-04-07',end:'2017-04-09',type:'overnight',loc:'Cutter Scout Reservation, CA',nights:2},
+  {name:'River Rafting \u2013 Cache Creek',date:'2017-06-10',end:'2017-06-11',type:'day',loc:'Cache Creek, CA',nights:0},
+  {name:'Summer Camp \u2013 Camp Oljato',date:'2017-07-09',end:'2017-07-15',type:'camp',loc:'Camp Oljato, CA',nights:7},
+  {name:'National Boy Scout Jamboree',date:'2017-07-15',end:'2017-07-28',type:'adventure',loc:'Summit Bechtel Reserve, WV',nights:13},
+  {name:'YNP \u2013 Hetch Hetchy Loop',date:'2017-07-22',end:'2017-07-29',type:'backpack',loc:'Yosemite National Park, CA',nights:7},
+  {name:'Camp Cutter Overnight',date:'2017-09-23',end:'2017-09-24',type:'overnight',loc:'Cutter BSA Reserve, CA',nights:1},
+  {name:'May Lake Backpacking',date:'2017-10-14',end:'2017-10-15',type:'backpack',loc:'May Lake, Yosemite, CA',nights:1},
+  {name:'Memorial Park Campout',date:'2017-12-09',end:'2017-12-10',type:'overnight',loc:'Memorial Park, Loma Mar, CA',nights:1},
+  {name:'Ski Trip \u2013 Squaw Valley',date:'2018-01-12',end:'2018-01-15',type:'day',loc:'Palisades Tahoe, CA',nights:0},
+  {name:'Rock Climbing \u2013 Planet Granite',date:'2018-01-24',end:'2018-01-24',type:'day',loc:'Planet Granite, Belmont, CA',nights:0},
+  {name:'Overnight Rock Climbing',date:'2018-02-10',end:'2018-02-11',type:'overnight',loc:'Davis, CA',nights:1},
+  {name:'Point Reyes Kayak Campout',date:'2018-03-10',end:'2018-03-11',type:'overnight',loc:'Point Reyes National Seashore, CA',nights:1},
+  {name:'All-District Camporee',date:'2018-04-06',end:'2018-04-08',type:'overnight',loc:'Cutter Scout Reservation, CA',nights:2},
+  {name:'Urban Hike SF',date:'2018-04-21',end:'2018-04-21',type:'day',loc:'San Francisco, CA',nights:0},
+  {name:'Cycling Outing',date:'2018-04-28',end:'2018-04-28',type:'day',loc:'Menlo Park, CA',nights:0},
+  {name:'Henry Coe Backpack Trip',date:'2018-05-05',end:'2018-05-06',type:'backpack',loc:'Henry Coe State Park, CA',nights:1},
+  {name:'Shotgun & Rifle Practice',date:'2018-05-12',end:'2018-05-12',type:'day',loc:'Los Altos Rod & Gun, CA',nights:0},
+  {name:'Windy Hill Hike (Camp Prep)',date:'2018-07-01',end:'2018-07-01',type:'day',loc:'Windy Hill Open Space, CA',nights:0},
+  {name:'Summer Camp \u2013 Camp Wente',date:'2018-07-08',end:'2018-07-14',type:'camp',loc:'Camp Wente, Willits, CA',nights:7},
+  {name:'Mount Whitney 50-Miler',date:'2018-07-26',end:'2018-08-03',type:'adventure',loc:'Inyo National Forest, CA',nights:8},
+  {name:'Cache Creek Whitewater Rafting',date:'2018-08-04',end:'2018-08-05',type:'day',loc:'Cache Creek, CA',nights:0},
+  {name:'Cooking MB & Advancement Campout',date:'2018-09-21',end:'2018-09-23',type:'overnight',loc:'Cutter Scout Reservation, CA',nights:2},
+  {name:'May Lake / Mt. Hoffman',date:'2018-10-13',end:'2018-10-14',type:'backpack',loc:'May Lake, Yosemite, CA',nights:1},
+  {name:'Council TTFC Campout',date:'2018-11-02',end:'2018-11-04',type:'overnight',loc:'Cutter Scout Reservation, CA',nights:2},
+  {name:'Pinnacles Day Hike',date:'2018-12-08',end:'2018-12-08',type:'day',loc:'Pinnacles National Park, CA',nights:0},
+  {name:'Ski Trip \u2013 Squaw Valley',date:'2019-01-19',end:'2019-01-21',type:'day',loc:'Palisades Tahoe, CA',nights:0},
+  {name:'Indoor Rock Climbing \u2013 Planet Granite',date:'2019-02-13',end:'2019-02-13',type:'day',loc:'Planet Granite, Belmont, CA',nights:0},
+  {name:'Boulder Creek Camp Out',date:'2019-03-09',end:'2019-03-10',type:'overnight',loc:'Boulder Creek Scout Reservation, CA',nights:1},
+  {name:'PacSky Camporee',date:'2019-03-29',end:'2019-03-31',type:'overnight',loc:'Cutter Scout Reserve, CA',nights:2},
+  {name:'OA Spring Ordeal',date:'2019-04-05',end:'2019-04-07',type:'overnight',loc:'Cutter Scout Reserve, CA',nights:2},
+  {name:'Windy Hill Philmont Prep Hike',date:'2019-05-04',end:'2019-05-04',type:'day',loc:'Windy Hill Open Space, CA',nights:0},
+  {name:'Butano Overnight Camping',date:'2019-05-18',end:'2019-05-19',type:'overnight',loc:'Butano State Park, CA',nights:1},
+  {name:'Summer Camp \u2013 John C. Mensinger',date:'2019-06-23',end:'2019-06-29',type:'camp',loc:'Camp Mensinger, CA',nights:6},
+  {name:'Philmont 2019',date:'2019-07-15',end:'2019-07-28',type:'adventure',loc:'Philmont Scout Ranch, NM',nights:13},
+  {name:'Cache Creek Rafting',date:'2019-08-03',end:'2019-08-04',type:'day',loc:'Cache Creek, CA',nights:0},
+  {name:'Gold Country Camping',date:'2019-09-14',end:'2019-09-15',type:'overnight',loc:'Tuttletown Recreation Area, CA',nights:1},
+  {name:'Black Diamond Mines Backpacking',date:'2019-10-19',end:'2019-10-20',type:'backpack',loc:'Black Diamond Mines RP, Antioch, CA',nights:1},
+  {name:'Trail to First Class Campout',date:'2019-11-02',end:'2019-11-03',type:'overnight',loc:'Boulder Creek Scout Reservation, CA',nights:1},
+  {name:'K-1 Speed',date:'2019-11-23',end:'2019-11-23',type:'day',loc:'K-1 Speed, Santa Clara, CA',nights:0},
+  {name:'Ski Trip \u2013 Squaw Valley',date:'2020-01-18',end:'2020-01-20',type:'day',loc:'Palisades Tahoe, CA',nights:0},
+  {name:'Camping MB Overnight',date:'2020-02-01',end:'2020-02-02',type:'overnight',loc:'TBD',nights:1},
+  {name:'Ropes Course \u2013 Mt. Hermon',date:'2020-02-15',end:'2020-02-15',type:'day',loc:'Mt. Hermon Adventures, Felton, CA',nights:0},
+  {name:'Cycling & Camping \u2013 Coyote Lake',date:'2020-02-21',end:'2020-02-23',type:'overnight',loc:'Coyote Lake Harvey Bear Ranch, CA',nights:2},
+  {name:'Point Reyes Backpacking',date:'2020-02-29',end:'2020-03-01',type:'backpack',loc:'Coast Camp, Point Reyes, CA',nights:1},
+  {name:'TTFC Spring Campout',date:'2020-03-13',end:'2020-03-15',type:'overnight',loc:'Atherton Scout Site, CA',nights:2},
+  {name:'Bayfront Trail Bike Ride',date:'2020-07-25',end:'2020-07-25',type:'day',loc:'Embarcadero Rd, Palo Alto, CA',nights:0},
+  {name:'Overnight Camping (Magruder)',date:'2020-08-07',end:'2020-08-09',type:'overnight',loc:'Magruder House, CA',nights:1},
+  {name:'Rancho San Antonio Hike',date:'2020-08-08',end:'2020-08-08',type:'day',loc:'Rancho San Antonio Open Space, CA',nights:0},
+  {name:'Alex Waitz Campout',date:'2020-08-14',end:'2020-08-16',type:'overnight',loc:'22 Holbrook Lane, Atherton, CA',nights:1},
+  {name:'Virtual Campout \u2013 Waitz House',date:'2020-09-11',end:'2020-09-13',type:'overnight',loc:'22 Holbrook Lane, Atherton, CA',nights:1},
+  {name:'Tour de Menlo Bike Ride',date:'2020-09-12',end:'2020-09-12',type:'day',loc:'Menlo Park / Atherton, CA',nights:0},
+  {name:'May Lake Backpacking',date:'2020-09-26',end:'2020-09-27',type:'backpack',loc:'May Lake, Yosemite, CA',nights:1},
+  {name:'Urban Hike \u2013 Chinatown SF',date:'2020-10-10',end:'2020-10-10',type:'day',loc:'San Francisco, CA',nights:0},
+  {name:'Overnight Campout (Magruders)',date:'2020-10-16',end:'2020-10-18',type:'overnight',loc:'Magruder House, CA',nights:2},
+  {name:'Livermore Camping',date:'2020-10-24',end:'2020-10-25',type:'overnight',loc:'Greenville Rd, Livermore, CA',nights:1},
+  {name:'Bike Outing',date:'2020-11-07',end:'2020-11-07',type:'day',loc:'Palo Alto, CA',nights:0},
+  {name:'Boulder Creek Conservation Project',date:'2020-11-14',end:'2020-11-14',type:'day',loc:'Boulder Creek Scout Reservation, CA',nights:0},
+  {name:'Local Campout',date:'2020-11-20',end:'2020-11-22',type:'overnight',loc:'Local Site, CA',nights:2},
+  {name:'NT Crew Kayaking \u2013 Elkhorn Slough',date:'2021-02-27',end:'2021-02-27',type:'day',loc:'Elkhorn Slough, Moss Landing, CA',nights:0},
+  {name:'Edgewood Park Hike',date:'2021-03-20',end:'2021-03-20',type:'day',loc:'Edgewood Park, Redwood City, CA',nights:0},
+  {name:'SF Urban Hike',date:'2021-04-11',end:'2021-04-11',type:'day',loc:'Chinatown, San Francisco, CA',nights:0},
+  {name:'Director\u2019s Cabin \u2013 Boulder Creek',date:'2021-05-01',end:'2021-05-02',type:'overnight',loc:'Boulder Creek Scout Reservation, CA',nights:2},
+  {name:'Cycling MB \u2013 50 Mile Ride',date:'2021-05-23',end:'2021-05-23',type:'day',loc:'Menlo Park area, CA',nights:0},
+  {name:'Pinnacles Camping',date:'2021-06-04',end:'2021-06-06',type:'overnight',loc:'Pinnacles National Park, CA',nights:2},
+  {name:'Half Moon Bay Camping',date:'2021-07-01',end:'2021-07-02',type:'overnight',loc:'Sweetwood Group Camp, Half Moon Bay, CA',nights:1},
+  {name:'Northern Tier Trek \u2013 Boundary Waters',date:'2021-07-06',end:'2021-07-16',type:'adventure',loc:'Northern Tier BSA, MN',nights:10},
+  {name:'Summer Camp \u2013 Camp Chawanakee',date:'2021-07-18',end:'2021-07-24',type:'camp',loc:'Camp Chawanakee, Shaver Lake, CA',nights:6},
+  {name:'Memorial Park Overnight',date:'2021-09-18',end:'2021-09-19',type:'overnight',loc:'Memorial Park, CA',nights:1},
+  {name:'Gold Country Camping',date:'2021-10-02',end:'2021-10-03',type:'overnight',loc:'Tuttle Town Recreation Area, CA',nights:1},
+  {name:'Elkhorn Slough Kayaking',date:'2021-10-16',end:'2021-10-16',type:'day',loc:'Monterey Bay Kayaks, Moss Landing, CA',nights:0},
+  {name:'Camping \u2013 Boulder Creek',date:'2021-11-06',end:'2021-11-07',type:'overnight',loc:'Boulder Creek Scout Reservation, CA',nights:1},
+  {name:'Indoor Overnight Rock Climbing',date:'2021-11-13',end:'2021-11-14',type:'overnight',loc:'Rocknasium, Davis, CA',nights:1},
+  {name:'K-1 Speed',date:'2021-12-04',end:'2021-12-04',type:'day',loc:'K-1 Speed, Santa Clara, CA',nights:0},
+  {name:'Black Diamond Mines Campout',date:'2021-12-11',end:'2021-12-12',type:'backpack',loc:'Black Diamond Mines RP, CA',nights:1},
+  {name:'Ski & Snowboard Trip \u2013 Squaw Valley',date:'2022-01-15',end:'2022-01-17',type:'day',loc:'Palisades Tahoe, CA',nights:0},
+  {name:'Urban Hike \u2013 Chinatown SF',date:'2022-01-22',end:'2022-01-22',type:'day',loc:'San Francisco, CA',nights:0},
+  {name:'Wunderlich Park Hike',date:'2022-01-29',end:'2022-01-29',type:'day',loc:'Wunderlich County Park, Woodside, CA',nights:0},
+  {name:'Philmont Prep Hike #2 \u2013 Corte de Madera',date:'2022-02-19',end:'2022-02-19',type:'day',loc:'Corte de Madera OS, CA',nights:0},
+  {name:'High Meadow Trail Loop Hike',date:'2022-03-12',end:'2022-03-12',type:'day',loc:'TBD, CA',nights:0},
+  {name:'Philmont Prep Hike #3 \u2013 Windy Hill',date:'2022-03-19',end:'2022-03-19',type:'day',loc:'Windy Hill Open Space, CA',nights:0},
+  {name:'Star Gazing / Mt. Hamilton Campout',date:'2022-04-09',end:'2022-04-10',type:'overnight',loc:'Joseph D Grant Park, CA',nights:1},
+  {name:'American River Rafting',date:'2022-05-21',end:'2022-05-22',type:'overnight',loc:'American River, CA',nights:1},
+  {name:'Philmont Backpacking \u2013 Portola Redwoods',date:'2022-06-11',end:'2022-06-12',type:'backpack',loc:'Portola State Park, CA',nights:1},
+  {name:'Philmont Backpacking \u2013 Castle Rock',date:'2022-06-18',end:'2022-06-19',type:'backpack',loc:'Castle Rock State Park, CA',nights:1},
+  {name:'Summer Camp \u2013 Camp Wente',date:'2022-06-26',end:'2022-07-02',type:'camp',loc:'Camp Wente, Willits, CA',nights:7},
+  {name:'NYLT 2022',date:'2022-07-10',end:'2022-07-16',type:'adventure',loc:'TBD, CA',nights:7},
+  {name:'Philmont 2022',date:'2022-07-18',end:'2022-07-31',type:'adventure',loc:'Philmont Scout Ranch, NM',nights:13},
+  {name:'Bedwell Bayfront Clean-up',date:'2022-08-13',end:'2022-08-13',type:'day',loc:'Bedwell Bayfront Park, Menlo Park, CA',nights:0},
+  {name:'Huddart Park Hiking',date:'2022-09-18',end:'2022-09-18',type:'day',loc:'Huddart Park, Woodside, CA',nights:0},
+  {name:'Urban Hike \u2013 San Francisco',date:'2022-10-01',end:'2022-10-01',type:'day',loc:'San Francisco, CA',nights:0},
+  {name:'Overnight \u2013 New Brighton State Beach',date:'2022-10-07',end:'2022-10-08',type:'overnight',loc:'Santa Cruz / New Brighton, CA',nights:1},
+  {name:'OA Fall Ordeal',date:'2022-10-14',end:'2022-10-16',type:'overnight',loc:'Boulder Creek Scout Reservation, CA',nights:2},
+  {name:'Kayaking \u2013 Elkhorn Slough',date:'2022-10-22',end:'2022-10-22',type:'day',loc:'Moss Landing, CA',nights:0},
+  {name:'Gold Country / Moaning Caverns',date:'2022-11-05',end:'2022-11-06',type:'overnight',loc:'Moaning Caverns, CA',nights:1},
+  {name:'K-1 Speed',date:'2022-12-17',end:'2022-12-17',type:'day',loc:'K-1 Speed, Santa Clara, CA',nights:0},
+  {name:'Corte Madera Hike',date:'2023-01-21',end:'2023-01-21',type:'day',loc:'El Corte Madera Creek OS, CA',nights:0},
+  {name:'Shooting Sports',date:'2023-01-28',end:'2023-01-28',type:'day',loc:'Los Altos Rod & Gun, CA',nights:0},
+  {name:'Coyote Lake Campout',date:'2023-02-24',end:'2023-02-26',type:'overnight',loc:'Coyote Lake, CA',nights:1},
+  {name:'Astronomy / Star Gazing \u2013 Mt. Hamilton',date:'2023-03-11',end:'2023-03-12',type:'day',loc:'Mt. Hamilton, CA',nights:0},
+  {name:'Coyote Lake Harvey Bear Ranch Campout',date:'2023-03-24',end:'2023-03-26',type:'overnight',loc:'Coyote Lake Harvey Bear Ranch, CA',nights:2},
+  {name:'Mt. Diablo Hike',date:'2023-04-01',end:'2023-04-01',type:'day',loc:'Mt. Diablo State Park, CA',nights:0},
+  {name:'Pinnacles Camping',date:'2023-04-21',end:'2023-04-23',type:'overnight',loc:'Pinnacles National Park, CA',nights:2},
+  {name:'Whitewater Rafting \u2013 American River',date:'2023-05-06',end:'2023-05-07',type:'day',loc:'South Fork American River, CA',nights:0},
+  {name:'San Bruno Mountain Hike',date:'2023-05-20',end:'2023-05-20',type:'day',loc:'San Bruno Mountain State Park, CA',nights:0},
+  {name:'Backpacking \u2013 Henry Coe',date:'2023-05-27',end:'2023-05-29',type:'backpack',loc:'Henry Coe State Park, CA',nights:2},
+  {name:'Florida Sea Base \u2013 Coral Reef Sailing',date:'2023-07-06',end:'2023-07-12',type:'adventure',loc:'Florida Sea Base, Florida Keys, FL',nights:6},
+  {name:'BSA National Jamboree',date:'2023-07-19',end:'2023-07-28',type:'adventure',loc:'Summit Bechtel Reserve, WV',nights:9},
+  {name:'Summer Camp \u2013 Camp Marin-Sierra',date:'2023-07-23',end:'2023-07-29',type:'camp',loc:'Camp Marin-Sierra, CA',nights:6},
+  {name:'California Coastal Cleanup Day',date:'2023-09-23',end:'2023-09-23',type:'day',loc:'Cooley Landing, East Palo Alto, CA',nights:0},
+  {name:'Yosemite Camping w/ Pack 565',date:'2023-10-06',end:'2023-10-09',type:'overnight',loc:'Yosemite National Park, CA',nights:3},
+  {name:'Santa Cruz Beach Boardwalk Overnight',date:'2023-10-13',end:'2023-10-14',type:'overnight',loc:'Santa Cruz Beach Boardwalk, CA',nights:1},
+  {name:'Canoe Skills \u2013 Pine Mountain Lake',date:'2023-10-27',end:'2023-10-29',type:'overnight',loc:'Pine Mountain Lake, CA',nights:2},
+  {name:'Urban Hike \u2013 Golden Gate Bridge',date:'2023-11-11',end:'2023-11-11',type:'day',loc:'San Francisco, CA',nights:0},
+  {name:'Boulder Creek Campout',date:'2023-11-18',end:'2023-11-19',type:'overnight',loc:'Boulder Creek Scout Reservation, CA',nights:1},
+  {name:'Hike Windy Hill',date:'2023-12-09',end:'2023-12-09',type:'day',loc:'Windy Hill Open Space, Portola Valley, CA',nights:0},
+  {name:'Coyote Lake Car Camping',date:'2024-01-13',end:'2024-01-15',type:'overnight',loc:'Coyote Lake, CA',nights:2},
+  {name:'Foothills Nature Reserve Hike',date:'2024-01-20',end:'2024-01-20',type:'day',loc:'Foothills Nature Preserve, Los Altos Hills, CA',nights:0},
+  {name:'Shoreline Lake Canoeing',date:'2024-03-17',end:'2024-03-17',type:'day',loc:'Shoreline Lake, Mountain View, CA',nights:0},
+  {name:'Henry Coe Backpacking',date:'2024-03-22',end:'2024-03-24',type:'backpack',loc:'Henry Coe State Park, CA',nights:2},
+  {name:'Star Gazing / Mt. Hamilton Campout',date:'2024-04-09',end:'2024-04-10',type:'overnight',loc:'Joseph D Grant Park, CA',nights:1},
+  {name:'Black Diamond Mines Camping',date:'2024-04-26',end:'2024-04-28',type:'backpack',loc:'Black Diamond Mines RP, CA',nights:2},
+  {name:'Caswell Memorial State Park Campout',date:'2024-05-17',end:'2024-05-19',type:'overnight',loc:'Caswell Memorial State Park, CA',nights:2},
+  {name:'Northern Tier High Adventure \u2013 MN',date:'2024-07-08',end:'2024-07-16',type:'adventure',loc:'Northern Tier BSA, Ely, MN',nights:8},
+  {name:'Summer Camp \u2013 Camp Oljato',date:'2024-07-21',end:'2024-07-27',type:'camp',loc:'Camp Oljato, CA',nights:6},
+  {name:'Arroyo Seco Car Camping \u2013 Los Padres NF',date:'2024-09-06',end:'2024-09-08',type:'overnight',loc:'Los Padres National Forest, CA',nights:2},
+  {name:'Gold Country Car Camping',date:'2024-09-14',end:'2024-09-15',type:'overnight',loc:'Gold Country, CA',nights:1},
+  {name:'Rock Climbing \u2013 Castle Rock',date:'2024-10-05',end:'2024-10-05',type:'day',loc:'Castle Rock State Park, CA',nights:0},
+  {name:'May Lake Backpacking Trip',date:'2024-10-12',end:'2024-10-14',type:'backpack',loc:'May Lake, Yosemite, CA',nights:2},
+  {name:'Marshall Beach Tomales Bay Canoe-in',date:'2024-10-19',end:'2024-10-20',type:'overnight',loc:'Marshall Beach, Tomales Bay, CA',nights:1},
+  {name:'Big Sur Camping & Wilderness Skills',date:'2024-10-25',end:'2024-10-27',type:'overnight',loc:'Big Sur, Los Padres NF, CA',nights:2},
+  {name:'Backpacking \u2013 Henry Coe',date:'2024-11-09',end:'2024-11-11',type:'backpack',loc:'Henry Coe State Park, CA',nights:2},
+  {name:'Ski & Snowboard Trip \u2013 Northstar',date:'2025-01-18',end:'2025-01-20',type:'overnight',loc:'Northstar California Resort, Truckee, CA',nights:2},
+  {name:'Point Reyes Wildcat Camp Backpacking',date:'2025-02-01',end:'2025-02-02',type:'backpack',loc:'Point Reyes National Seashore, CA',nights:1},
+  {name:'Purisima Creek Redwoods Hike',date:'2025-02-08',end:'2025-02-08',type:'day',loc:'Skyline Blvd, Redwood City, CA',nights:0},
+  {name:'Santa Cruz Beach Boardwalk Overnight',date:'2025-03-21',end:'2025-03-22',type:'overnight',loc:'Santa Cruz Beach Boardwalk, CA',nights:1},
+  {name:'Pinnacles Overnight',date:'2025-05-09',end:'2025-05-11',type:'overnight',loc:'Pinnacles National Park, CA',nights:2},
+  {name:'Philmont Backpacking Prep \u2013 Castle Rock',date:'2025-05-17',end:'2025-05-18',type:'backpack',loc:'Castle Rock State Park, CA',nights:1},
+  {name:'Big Sur Backpacking Trip',date:'2025-05-24',end:'2025-05-26',type:'backpack',loc:'Los Padres NF, Big Sur, CA',nights:2},
+  {name:'Philmont 2025',date:'2025-07-01',end:'2025-07-06',type:'adventure',loc:'Philmont Scout Ranch, NM',nights:6},
+  {name:'Summer Camp \u2013 Camp Wente',date:'2025-07-13',end:'2025-07-19',type:'camp',loc:'Wente Scout Reservation, CA',nights:7},
+  {name:'Sam McDonald Park Overnight',date:'2025-09-27',end:'2025-09-28',type:'overnight',loc:'Sam McDonald Park, CA',nights:1},
+  {name:'Desolation Wilderness Advanced Backpacking',date:'2025-10-10',end:'2025-10-13',type:'backpack',loc:'Desolation Wilderness, Lake Tahoe, CA',nights:3},
+  {name:'Black Mountain Backpacking',date:'2025-10-25',end:'2025-10-26',type:'backpack',loc:'Monte Bello Open Space Preserve, CA',nights:1},
+  {name:'Memorial Park Car Camping',date:'2025-12-05',end:'2025-12-07',type:'overnight',loc:'Memorial Park, San Mateo County, CA',nights:2},
+  {name:'Ski & Snowboard Trip \u2013 Northstar 2026',date:'2026-01-17',end:'2026-01-19',type:'overnight',loc:'Northstar California Resort, Truckee, CA',nights:2},
+  {name:'Point Reyes Backpacking (50-Miler Prep)',date:'2026-02-14',end:'2026-02-16',type:'backpack',loc:'Point Reyes National Seashore, CA',nights:2},
+  {name:'Black Diamond Mines Backpacking',date:'2026-03-14',end:'2026-03-15',type:'backpack',loc:'Black Diamond Mines RP, Antioch, CA',nights:1},
+  {name:'50-Miler Prep \u2013 Ohlone Wilderness',date:'2026-04-04',end:'2026-04-06',type:'backpack',loc:'Ohlone Wilderness Trail, East Bay, CA',nights:2},
+  {name:'50-Miler Prep \u2013 Big Sur',date:'2026-04-04',end:'2026-04-06',type:'backpack',loc:'Big Sur, Los Padres NF, CA',nights:2},
+  {name:'Sunset State Beach Camping',date:'2026-04-24',end:'2026-04-26',type:'overnight',loc:'Sunset State Beach, Santa Cruz County, CA',nights:2},
+  {name:'50-Miler Prep \u2013 La Honda',date:'2026-05-08',end:'2026-05-10',type:'backpack',loc:'La Honda area, CA',nights:2},
+  {name:'Angel Island Camping',date:'2026-05-23',end:'2026-05-25',type:'overnight',loc:'Angel Island State Park, SF Bay, CA',nights:2},
+  {name:'Summer Camp \u2013 Camp Hi-Sierra',date:'2026-07-12',end:'2026-07-18',type:'camp',loc:'Camp Hi-Sierra, Long Barn, CA',nights:7},
+  {name:'High Sierra 50-Miler',date:'2026-07-26',end:'2026-08-02',type:'adventure',loc:'Inyo National Forest, CA',nights:7},
+];
+const TYPE_LABEL={day:'Day Outing',overnight:'Overnight / Car Camp',backpack:'Backpacking',camp:'Summer Camp',adventure:'High Adventure'};
+const eventByDate={};
+ALL_EVENTS.forEach(ev=>{
+  let cur=new Date(ev.date+'T12:00:00'),end=new Date(ev.end+'T12:00:00');
+  while(cur<=end){
+    const k=cur.toISOString().slice(0,10);
+    if(!eventByDate[k])eventByDate[k]=[];
+    eventByDate[k].push(ev);cur.setDate(cur.getDate()+1);
   }
 });
-
-const TYPE_COLOR = {day:'type-day', overnight:'type-overnight', backpack:'type-backpack', camp:'type-camp', adventure:'type-adventure'};
-const TYPE_LABEL = {day:'Day Outing', overnight:'Overnight/Car Camp', backpack:'Backpacking', camp:'Summer Camp', adventure:'High Adventure'};
-const TYPE_BG    = {day:'rgba(74,124,89,0.6)', overnight:'rgba(46,107,158,0.6)', backpack:'rgba(74,158,212,0.6)', camp:'rgba(200,135,42,0.6)', adventure:'rgba(217,79,46,0.6)'};
-
-let calYear = 2017, calMonth = 0; // 0 = Jan
-
-function buildCalYearBtns() {
-  const wrap = document.getElementById('cal-year-select');
-  wrap.innerHTML = '';
-  for (let y = 2017; y <= 2026; y++) {
-    const btn = document.createElement('button');
-    btn.className = 'cal-year-btn' + (y === calYear ? ' on' : '');
-    btn.textContent = y;
-    btn.addEventListener('click', () => { calYear = y; calMonth = 0; renderCal(); buildCalYearBtns(); });
+let calYear=2017,calMonth=0;
+function buildCalYearBtns(){
+  const wrap=document.getElementById('cal-year-select');wrap.innerHTML='';
+  for(let y=2017;y<=2026;y++){
+    const btn=document.createElement('button');
+    btn.className='cal-year-btn'+(y===calYear?' on':'');
+    btn.textContent=y;
+    btn.addEventListener('click',()=>{calYear=y;calMonth=0;renderCal();buildCalYearBtns();});
     wrap.appendChild(btn);
   }
 }
-
-function renderCal() {
-  const MNAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('cal-title').textContent = MNAMES[calMonth] + ' ' + calYear;
-
-  const grid = document.getElementById('cal-grid');
-  // Remove old day cells (keep DOW headers = first 7 children)
-  while (grid.children.length > 7) grid.removeChild(grid.lastChild);
-
-  const firstDow = new Date(calYear, calMonth, 1).getDay();
-  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  const prevDays = new Date(calYear, calMonth, 0).getDate();
-  const today = new Date();
-
-  // Prev month padding
-  for (let i = firstDow - 1; i >= 0; i--) {
-    const d = document.createElement('div');
-    d.className = 'cal-day other-month';
-    d.innerHTML = `<div class="cal-day-num">${prevDays - i}</div>`;
-    grid.appendChild(d);
-  }
-
-  // Current month days
-  for (let d = 1; d <= daysInMonth; d++) {
-    const cell = document.createElement('div');
-    const isToday = today.getFullYear()===calYear && today.getMonth()===calMonth && today.getDate()===d;
-    cell.className = 'cal-day' + (isToday ? ' today' : '');
-    const dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-    const evs = eventByDate[dateStr] || [];
-    // Deduplicate (multi-day events show each day)
-    const unique = [...new Map(evs.map(e=>[e.name,e])).values()];
-    const startEvs = unique.filter(e => e.date === dateStr);
-
-    let html = `<div class="cal-day-num">${d}</div>`;
-    const showMax = 2;
-    startEvs.slice(0, showMax).forEach(ev => {
-      html += `<div class="cal-event ${TYPE_COLOR[ev.type]}" data-name="${ev.name.replace(/"/g,'&quot;')}" title="${ev.name}">${ev.name}</div>`;
-    });
-    if (startEvs.length > showMax) {
-      html += `<div class="cal-more">+${startEvs.length - showMax} more</div>`;
-    }
-    // Continuation indicator (non-start days)
-    const contEvs = unique.filter(e => e.date !== dateStr);
-    if (contEvs.length > 0 && startEvs.length === 0) {
-      html += `<div style="height:4px;border-radius:2px;background:${TYPE_BG[contEvs[0].type]};margin-top:2px;opacity:0.5;"></div>`;
-    }
-    cell.innerHTML = html;
-
-    // Click on event pill
-    cell.addEventListener('click', e => {
-      const pill = e.target.closest('.cal-event');
-      if (!pill) return;
-      const evName = pill.dataset.name;
-      const ev = ALL_EVENTS.find(x => x.name === evName);
-      if (!ev) return;
-      showModal(ev);
-    });
+function renderCal(){
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-title').textContent=MN[calMonth]+' '+calYear;
+  const grid=document.getElementById('cal-grid');
+  while(grid.children.length>7)grid.removeChild(grid.lastChild);
+  const firstDow=new Date(calYear,calMonth,1).getDay();
+  const dim=new Date(calYear,calMonth+1,0).getDate();
+  const prevDays=new Date(calYear,calMonth,0).getDate();
+  const today=new Date();
+  for(let i=firstDow-1;i>=0;i--){const d=document.createElement('div');d.className='cal-day other-month';d.innerHTML=`<div class="cal-day-num">${prevDays-i}</div>`;grid.appendChild(d);}
+  for(let d=1;d<=dim;d++){
+    const cell=document.createElement('div');
+    const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;
+    cell.className='cal-day'+(isToday?' today':'');
+    const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const evs=eventByDate[ds]||[];
+    const unique=[...new Map(evs.map(e=>[e.name,e])).values()];
+    const starts=unique.filter(e=>e.date===ds);
+    const conts=unique.filter(e=>e.date!==ds);
+    let html=`<div class="cal-day-num">${d}</div>`;
+    starts.slice(0,2).forEach(ev=>{html+=`<div class="cal-event type-${ev.type}" data-name="${ev.name.replace(/"/g,'&quot;')}" title="${ev.name}">${ev.name}</div>`;});
+    if(starts.length>2)html+=`<div class="cal-more">+${starts.length-2} more</div>`;
+    if(conts.length>0&&starts.length===0)html+=`<div class="cal-cont" style="background:${conts[0].type==='adventure'?'#C84820':conts[0].type==='camp'?'#C8A028':conts[0].type==='backpack'?'#8A9A50':conts[0].type==='overnight'?'#4A7C9A':'#7C9070'}"></div>`;
+    cell.innerHTML=html;
+    cell.addEventListener('click',e=>{const pill=e.target.closest('.cal-event');if(!pill)return;const ev=ALL_EVENTS.find(x=>x.name===pill.dataset.name);if(ev)showModal(ev);});
     grid.appendChild(cell);
   }
-
-  // Next month padding
-  const totalCells = firstDow + daysInMonth;
-  const remainder = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
-  for (let i = 1; i <= remainder; i++) {
-    const d = document.createElement('div');
-    d.className = 'cal-day other-month';
-    d.innerHTML = `<div class="cal-day-num">${i}</div>`;
-    grid.appendChild(d);
-  }
+  const rem=(firstDow+dim)%7;const pad=rem===0?0:7-rem;
+  for(let i=1;i<=pad;i++){const d=document.createElement('div');d.className='cal-day other-month';d.innerHTML=`<div class="cal-day-num">${i}</div>`;grid.appendChild(d);}
 }
-
-function showModal(ev) {
-  const overlay = document.getElementById('cal-modal-overlay');
-  const typeEl = document.getElementById('cal-modal-type');
-  typeEl.textContent = TYPE_LABEL[ev.type];
-  typeEl.style.background = TYPE_BG[ev.type];
-  typeEl.style.color = ev.type==='camp'?'#5a3c00':ev.type==='day'?'#2e4028':'#fff';
-  document.getElementById('cal-modal-title').textContent = ev.name;
-  const sd = new Date(ev.date+'T12:00:00');
-  const ed = new Date(ev.end+'T12:00:00');
-  const fmt = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  document.getElementById('cal-modal-date').textContent = ev.date===ev.end ? fmt(sd) : fmt(sd) + ' – ' + fmt(ed);
-  document.getElementById('cal-modal-loc').textContent = ev.loc;
-  document.getElementById('cal-modal-nights').textContent = ev.nights > 0 ? ev.nights + ' night' + (ev.nights>1?'s':'') + ' in the field' : 'Day outing — no overnight';
-  overlay.classList.add('open');
+function showModal(ev){
+  const o=document.getElementById('cal-modal-overlay');
+  document.getElementById('cal-modal-type').textContent=TYPE_LABEL[ev.type];
+  document.getElementById('cal-modal-title').textContent=ev.name;
+  const sd=new Date(ev.date+'T12:00:00'),ed=new Date(ev.end+'T12:00:00');
+  const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('cal-modal-date').textContent=ev.date===ev.end?fmt(sd):fmt(sd)+' \u2013 '+fmt(ed);
+  document.getElementById('cal-modal-loc').textContent=ev.loc;
+  document.getElementById('cal-modal-nights').textContent=ev.nights>0?ev.nights+' night'+(ev.nights>1?'s':'')+' in the field':'Day outing \u2014 no overnight';
+  o.classList.add('open');
 }
+document.getElementById('cal-modal-close').addEventListener('click',()=>document.getElementById('cal-modal-overlay').classList.remove('open'));
+document.getElementById('cal-modal-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('open');});
+document.getElementById('cal-prev').addEventListener('click',()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCal();buildCalYearBtns();});
+document.getElementById('cal-next').addEventListener('click',()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCal();buildCalYearBtns();});
+buildCalYearBtns();renderCal();
 
-document.getElementById('cal-modal-close').addEventListener('click', () => document.getElementById('cal-modal-overlay').classList.remove('open'));
-document.getElementById('cal-modal-overlay').addEventListener('click', e => { if (e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
-document.getElementById('cal-prev').addEventListener('click', () => { calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCal(); buildCalYearBtns(); });
-document.getElementById('cal-next').addEventListener('click', () => { calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCal(); buildCalYearBtns(); });
+// ── PLANNING HUB ──
+const PLAN_LOCS=[
+  {name:'Philmont Scout Ranch',type:'High Adventure',loc:'Cimarron, New Mexico',visits:[2016,2019,2022,2025],website:'https://www.philmontscoutranch.org',booking:'BSA council lottery ~2 years in advance. $150 non-refundable deposit. Balance due May 1.',notes:'12-day expedition. ~$2,450/person (2025). Apply through council. T222 attended 3 times and has strong lottery history. SOLD OUT 2025.',warning:'',phone:''},
+  {name:'Florida Sea Base \u2013 Coral Reef Sailing',type:'High Adventure',loc:'Islamorada, Florida Keys, FL',visits:[2023,2027],website:'https://www.bsaseabase.org',booking:'Book directly through BSA Sea Base. 3 sailboats secured for 2027. 2nd payment due March 30, 2026.',notes:'6-night sailing adventure. T222 attended 2023 and has 2027 trip confirmed. Departs April 11, 2027.',warning:'',phone:''},
+  {name:'Northern Tier \u2013 Boundary Waters',type:'High Adventure',loc:'Ely, Minnesota (BWCAW)',visits:[2021,2024],website:'https://www.bsanortherntiercsr.org',booking:'Apply 1\u20132 years in advance through BSA Northern Tier reservation system.',notes:'10\u201312 day canoe trek in the Boundary Waters Canoe Area Wilderness. T222 attended 2021 and 2024.',warning:'',phone:''},
+  {name:'Summit Bechtel Reserve \u2013 National Jamboree',type:'High Adventure',loc:'Glen Jean, West Virginia',visits:[2017,2023],website:'https://www.scouting.org/jamboree',booking:'Register through BSA national when announced. Next Jamboree: 2027.',notes:'National Boy Scout Jamboree. T222 attended 2017 and 2023. Multi-week with 50,000+ scouts.',warning:'',phone:''},
+  {name:'Camp Wente / Wente Scout Reservation',type:'Summer Camp',loc:'Willits, CA',visits:[2018,2022,2025],website:'https://wente.goldengatescouting.org',booking:'Register through Golden Gate Area Council (GGAC). Non-GGAC units on space-available basis \u2014 register early.',notes:"Week-long BSA summer camp. $875/scout (2025). T222\u2019s most attended summer camp.",warning:'',phone:''},
+  {name:'Camp Oljato',type:'Summer Camp',loc:'CA',visits:[2017,2024],website:'',booking:'Register through BSA council.',notes:'Week-long summer camp. T222 attended 2017 and 2024.',warning:'',phone:''},
+  {name:'Camp Hi-Sierra',type:'Summer Camp',loc:'Long Barn, CA',visits:[2026],website:'',booking:'Register through BSA council. Sign-ups open.',notes:'Week-long summer camp. Planned July 12\u201318, 2026.',warning:'',phone:''},
+  {name:'Point Reyes \u2013 Wildcat Camp / Coast Camp',type:'Overnight Backpacking',loc:'Point Reyes National Seashore, Marin County',visits:[2016,2017,2018,2020,2025,2026],website:'https://www.nps.gov/pore',booking:'Reserve 90 days in advance on recreation.gov. Pick up permit in person at Bear Valley Visitor Center on arrival day.',notes:'~5-mile hike to Wildcat Camp or Coast Camp. Beach access at Wildcat. One of T222\u2019s most-visited backpacking spots \u2014 5 visits.',warning:'',phone:''},
+  {name:'May Lake / Mt. Hoffman \u2013 Yosemite',type:'Overnight Backpacking',loc:'Yosemite National Park, CA',visits:[2016,2017,2018,2020,2024],website:'https://www.nps.gov/yose',booking:'Wilderness permit lottery opens 24 weeks in advance at recreation.gov. Walk-up permits 7 days before at 7am PDT. Trailhead: Tioga Road (May Lake TH).',notes:"T222\u2019s most visited single backpacking location \u2014 5 times. Mt. Hoffman summit optional (10,850 ft). 2-mile hike from trailhead.",warning:'Tioga Road closed in winter \u2014 typically opens late May/June depending on snow.',phone:''},
+  {name:'Henry Coe State Park',type:'Overnight Backpacking',loc:'Morgan Hill, CA',visits:[2016,2018,2023,2024],website:'https://coepark.net',booking:'First-come first-served permits in person at park headquarters (8500 E Dunne Ave) or Dowdy Ranch. $5/person/night. No online booking.',notes:'Visited 4 times. Remote and rugged \u2014 largest state park in Northern CA. Multiple route options from HQ. Bring water filter.',warning:'',phone:'(408) 779-2728'},
+  {name:'Black Diamond Mines \u2013 Stewartville Camp',type:'Overnight Backpacking',loc:'Antioch, CA (East Bay)',visits:[2019,2021,2024,2026],website:'https://www.ebparks.org/parks/black-diamond',booking:'Reservations REQUIRED \u2014 call East Bay Regional Park District at least 3 business days in advance. No online booking.',notes:'3.2-mile hike to Stewartville camp. Great for beginners. Minimum 17 campers for group use. T222 has visited 4 times.',warning:'No online booking \u2014 phone reservation only.',phone:'(510) 544-2750'},
+  {name:'Castle Rock State Park \u2013 Trail Camp',type:'Overnight Backpacking',loc:'Santa Cruz Mountains, CA',visits:[2016,2022,2025],website:'https://www.parks.ca.gov/?page_id=538',booking:'Trail camp reservations open 60 days in advance. $15/night + $8 reservation fee. ~2.5-mile hike from parking.',notes:"T222\u2019s go-to Philmont prep backpacking site \u2014 3 visits. Great rock features, ridgeline views. Used for Philmont simulation.",warning:'',phone:'(831) 338-8860'},
+  {name:'Big Sur \u2013 Los Padres National Forest',type:'Overnight Backpacking',loc:'Big Sur, CA',visits:[2016,2024,2025],website:'https://www.fs.usda.gov/recarea/lpnf/recarea/?recid=10967',booking:'Free California Campfire Permit required (readyforwildfire.org). No parking fee at Hwy 1 trailheads.',notes:'3-mile hike in. 16 spots for T222 in 2025. Stunning coastal mountains and redwoods. Arroyo Seco & Santa Lucia trails used.',warning:'Check Cal Fire restrictions before any trip \u2014 fires often prohibited in summer/fall.',phone:''},
+  {name:'Desolation Wilderness',type:'Overnight Backpacking',loc:'El Dorado County, Lake Tahoe area, CA',visits:[2025],website:'https://www.fs.usda.gov/eldorado',booking:'Overnight permit required May 22\u2013Sep 30. Apply via recreation.gov lottery in March. Quota: 700 people/day.',notes:'Advanced 20-mile route with 5 miles off-trail. For experienced, fit scouts only. First visited 2025. Stunning high Sierra scenery.',warning:'Permit quota fills fast \u2014 apply in March lottery.',phone:''},
+  {name:'Monte Bello Open Space \u2013 Black Mountain',type:'Overnight Backpacking',loc:'Palo Alto, CA',visits:[2016,2025],website:'https://www.openspace.org/preserves/monte-bello',booking:'Reserve ~3 months in advance. $2/person/night. Non-potable water only \u2014 bring filter.',notes:'~1.5-mile hike from parking. Bay Area views. Great beginner backpacking.',warning:'Non-potable water \u2014 bring filter or enough water.',phone:'(650) 691-1200'},
+  {name:'Ohlone Wilderness Trail',type:'Overnight Backpacking',loc:'East Bay, Alameda/Santa Clara County, CA',visits:[2019,2026],website:'https://www.ebparks.org/parks/ohlone',booking:'Overnight camping reservation required \u2014 call EBRPD. Day-use permit also required ($5).',notes:'Used for Philmont prep (2019) and 50-Miler prep (2026). Remote and challenging 29-mile East Bay ridge trail.',warning:'Call to reserve \u2014 no online booking.',phone:'(510) 544-2750'},
+  {name:'Boulder Creek Scout Reservation',type:'Overnight Outing',loc:'Boulder Creek, CA',visits:[2017,2019,2021,2022,2023,2024],website:'https://pacsky.org/camping/bcsr/',booking:'Reserve through Pacific Skyline Council reservation system. Units outside PacSky should call ahead.',notes:"T222\u2019s most-used council facility \u2014 6+ visits. Used for NYLT, IOLS, Wood Badge, OA, leadership retreats. Pool access in summer.",warning:'',phone:''},
+  {name:'Pinnacles National Park',type:'Overnight Outing',loc:'Pinnacles National Park, CA',visits:[2016,2019,2021,2023,2025],website:'https://www.nps.gov/pinn',booking:'Reserve 6 months in advance on recreation.gov. Group campsites book fast.',notes:'T222 has visited 5 times. Spring and fall are best \u2014 summers are extremely hot. Talus caves, condor sightings.',warning:'Avoid free entrance days \u2014 park gets extremely crowded.',phone:''},
+  {name:'Memorial Park \u2013 Pescadero',type:'Overnight Outing',loc:'9500 Pescadero Creek Rd, Loma Mar, CA',visits:[2017,2021,2025],website:'https://www.smcgov.org/parks/memorial-park',booking:'Reservations open 6 months in advance. Holiday weekends require 3-night minimum.',notes:'Redwood camping on Pescadero Creek. Multiple campgrounds including Sequoia Campground. Great December/fall camping.',warning:'',phone:'(650) 879-0212'},
+  {name:'Coyote Lake Harvey Bear Ranch',type:'Overnight Outing',loc:'Gilroy, CA',visits:[2020,2023,2024],website:'https://parks.santaclaracounty.gov/locations/coyote-lake-harvey-bear-ranch-county-park',booking:'Reserve at gooutsideandplay.org or call. Opens 6 months in advance.',notes:'Car camping and cycling. Good winter/spring destination. Lake fishing, hiking trails.',warning:'',phone:'(408) 355-2201'},
+  {name:'Tuttletown Recreation Area (Gold Country)',type:'Overnight Outing',loc:'New Melones Lake, Calaveras County, CA',visits:[2019,2021,2022],website:'https://www.recreation.gov',booking:'Reserve on recreation.gov. Search \u201cTuttletown Recreation Area.\u201d',notes:'Car camping in the Gold Country foothills. New Melones Lake. Good fall trip.',warning:'',phone:''},
+  {name:'Northstar California Resort \u2013 Ski Trip',type:'Overnight Outing',loc:'Truckee, CA (Lake Tahoe area)',visits:[2025,2026],website:'https://www.northstarcalifornia.com',booking:'Buy lift tickets online in advance. Epic Pass holders get discounted access. Book lodging 6+ months out for MLK weekend.',notes:'Annual T222 ski trip. MLK weekend. Moved to Northstar from Squaw/Palisades starting 2025.',warning:'MLK weekend is peak season \u2014 book lodging immediately.',phone:''},
+  {name:'Santa Cruz Beach Boardwalk Scout Overnight',type:'Overnight Outing',loc:'Santa Cruz, CA',visits:[2022,2023,2025],website:'https://beachboardwalk.com/scout-overnights/',booking:'Register through the Boardwalk website. Limited spaces \u2014 sign up as soon as dates are released.',notes:'Scout overnight program at the Boardwalk \u2014 3 T222 visits. Great social outing. Usually Oct\u2013Nov.',warning:'Spaces fill very fast \u2014 watch for date release announcement.',phone:''},
+  {name:'Angel Island State Park',type:'Overnight Outing',loc:'San Francisco Bay, CA',visits:[2026],website:'https://www.parks.ca.gov/?page_id=468',booking:'Ferry required: Blue & Gold Fleet from Tiburon or SF Ferry Building. Reserve campsite on reservecalifornia.com. Ferry: blueandgoldfleet.com.',notes:'2-night camping. Family-friendly. Ferry access only \u2014 no cars. Historic military island with panoramic Bay views.',warning:'Campsite + ferry tickets both need advance booking separately.',phone:''},
+  {name:'Windy Hill Open Space Preserve',type:'Day Outing',loc:'Portola Valley, CA',visits:[2016,2018,2019,2022,2023,2025],website:'https://www.openspace.org/preserves/windy-hill',booking:'No reservations required. Open sunrise to sunset. Free parking at 555 Portola Rd.',notes:"T222\u2019s most-used day hike location \u2014 6+ visits. Primary Philmont prep hike. Spring Ridge Trail to summit (1,900 ft).",warning:'',phone:''},
+  {name:'Golden Gate National Cemetery \u2013 Memorial Day',type:'Day Outing',loc:'1300 Sneath Ln, San Bruno, CA',visits:[2016,2017,2018,2019,2022,2023,2024],website:'https://www.cem.va.gov/cems/nchp/goldengatenat.asp',booking:'No reservations required. Coordinate with cemetery staff in advance for large groups.',notes:'Annual Memorial Day flag placement. 7 visits \u2014 strongest T222 tradition.',warning:'',phone:''},
+  {name:'Cache Creek / American River \u2013 Whitewater Rafting',type:'Day Outing',loc:'Rumsey, CA / El Dorado County, CA',visits:[2016,2017,2018,2019,2022,2023],website:'https://www.gotwhitewater.com',booking:'Book through outfitter (Got Whitewater for Cache Creek, Sierra Whitewater for American River) several months in advance.',notes:'T222 has done rafting 6 times. Cache Creek (Class III) and South Fork American River (Class III-IV). Usually May\u2013June.',warning:'',phone:''},
+  {name:'El Corte Madera Creek / Skyline \u2013 Skeggs Point',type:'Day Outing',loc:'Skyline Blvd, CA (near Redwood City)',visits:[2022,2023,2025],website:'https://www.openspace.org/preserves/el-corte-de-madera',booking:'No reservations required. Free parking at Skeggs Point (Hwy 35).',notes:'Used for Philmont prep hikes and Purisima Creek connections. Good year-round. Wooded, shaded trails.',warning:'',phone:''},
+  {name:'Los Altos Rod & Gun Club \u2013 Shooting Sports',type:'Day Outing',loc:'14750 Skyline Blvd, Los Gatos, CA',visits:[2018,2019,2021,2023,2024,2025],website:'https://www.losaltosrodandgunclub.com',booking:'Contact club in advance to arrange BSA group visit. BSA-certified shooting sports instructor required.',notes:"T222\u2019s go-to shooting sports venue \u2014 6 visits. Shotgun and rifle practice.",warning:'BSA instructor required \u2014 confirm availability before booking.',phone:'(408) 867-3106'},
+  {name:'SF Urban Hike \u2013 Chinatown / Golden Gate Bridge',type:'Day Outing',loc:'San Francisco, CA',visits:[2016,2020,2021,2022,2023],website:'',booking:'No reservations required. Meet at China Gate (Grant Ave at Bush St). Parking: Sutter Stockton Garage. BART to Montgomery also works.',notes:'~10-mile SF urban hike. Multiple route variations. 5 T222 visits. Great for Hiking Merit Badge credit.',warning:'',phone:''},
+  {name:'Shoreline Lake Aquatic Center \u2013 Canoeing',type:'Day Outing',loc:'Mountain View, CA',visits:[2024],website:'https://www.mountainview.gov/depts/cs/shoreline/aquatic_center/default.asp',booking:'Reserve through Shoreline Aquatic Center. Group rates may be available.',notes:'Flat-water canoe/kayak training. Great for building paddling skills before bigger trips.',warning:'',phone:''},
+  {name:'Holbrook Palmer Park \u2013 Earth Day (ADAPT)',type:'Day Outing',loc:'Atherton, CA',visits:[2024,2025,2026],website:'https://www.ci.atherton.ca.us/264/Holbrook-Palmer-Park',booking:'No reservation needed. Watch for annual sign-up link from ADAPT Atherton 4\u20136 weeks before Earth Day.',notes:'Annual Earth Day conservation volunteer event. T222 has attended 3 consecutive years.',warning:'',phone:''},
+];
 
-buildCalYearBtns();
-renderCal();
+function planTagCls(t){if(t==='Overnight Backpacking')return 'tag-bp';if(t==='High Adventure')return 'tag-adv';if(t==='Summer Camp')return 'tag-camp';if(t==='Overnight Outing')return 'tag-on';return 'tag-day';}
+function renderPlan(filter='all',search=''){
+  const grid=document.getElementById('plan-grid');const cnt=document.getElementById('plan-count');
+  grid.innerHTML='';const q=search.toLowerCase().trim();
+  const filtered=PLAN_LOCS.filter(p=>{
+    const tm=filter==='all'||p.type===filter;
+    const sm=!q||[p.name,p.loc,p.notes,p.booking,p.type].join(' ').toLowerCase().includes(q);
+    return tm&&sm;
+  });
+  cnt.textContent=filtered.length+' location'+(filtered.length!==1?'s':'');
+  if(!filtered.length){grid.innerHTML='<div class="plan-no-results">No locations match.</div>';return;}
+  filtered.sort((a,b)=>b.visits.length-a.visits.length).forEach(p=>{
+    const card=document.createElement('div');card.className='plan-card';
+    const yrs=p.visits.sort((a,b)=>a-b).join(', ');
+    const last=Math.max(...p.visits);
+    card.innerHTML=`<div class="plan-card-top"><div class="plan-card-title">${p.name}</div><span class="plan-card-type ${planTagCls(p.type)}" style="background:transparent;border:1px solid var(--border);font-size:.55rem;padding:.15rem .5rem">${p.type}</span></div><div class="plan-card-loc">${p.loc}</div><div class="plan-card-notes">${p.notes}</div>${p.booking?`<div class="plan-booking">${p.booking}</div>`:''} ${p.warning?`<div class="plan-warning">${p.warning}</div>`:''}<div class="plan-card-footer"><div style="flex:1"><div class="plan-card-visits">Visited <strong>${p.visits.length}\u00d7</strong> &nbsp;\u00b7&nbsp; Last: <strong>${last}</strong></div><div class="plan-years">${yrs}</div></div>${p.website?`<a class="plan-card-link" href="${p.website}" target="_blank" rel="noopener">Book \u2197</a>`:''} ${p.phone?`<span class="plan-card-phone">${p.phone}</span>`:''}</div>`;
+    grid.appendChild(card);
+  });
+}
+renderPlan();
+document.getElementById('plan-search-input').addEventListener('input',e=>renderPlan(document.getElementById('plan-type-filter').value,e.target.value));
+document.getElementById('plan-type-filter').addEventListener('change',e=>renderPlan(e.target.value,document.getElementById('plan-search-input').value));
 
-// ── MAP VIEW ──────────────────────────────────────────────────────────────
-const mapEl = document.getElementById('map');
-const mapInfoPanel = document.getElementById('map-info');
-const mapInfoTitle = document.getElementById('map-info-title');
-const mapInfoEvents = document.getElementById('map-info-events');
 
-const map = L.map(mapEl).setView([38,-119], 6); // Centered on California
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors',
-  maxZoom: 15
-}).addTo(map);
-
-// Parse locations and create markers
-const COLORS = {day:'#4a7c59',overnight:'#2e6b9e',backpack:'#4a9ed4',camp:'#c8872a',adventure:'#d94f2e'};
-const locMarkers = {};
-
-ALL_EVENTS.forEach(ev => {
-  const parts = ev.loc.split(',');
-  if (!parts[0]) return;
-  const key = ev.loc;
-  if (!locMarkers[key]) {
-    locMarkers[key] = {loc:ev.loc, events:[], lat:null, lng:null};
-  }
-  locMarkers[key].events.push(ev);
-});
-
-// Geocode locations
-const GEOCODED = {
-  'Half Moon Bay State Park, CA': [37.460,-122.439],
-  'Point Reyes National Seashore, CA': [37.997,-122.756],
-  'Yosemite National Park, CA': [37.865,-119.535],
-  'Tomales Bay, CA': [38.167,-122.839],
-  'Cutter Scout Reservation, CA': [37.583,-121.983],
-  'Cache Creek, CA': [38.663,-122.261],
-  'Camp Oljato, CA': [36.166,-120.665],
-  'Summit Bechtel Reserve, WV': [38.126,-82.765],
-  'May Lake, Yosemite, CA': [37.826,-119.450],
-  'Memorial Park, Loma Mar, CA': [37.250,-122.293],
-  'Palisades Tahoe, CA': [39.196,-120.237],
-  'Planet Granite, Belmont, CA': [37.516,-122.289],
-  'Davis, CA': [38.545,-121.741],
-  'San Francisco, CA': [37.775,-122.419],
-  'Menlo Park, CA': [37.454,-122.180],
-  'Henry Coe State Park, CA': [37.233,-121.550],
-  'Los Altos Rod & Gun, CA': [37.370,-122.060],
-  'Windy Hill Open Space, CA': [37.368,-122.238],
-  'Camp Wente, Willits, CA': [39.406,-123.371],
-  'Inyo National Forest, CA': [37.900,-118.700],
-  'Cutter BSA Reserve, CA': [37.583,-121.983],
-  'Pinnacles National Park, CA': [36.480,-121.170],
-  'Boulder Creek Scout Reservation, CA': [37.127,-122.153],
-  'Butano State Park, CA': [37.179,-122.302],
-  'Camp Mensinger, CA': [37.500,-121.000],
-  'Philmont Scout Ranch, NM': [36.330,-104.979],
-  'Black Diamond Mines RP, Antioch, CA': [37.875,-121.835],
-  'Tuttletown Recreation Area, CA': [38.067,-120.890],
-  'K-1 Speed, Santa Clara, CA': [37.355,-121.936],
-  'Mt. Hermon Adventures, Felton, CA': [37.046,-122.075],
-  'Coyote Lake Campground, CA': [37.370,-121.590],
-  'Coast Camp, Point Reyes, CA': [37.926,-122.903],
-  'Atherton Scout Site, CA': [37.460,-122.193],
-  'Embarcadero Rd, Palo Alto, CA': [37.441,-122.160],
-  'Magruder House, CA': [37.466,-122.187],
-  'Rancho San Antonio Open Space, CA': [37.397,-122.159],
-  '22 Holbrook Lane, Atherton, CA': [37.465,-122.195],
-  'Greenville Rd, Livermore, CA': [37.639,-121.876],
-  'Elkhorn Slough, Moss Landing, CA': [36.807,-121.791],
-  'Ohlone Regional Wilderness, CA': [37.433,-121.633],
-  'Morgan Territory Regional Preserve, CA': [37.919,-121.763],
-  'Desolation Wilderness, CA': [38.962,-120.243],
-  'Los Padres National Forest, CA': [34.729,-119.621],
-  'Arroyo Seco, Los Padres, CA': [36.243,-121.367],
-  'Big Sur, Los Padres NF, CA': [36.263,-121.413],
-  'Sunset State Beach, Santa Cruz County, CA': [36.926,-121.810],
-  'La Honda area, CA': [37.267,-122.333],
-  'Angel Island State Park, SF Bay, CA': [37.864,-122.434],
-  'Camp Hi-Sierra, Long Barn, CA': [38.322,-120.168],
-  'Boundary Waters, MN': [48.000,-89.600],
-  'Ely, MN': [47.900,-91.900],
-  'Florida Sea Base, FL': [24.690,-81.385],
-  'National Jamboree, VA': [38.580,-77.848]
+// ── EXPANDED CHRONICLE ──────────────────────────────────────────────────────
+const YEAR_DETAIL = {
+  '2017':{day:3,overnight:5,backpack:2,camp:1,adv:1,nights:28,highlights:['National Jamboree – WV','Hetch Hetchy Loop (YNP)','Camp Oljato'],type_adv:['National Boy Scout Jamboree'],type_camp:['Camp Oljato'],type_bp:['Point Reyes Wildcat Camp','Snow Camping – Yosemite','May Lake Backpacking']},
+  '2018':{day:8,overnight:5,backpack:2,camp:1,adv:1,nights:35,highlights:['Mount Whitney 50-Miler','Camp Wente','May Lake / Mt. Hoffman'],type_adv:['Mount Whitney 50-Miler'],type_camp:['Camp Wente'],type_bp:['Point Reyes Kayak Campout','Henry Coe Backpack Trip','May Lake / Mt. Hoffman']},
+  '2019':{day:6,overnight:5,backpack:3,camp:1,adv:1,nights:32,highlights:['Philmont 2019','Camp Mensinger','Black Diamond Mines'],type_adv:['Philmont 2019'],type_camp:['Camp Mensinger'],type_bp:['Boulder Creek Camp Out','PacSky Camporee – Cutter','OA Spring Ordeal','Black Diamond Mines']},
+  '2020':{day:10,overnight:8,backpack:3,camp:0,adv:0,nights:25,highlights:['COVID year – virtual events','Point Reyes Backpacking','Coyote Lake Camping'],type_adv:[],type_camp:[],type_bp:['Point Reyes (Coast Camp)','May Lake Backpacking']},
+  '2021':{day:6,overnight:5,backpack:3,camp:1,adv:1,nights:30,highlights:['Northern Tier Trek – Boundary Waters','Camp Chawanakee','Return to in-person!'],type_adv:['Northern Tier Trek – MN'],type_camp:['Camp Chawanakee'],type_bp:['Pinnacles Camping','Black Diamond Mines','Memorial Park']},
+  '2022':{day:11,overnight:3,backpack:4,camp:1,adv:2,nights:38,highlights:['Philmont 2022','NYLT 2022','Camp Wente – 4 October outings!'],type_adv:['Philmont 2022','NYLT 2022'],type_camp:['Camp Wente'],type_bp:['Portola Redwoods','Castle Rock','May Lake / Mt. Hoffman','Black Diamond Mines Campout']},
+  '2023':{day:9,overnight:6,backpack:2,camp:1,adv:2,nights:36,highlights:['Florida Sea Base Sailing','National Jamboree 2023','Camp Marin-Sierra'],type_adv:['Florida Sea Base – Keys','BSA National Jamboree'],type_camp:['Camp Marin-Sierra'],type_bp:['Henry Coe Backpacking','Coyote Lake Harvey Bear Ranch']},
+  '2024':{day:3,overnight:5,backpack:6,camp:1,adv:1,nights:42,highlights:['Northern Tier High Adventure','Camp Oljato','50-Miler planning begins'],type_adv:['Northern Tier – Ely, MN'],type_camp:['Camp Oljato'],type_bp:['Henry Coe','Black Diamond Mines','May Lake','Point Reyes','Ohlone Wilderness','Big Sur']},
+  '2025':{day:1,overnight:3,backpack:7,camp:1,adv:1,nights:38,highlights:['Philmont 2025 (sold out)','Desolation Wilderness 20mi','Camp Wente – $875/scout'],type_adv:['Philmont 2025'],type_camp:['Camp Wente'],type_bp:['Point Reyes','Castle Rock','Big Sur','Sam McDonald Park','Desolation Wilderness','Black Mountain']},
+  '2026':{day:0,overnight:3,backpack:5,camp:1,adv:1,nights:35,highlights:['High Sierra 50-Miler (planned)','Sea Base 2027 confirmed','Angel Island + Sunset Beach'],type_adv:['High Sierra 50-Miler'],type_camp:['Camp Hi-Sierra'],type_bp:['Point Reyes 50-Miler Prep','Black Diamond Mines','Ohlone Wilderness','Big Sur 50-Miler Prep','La Honda 50-Miler Prep']},
 };
 
-const markerGroup = L.markerClusterGroup({maxClusterRadius: 50});
+// Rebuild timeline with expand functionality
+(function buildTimeline(){
+  const tlBody = document.getElementById('tl-body');
+  tlBody.innerHTML = '';
+  const HIGHLIGHTS_DATA = [
+    {y:'2017',c:12,txt:'Troop returns to the <strong>National Jamboree</strong> at Bechtel Reserve. Three July outings including the Hetch Hetchy loop. 12 outings across 8 active months.'},
+    {y:'2018',c:17,txt:'Most active pre-COVID year. <strong>Mount Whitney 50-Miler</strong> marks T222’s first major high adventure. 8 day trips — strongest day outing year in troop history.'},
+    {y:'2019',c:15,txt:'<strong>Philmont 2019</strong> — the troop’s first Philmont expedition. Cache Creek rafting, Butano overnight, and Gold Country camping.'},
+    {y:'2020',c:21,txt:'COVID year: highest total (21) includes virtual events. Point Reyes and Coyote Lake completed before shutdown. Backyard campouts and virtual Camporee kept scouts connected.'},
+    {y:'2021',c:16,txt:'Return to in-person scouting! <strong>Northern Tier Trek</strong> (Boundary Waters, MN). Pinnacles, Half Moon Bay, and Gold Country all return.'},
+    {y:'2022',c:21,txt:'Tied all-time high. <strong>Philmont 2022</strong> expedition. 11 day trips. October saw 4 outings — a single-month record. Elkhorn Slough kayaking added.'},
+    {y:'2023',c:20,txt:'<strong>Florida Sea Base Coral Reef Sailing</strong> + <strong>National Jamboree</strong> in the same year. First Sea Base adventure. Three May outings including Henry Coe backpacking.'},
+    {y:'2024',c:16,txt:'<strong>Northern Tier High Adventure</strong> returns (Ely, MN). Heaviest backpacking year: 6 backcountry trips. 50-Miler planning begins.'},
+    {y:'2025',c:13,txt:'<strong>Philmont 2025</strong> (sold out). Desolation Wilderness 20-mile advanced route. Troop shifts decisively to backpacking: 7 backcountry trips, only 1 day outing.'},
+    {y:'2026',c:10,txt:'<strong>High Sierra 50-Miler</strong> planned July. Sea Base 2027 confirmed. Angel Island and Sunset State Beach added. Sep–Nov gaps filled per historical patterns.'},
+  ];
 
-Object.entries(locMarkers).forEach(([key, data]) => {
-  const coords = GEOCODED[key];
-  if (coords) {
-    data.lat = coords[0];
-    data.lng = coords[1];
-    const typeColorCount = {};
-    data.events.forEach(e => { typeColorCount[e.type] = (typeColorCount[e.type]||0)+1; });
-    const primaryType = Object.keys(typeColorCount).sort((a,b)=>typeColorCount[b]-typeColorCount[a])[0];
-    const color = COLORS[primaryType] || '#999';
-    const marker = L.circleMarker([data.lat, data.lng], {
-      radius: 8, fillColor: color, color: '#fff', weight: 2, opacity: 0.8, fillOpacity: 0.7
-    });
-    marker.bindPopup(key);
-    marker.on('click', () => {
-      mapInfoTitle.textContent = key + ' (' + data.events.length + ' events)';
-      mapInfoEvents.innerHTML = data.events.map(e => `<div class="map-event-row">
-        <div class="map-event-dot" style="background:${COLORS[e.type]}"></div>
-        <div class="map-event-text">
-          <div class="map-event-name">${e.name}</div>
-          <div class="map-event-date">${new Date(e.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</div>
+  HIGHLIGHTS_DATA.forEach(h => {
+    const d = YEAR_DETAIL[h.y];
+    const div = document.createElement('div');
+    div.className = 'tl-item';
+
+    let expHtml = '';
+    if (d) {
+      expHtml = `<div class="tl-expanded">
+        <div class="tl-exp-grid">
+          <div class="tl-exp-stat"><div class="tl-exp-stat-n">${h.c}</div><div class="tl-exp-stat-l">Total Outings</div></div>
+          <div class="tl-exp-stat"><div class="tl-exp-stat-n">${d.day}</div><div class="tl-exp-stat-l">Day Outings</div></div>
+          <div class="tl-exp-stat"><div class="tl-exp-stat-n">${d.overnight + d.backpack}</div><div class="tl-exp-stat-l">Overnight/BP</div></div>
+          <div class="tl-exp-stat"><div class="tl-exp-stat-n">${d.nights}</div><div class="tl-exp-stat-l">Nights in Field</div></div>
         </div>
-      </div>`).join('');
-      mapInfoPanel.style.display = 'block';
-      map.setView([data.lat, data.lng], 10);
+        <div class="tl-exp-trips">
+          <div class="tl-exp-trip-label">Highlights</div>
+          ${d.type_adv.map(t=>`<span class="tl-exp-trip type-adv">★ ${t}</span>`).join('')}
+          ${d.type_camp.map(t=>`<span class="tl-exp-trip type-camp">⛺ ${t}</span>`).join('')}
+          ${d.type_bp.map(t=>`<span class="tl-exp-trip type-bp">▲ ${t}</span>`).join('')}
+        </div>
+      </div>`;
+    }
+
+    div.innerHTML = `
+      <div class="tl-year">${h.y} <span style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--bark);font-weight:400">· ${h.c} outings</span></div>
+      <div class="tl-detail">${h.txt}</div>
+      <button class="tl-expand-btn" aria-label="Expand ${h.y}">Details <span class="arrow">▾</span></button>
+      ${expHtml}
+    `;
+
+    div.querySelector('.tl-expand-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      div.classList.toggle('open');
+      this.childNodes[0].textContent = div.classList.contains('open') ? 'Close ' : 'Details ';
     });
-    markerGroup.addLayer(marker);
-  }
-});
 
-map.addLayer(markerGroup);
+    tlBody.appendChild(div);
+  });
+})();
 
-map.on('moveend', () => {
-  if (map.getZoom() < 7) mapInfoPanel.style.display = 'none';
-});
+// ── MAP VIEW ───────────────────────────────────────────────────────────────
+const MAP_LOCS = [
+  // California locations
+  {name:'Point Reyes National Seashore',type:'Overnight Backpacking',lat:38.0411,lng:-122.8002,visits:6,years:'2016–2026',booking:'recreation.gov · 90 days ahead · permit pickup at Bear Valley VC'},
+  {name:'May Lake / Yosemite',type:'Overnight Backpacking',lat:37.8406,lng:-119.4937,visits:5,years:'2016–2024',booking:'recreation.gov lottery · 24 weeks out · walk-ups 7 days before 7am'},
+  {name:'Henry Coe State Park',type:'Overnight Backpacking',lat:37.1864,lng:-121.4456,visits:4,years:'2016–2024',booking:'In-person only · $5/person/night · (408) 779-2728'},
+  {name:'Black Diamond Mines RP',type:'Overnight Backpacking',lat:37.9651,lng:-121.8683,visits:4,years:'2019–2026',booking:'Phone only · 3 business days ahead · (510) 544-2750'},
+  {name:'Boulder Creek Scout Reservation',type:'Overnight Outing',lat:37.1281,lng:-122.1200,visits:6,years:'2017–2024',booking:'PacSky council reservation system'},
+  {name:'Windy Hill Open Space',type:'Day Outing',lat:37.3659,lng:-122.1847,visits:6,years:'2016–2025',booking:'No reservation required · Free parking'},
+  {name:'Pinnacles National Park',type:'Overnight Outing',lat:36.4906,lng:-121.1825,visits:5,years:'2016–2025',booking:'recreation.gov · 6 months ahead'},
+  {name:'Los Altos Rod & Gun Club',type:'Day Outing',lat:37.2416,lng:-122.0714,visits:6,years:'2018–2025',booking:'Call ahead · BSA instructor required · (408) 867-3106'},
+  {name:'Castle Rock State Park',type:'Overnight Backpacking',lat:37.2303,lng:-122.0931,visits:3,years:'2016–2025',booking:'60 days ahead · $15/night + $8 fee'},
+  {name:'Big Sur / Los Padres NF',type:'Overnight Backpacking',lat:36.2700,lng:-121.6100,visits:3,years:'2016–2025',booking:'Free CA Campfire Permit required (readyforwildfire.org)'},
+  {name:'Desolation Wilderness',type:'Overnight Backpacking',lat:38.9370,lng:-120.1300,visits:1,years:'2025',booking:'March lottery · recreation.gov · quota 700/day'},
+  {name:'Monte Bello / Black Mountain',type:'Overnight Backpacking',lat:37.3216,lng:-122.1498,visits:2,years:'2016, 2025',booking:'~3 months ahead · $2/person/night · non-potable water'},
+  {name:'Ohlone Wilderness Trail',type:'Overnight Backpacking',lat:37.5947,lng:-121.7897,visits:2,years:'2019, 2026',booking:'Call EBRPD · no online booking · (510) 544-2750'},
+  {name:'SF Urban Hike (Chinatown / GGB)',type:'Day Outing',lat:37.7953,lng:-122.4072,visits:5,years:'2016–2023',booking:'No reservation · BART to Montgomery or park at Sutter/Stockton'},
+  {name:'Elkhorn Slough Kayaking',type:'Day Outing',lat:36.8119,lng:-121.7804,visits:3,years:'2016–2022',booking:'Book through Monterey Bay Kayaks in advance'},
+  {name:'Memorial Park, Pescadero',type:'Overnight Outing',lat:37.2564,lng:-122.2219,visits:3,years:'2017–2025',booking:'6 months ahead · Holiday 3-night minimum · (650) 879-0212'},
+  {name:'Coyote Lake Harvey Bear Ranch',type:'Overnight Outing',lat:37.1136,lng:-121.5464,visits:3,years:'2020–2024',booking:'gooutsideandplay.org · opens 6 months ahead · (408) 355-2201'},
+  {name:'Gold Country / Tuttletown',type:'Overnight Outing',lat:37.9467,lng:-120.4833,visits:3,years:'2019–2022',booking:'recreation.gov · search Tuttletown Recreation Area'},
+  {name:'American River / Cache Creek Rafting',type:'Day Outing',lat:38.8477,lng:-120.9763,visits:6,years:'2016–2023',booking:'Book through outfitter 3–6 months ahead'},
+  {name:'Palisades Tahoe (Squaw Valley)',type:'Day Outing',lat:39.1969,lng:-120.2357,visits:4,years:'2018–2022',booking:'Buy lift tickets online · Book lodging 6+ months out'},
+  {name:'Northstar California Resort',type:'Overnight Outing',lat:39.2570,lng:-120.1213,visits:2,years:'2025–2026',booking:'Buy lift tickets online · MLK weekend — book lodging immediately'},
+  {name:'Angel Island State Park',type:'Overnight Outing',lat:37.8607,lng:-122.4313,visits:1,years:'2026',booking:'reservecalifornia.com + blueandgoldfleet.com ferry separately'},
+  {name:'Sunset State Beach',type:'Overnight Outing',lat:36.9037,lng:-121.8274,visits:1,years:'2026',booking:'reservecalifornia.com · 6 months ahead'},
+  {name:'Arroyo Seco / Los Padres NF',type:'Overnight Outing',lat:36.0367,lng:-121.1883,visits:2,years:'2024, 2026',booking:'Free CA Campfire Permit required'},
+  {name:'Santa Cruz Beach Boardwalk',type:'Overnight Outing',lat:36.9645,lng:-122.0167,visits:3,years:'2022–2025',booking:'beachboardwalk.com/scout-overnights · fills fast — watch for dates'},
+  {name:'Mt. Hamilton / Joseph D. Grant Park',type:'Overnight Outing',lat:37.3416,lng:-121.6447,visits:2,years:'2022–2023',booking:'gooutsideandplay.org · opens 6 months ahead'},
+  {name:'Half Moon Bay State Beach',type:'Overnight Outing',lat:37.4631,lng:-122.4513,visits:2,years:'2017, 2021',booking:'reservecalifornia.com · book several months ahead'},
+  {name:'Sam McDonald Park',type:'Overnight Outing',lat:37.2558,lng:-122.2302,visits:1,years:'2025',booking:'San Mateo County Parks · 50-person capacity'},
+  {name:'Golden Gate National Cemetery',type:'Day Outing',lat:37.6351,lng:-122.4780,visits:7,years:'2016–2024',booking:'No reservation · coordinate with cemetery for large groups'},
+  {name:'Holbrook Palmer Park (Earth Day)',type:'Day Outing',lat:37.4613,lng:-122.1935,visits:3,years:'2024–2026',booking:'Watch for ADAPT Atherton sign-up link 4–6 weeks before Earth Day'},
+  {name:'Shoreline Lake Aquatic Center',type:'Day Outing',lat:37.4260,lng:-122.0850,visits:1,years:'2024',booking:'mountainview.gov · group rates available'},
+  {name:'Wente Scout Reservation',type:'Summer Camp',lat:39.4104,lng:-123.3520,visits:3,years:'2018, 2022, 2025',booking:'Register through GGAC · Non-GGAC units on space-available basis'},
+  {name:'Camp Oljato',type:'Summer Camp',lat:38.2800,lng:-119.7000,visits:2,years:'2017, 2024',booking:'Register through BSA council'},
+  {name:'Camp Chawanakee',type:'Summer Camp',lat:37.0748,lng:-119.2677,visits:1,years:'2021',booking:'Register through BSA council'},
+  {name:'Camp Marin-Sierra',type:'Summer Camp',lat:37.9547,lng:-120.2100,visits:1,years:'2023',booking:'Register through BSA council'},
+  {name:'Camp Hi-Sierra',type:'Summer Camp',lat:38.0700,lng:-119.9200,visits:1,years:'2026',booking:'Register through BSA council'},
+  // Out of state
+  {name:'Philmont Scout Ranch, NM',type:'High Adventure',lat:36.4817,lng:-104.9261,visits:3,years:'2016, 2019, 2022, 2025',booking:'BSA council lottery ~2 years ahead · $150 deposit'},
+  {name:'Northern Tier BSA – Boundary Waters, MN',type:'High Adventure',lat:47.9464,lng:-91.7696,visits:2,years:'2021, 2024',booking:'Apply 1–2 years ahead through BSA Northern Tier'},
+  {name:'Summit Bechtel Reserve, WV',type:'High Adventure',lat:37.8681,lng:-81.1313,visits:2,years:'2017, 2023',booking:'Register through BSA national when announced'},
+  {name:'Florida Sea Base, Keys',type:'High Adventure',lat:24.9108,lng:-80.6273,visits:1,years:'2023, 2027',booking:'bsaseabase.org · 2027 confirmed · 2nd payment due Mar 30, 2026'},
+];
 
-// ── TABS (event delegation, no implicit `event`) ───────────────────────
-document.querySelector('.nav-tabs').addEventListener('click', e=>{
-  const btn = e.target.closest('.tab-btn');
+const TYPE_COLOR_MAP = {
+  'Overnight Backpacking':'#6A8A40',
+  'Overnight Outing':'#4A7C9A',
+  'Day Outing':'#7C9070',
+  'Summer Camp':'#C8A028',
+  'High Adventure':'#C84820',
+};
+
+let leafletMap = null;
+let mapMarkers = [];
+let currentMapFilter = 'all';
+
+function initMap() {
+  if (leafletMap) return;
+  leafletMap = L.map('map-container', {
+    center: [37.8, -119.5],
+    zoom: 6,
+    zoomControl: true,
+  });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(leafletMap);
+  renderMapMarkers('all');
+}
+
+function renderMapMarkers(filter) {
+  currentMapFilter = filter;
+  if (!leafletMap) return;
+  mapMarkers.forEach(m => leafletMap.removeLayer(m));
+  mapMarkers = [];
+
+  const filtered = filter === 'all' ? MAP_LOCS : MAP_LOCS.filter(l => l.type === filter);
+
+  filtered.forEach(loc => {
+    const color = TYPE_COLOR_MAP[loc.type] || '#7C9070';
+    const size = Math.max(10, Math.min(26, 8 + loc.visits * 3));
+
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${color};border:2px solid rgba(255,255,255,0.9);box-shadow:0 2px 6px rgba(0,0,0,0.25);"></div>`,
+      iconSize: [size, size],
+      iconAnchor: [size/2, size/2],
+    });
+
+    const popup = `
+      <span class="map-popup-title">${loc.name}</span>
+      <span class="map-popup-type">${loc.type}</span>
+      <b>Visited:</b> <span class="map-popup-visits">${loc.visits}×</span><br>
+      <b>Years:</b> ${loc.years}<br>
+      <span style="color:#6B5040;font-size:.6rem;margin-top:.3rem;display:block">${loc.booking}</span>
+    `;
+
+    const marker = L.marker([loc.lat, loc.lng], { icon })
+      .addTo(leafletMap)
+      .bindPopup(popup, { maxWidth: 260 });
+    mapMarkers.push(marker);
+  });
+}
+
+document.getElementById('map-filters').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
   if (!btn) return;
+  const f = btn.dataset.mf;
+  document.querySelectorAll('#map-filters .filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderMapMarkers(f);
+});
+
+
+// ── TABS ──
+document.getElementById('main-nav').addEventListener('click',e=>{
+  const btn=e.target.closest('.nav-btn');if(!btn)return;
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  const tab = btn.dataset.tab;
-  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
   btn.classList.add('active');
-  if (tab === 'map') {
-    setTimeout(() => map.invalidateSize(), 100);
-  }
+  if(btn.dataset.tab==='map'){setTimeout(()=>{initMap();if(leafletMap)leafletMap.invalidateSize();},50);}
 });
 </script>
-
-<div class="hm-tooltip" id="hm-tooltip"><div class="hm-tooltip-header" id="hm-tooltip-header"></div><div id="hm-tooltip-body"></div></div>
-
 </body>
 </html>
