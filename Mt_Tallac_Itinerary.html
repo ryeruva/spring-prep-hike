@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hike 3 — Mt. Tallac Itinerary</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1410;--stone:#3D332A;--bark:#6B5040;--sand:#C4A882;--cream:#F5EDD8;
+  --sage:#7C9070;--sky:#4A7C9A;--gold:#C8A028;--ember:#C84820;--bg:#F0E8D5;
+  --border:rgba(100,80,50,.18);
+  --d1:#1F3A5A;
+  --d2:#8C4A2F;
+  --d3:#4A6741;
+}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;font-size:15px;line-height:1.7}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(100,80,50,.06) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(100,80,50,.04) 40px);
+  background-size:40px 40px}
+.page{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 1.5rem 5rem}
+
+nav{background:#1A1410;padding:.55rem 1.5rem;font-family:'DM Mono',monospace;font-size:.68rem;
+  letter-spacing:.1em;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:100;margin:0 -1.5rem}
+nav a{color:#C4A882;text-decoration:none;text-transform:uppercase;transition:color .15s}
+nav a:hover{color:#C8A028}
+nav a.home{color:#C8A028;font-weight:500}
+nav .sep{color:#3D332A;font-size:.5rem}
+nav .current{color:#6B5040;text-transform:uppercase}
+
+.header{padding:3rem 0 2rem;border-bottom:2px solid var(--gold);margin-bottom:2rem}
+.eyebrow{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bark);margin-bottom:.5rem}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,7vw,4.8rem);color:var(--stone);line-height:.92;margin-bottom:.4rem}
+.tagline{font-size:.9rem;color:var(--bark);font-style:italic;max-width:540px;line-height:1.7;margin-bottom:1.4rem}
+
+/* stat strip */
+.stats{display:flex;flex-wrap:wrap;gap:0;border:1px solid #D0C8BC;border-radius:5px;overflow:hidden;margin-bottom:2rem;background:#fff}
+.stat{flex:1 1 100px;padding:.7rem 1rem;border-right:1px solid #D0C8BC;text-align:center}
+.stat:last-child{border-right:none}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--stone);line-height:1}
+.stat-lbl{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark);margin-top:.15rem}
+@media(max-width:500px){.stat{border-right:none;border-bottom:1px solid #D0C8BC}.stat:last-child{border-bottom:none}}
+
+/* attendance warning */
+.attend-warn{background:#FFF0EE;border:2px solid #E8A07A;border-radius:5px;padding:1.1rem 1.4rem;margin-bottom:2rem}
+.attend-warn-title{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#8C2A00;font-weight:500;margin-bottom:.5rem}
+.attend-warn p{font-size:.84rem;color:#5C2A1A;line-height:1.75}
+.attend-warn a{color:#C84820;font-weight:500}
+
+/* map link */
+.map-link{display:inline-flex;align-items:center;gap:.55rem;background:var(--stone);color:var(--cream);padding:.65rem 1.3rem;font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:3px;margin-bottom:2rem;transition:background .15s}
+.map-link:hover{background:var(--bark)}
+.resource-links{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:2rem}
+.resource-link{display:inline-flex;align-items:center;gap:.4rem;border:1px solid #D0C8BC;background:#fff;color:var(--bark);padding:.55rem 1rem;font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:3px;transition:background .15s,color .15s}
+.resource-link:hover{background:var(--stone);color:var(--cream)}
+.resource-link.disabled{opacity:.4;pointer-events:none;font-style:italic}
+
+/* overview */
+.overview{background:#fff;border:1px solid #D0C8BC;border-radius:5px;padding:1.1rem 1.4rem;font-size:.84rem;line-height:1.8;color:var(--stone);margin-bottom:2rem}
+.overview strong{color:var(--ink)}
+
+/* day sections */
+.day-section{margin-bottom:2.5rem}
+.day-header{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;border-radius:5px 5px 0 0;color:#fff}
+.day-header.d1{background:var(--d1)}
+.day-header.d2{background:var(--d2)}
+.day-header.d3{background:var(--d3)}
+.day-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1;opacity:.6;flex-shrink:0}
+.day-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;line-height:1;margin-bottom:.2rem}
+.day-sub{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.08em;opacity:.8}
+
+.day-body{background:#fff;border:1px solid #D0C8BC;border-top:none;border-radius:0 0 5px 5px;overflow:hidden}
+
+.day-stats{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid #EEE8E0;background:#F5F0E8}
+.ds{flex:1 1 80px;padding:.6rem .9rem;border-right:1px solid #EEE8E0;text-align:center}
+.ds:last-child{border-right:none}
+.ds-val{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--stone);line-height:1}
+.ds-lbl{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--bark);margin-top:.1rem}
+
+.elev-bar{height:6px;background:linear-gradient(90deg,#7C9070 0%,#C8A028 40%,#C84820 70%,#7B3F00 100%);opacity:.6;margin-bottom:0}
+
+.day-content{padding:1.1rem 1.3rem;font-size:.82rem;line-height:1.8;color:var(--stone);border-bottom:1px solid #EEE8E0}
+.day-content:last-child{border-bottom:none}
+.day-content p{margin-bottom:.7rem}
+.day-content p:last-child{margin-bottom:0}
+
+.camp-block{padding:1rem 1.3rem;background:#FAFAF7;border-bottom:1px solid #EEE8E0}
+.camp-title{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bark);margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.camp-name{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--stone);margin-bottom:.6rem}
+.camp-features{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem}
+.feat{font-family:'DM Mono',monospace;font-size:.66rem;padding:.2rem .55rem;border-radius:3px;background:var(--cream);color:var(--bark);border:1px solid rgba(100,80,50,.15)}
+.feat.water{background:#E8F0F5;color:var(--sky);border-color:#B5D4F4}
+.feat.warn{background:#FDE8D8;color:#8C2A00;border-color:#F5C4B3}
+.feat.elev{background:#EDE5F5;color:#4A1A7A;border-color:#C5B5E4}
+.camp-note{font-size:.76rem;color:var(--bark);font-style:italic;line-height:1.6}
+
+.note-block{padding:.75rem 1.3rem;background:#FFFBF0;border-left:3px solid var(--gold);font-size:.76rem;color:#5C4A1A;line-height:1.7;border-bottom:1px solid #EEE8E0}
+.note-block strong{display:block;margin-bottom:.2rem;font-size:.78rem}
+
+/* hike detail box */
+.hike-detail{background:#fff;border:1px solid #D0C8BC;border-radius:5px;overflow:hidden;margin-bottom:2rem}
+.hike-detail-header{background:var(--d2);color:#fff;padding:.9rem 1.2rem}
+.hike-detail-header h3{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;line-height:1;margin-bottom:.15rem}
+.hike-detail-header p{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;opacity:.8}
+.hike-detail-body{padding:1rem 1.3rem}
+.hike-detail-row{display:flex;gap:.75rem;padding:.5rem 0;border-bottom:1px solid #EEE8E0;font-size:.82rem}
+.hike-detail-row:last-child{border-bottom:none}
+.hd-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--bark);flex:0 0 100px}
+.hd-val{color:var(--stone)}
+
+/* safety */
+.safety-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:1.5rem}
+.safety-card{background:#fff;border:1px solid #D0C8BC;border-radius:5px;padding:.85rem 1rem}
+.safety-icon{font-size:1.1rem;margin-bottom:.3rem}
+.safety-title{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);font-weight:500;margin-bottom:.3rem}
+.safety-desc{font-size:.76rem;color:var(--bark);line-height:1.65}
+.safety-card.priority{border-color:#E8A07A;background:#FFF8F5}
+.safety-card.priority .safety-title{color:#8C2A00}
+
+.contacts{background:var(--stone);color:#fff;border-radius:5px;padding:1.1rem 1.3rem}
+.contacts h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;margin-bottom:.8rem;color:var(--gold)}
+.contact-row{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:.5rem;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.78rem}
+.contact-row:last-child{border-bottom:none}
+.contact-name{opacity:.75}
+.contact-num{font-family:'DM Mono',monospace;font-weight:500;color:var(--gold)}
+
+.section-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bark);margin-bottom:.4rem;display:flex;align-items:center;gap:.6rem}
+.section-label::before{content:'';width:24px;height:1px;background:var(--bark)}
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.3rem);color:var(--stone);line-height:1;margin-bottom:1rem}
+.section{margin:2.5rem 0}
+
+footer{border-top:1px solid rgba(100,80,50,.2);padding:2rem 0;margin-top:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--bark)}
+.footer-note{font-family:'DM Mono',monospace;font-size:.63rem;color:var(--bark);opacity:.55}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="home">&#8962; Troop 222</a>
+  <span class="sep">&#9679;</span>
+  <a href="T222_2026_50Miler.html">50-Miler Hub</a>
+  <a href="Mt_Tallac_Menu.html">Crew Menu</a>
+  <a href="Mt_Tallac_Expenses.html">Expenses</a>
+  <span class="sep">&#9679;</span>
+  <span class="current">Itinerary</span>
+</nav>
+
+<div class="page">
+
+<div class="header">
+  <p class="eyebrow">Hike 3 · 50-Miler Prep Series · May 8–10, 2026</p>
+  <h1>Mt. Tallac<br>Desolation Wilderness</h1>
+  <p class="tagline">Tahoe Valley base camp + alpine start to summit Mt. Tallac — altitude acclimatization training for the High Sierra 50-Miler.</p>
+</div>
+
+<!-- stat strip -->
+<div class="stats">
+  <div class="stat"><div class="stat-val">10</div><div class="stat-lbl">Miles RT</div></div>
+  <div class="stat"><div class="stat-val">+3,700</div><div class="stat-lbl">Gain (ft)</div></div>
+  <div class="stat"><div class="stat-val">9,739</div><div class="stat-lbl">Summit (ft)</div></div>
+  <div class="stat"><div class="stat-val">6,300</div><div class="stat-lbl">Start elev (ft)</div></div>
+  <div class="stat"><div class="stat-val">3</div><div class="stat-lbl">Days</div></div>
+</div>
+
+<!-- attendance warning -->
+<div class="attend-warn">
+  <p class="attend-warn-title">⚠ Attendance Requirement — Read This</p>
+  <p>To remain on the 50-Miler crew, you must have attended <strong>at least two of the three prep outings</strong>. If you have only attended one so far (Point Reyes or Ohlone), <strong>this trip is mandatory.</strong> If this presents a conflict, email <a href="mailto:50-miler2026@t222.org">50-miler2026@t222.org</a> immediately.</p>
+</div>
+
+<!-- overview -->
+<div class="overview">
+  This is our <strong>third and final overnight preparation outing</strong> before we hit the trail for the 50-Miler in July. This trip is critical: we are heading to Tahoe to <strong>simulate the high-altitude conditions</strong> we will face this summer. Your body works significantly harder at 9,000+ feet, and this is the time to learn how you react and how to pace yourself.
+</div>
+
+<!-- resource links -->
+<div class="resource-links">
+  <a href="#" class="resource-link disabled">&#128205; AllTrails — Mt. Tallac (link TBD)</a>
+  <a href="#" class="resource-link disabled">&#9928; NOAA Weather Forecast (link TBD)</a>
+  <a href="#" class="resource-link disabled">&#128507; CalTopo Map (link TBD)</a>
+</div>
+
+<!-- DAY 1 -->
+<div class="day-section">
+  <div class="day-header d1">
+    <div class="day-num">1</div>
+    <div class="day-meta">
+      <div class="day-title">Drive to Tahoe · Establish Base Camp</div>
+      <div class="day-sub">Friday, May 8 &nbsp;·&nbsp; Depart no later than 4:30 PM &nbsp;·&nbsp; Tahoe Valley Campground</div>
+    </div>
+  </div>
+  <div class="day-body">
+    <div class="day-content">
+      <p><strong>Meet at the Troop 222 Shed immediately after school.</strong> We will depart absolutely no later than 4:30 PM — be there early, not on time.</p>
+      <p>We drive to <strong>Tahoe Valley Campground</strong> to establish base camp and begin acclimating to the elevation. The campground sits at approximately 6,200 ft — your body starts adjusting the moment you arrive, so a full night at altitude before the summit push matters.</p>
+      <p style="font-size:.76rem;color:var(--bark);font-style:italic">&#127860; Dinner: Grab a bagged dinner before departure or bring money for a stop along the way. No group dinner provided Friday night.</p>
+    </div>
+    <div class="camp-block">
+      <p class="camp-title">&#127956; Base Camp</p>
+      <p class="camp-name">Tahoe Valley Campground</p>
+      <div class="camp-features">
+        <span class="feat">Drive-in campground</span>
+        <span class="feat water">&#128167; Running water</span>
+        <span class="feat">Flush toilets</span>
+        <span class="feat">Picnic tables &amp; fire rings</span>
+        <span class="feat elev">&#9968; ~6,200 ft elevation</span>
+      </div>
+      <p class="camp-note">Established campground in South Lake Tahoe. Serves as our base for acclimation and logistics staging on Saturday morning.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DAY 2 -->
+<div class="day-section">
+  <div class="day-header d2">
+    <div class="day-num">2</div>
+    <div class="day-meta">
+      <div class="day-title">Alpine Start · Mt. Tallac Summit Push</div>
+      <div class="day-sub">Saturday, May 9 &nbsp;·&nbsp; Pre-sunrise wake-up &nbsp;·&nbsp; 10 mi RT &nbsp;·&nbsp; 6,300 → 9,739 ft &nbsp;·&nbsp; Strenuous</div>
+    </div>
+  </div>
+  <div class="day-body">
+    <div class="elev-bar" style="background:linear-gradient(90deg,#7C9070 0%,#C8A028 30%,#C84820 65%,#7B3F00 100%)"></div>
+    <div class="day-stats">
+      <div class="ds"><div class="ds-val">10</div><div class="ds-lbl">Miles RT</div></div>
+      <div class="ds"><div class="ds-val">+3,700</div><div class="ds-lbl">Gain (ft)</div></div>
+      <div class="ds"><div class="ds-val">6,300</div><div class="ds-lbl">Start (ft)</div></div>
+      <div class="ds"><div class="ds-val">9,739</div><div class="ds-lbl">Summit (ft)</div></div>
+    </div>
+    <div class="day-content">
+      <p><strong>Early wake-up before sunrise.</strong> We drive to the Mt. Tallac Trailhead to beat the crowds and practice an efficient "alpine start" — a skill you will use every day on the 50-Miler.</p>
+      <p>Mt. Tallac is a <strong>strenuous, continuous, steep ascent</strong> with no flat sections to recover on. Expect the full 5 miles out to feel relentless. Pace yourself deliberately, especially in the first 2 miles. At 9,000+ ft, your cardiovascular system is working significantly harder than at sea level — this is the point of the exercise.</p>
+      <p>The summit rewards with <strong>panoramic views of Lake Tahoe, Fallen Leaf Lake, and the Desolation Wilderness</strong> — a preview of the High Sierra terrain you will cross in July.</p>
+      <p style="font-size:.76rem;color:var(--bark);font-style:italic">&#9888; Snow note: If we encounter significant snow on the upper mountain, we will turn back. Safety over the summit — we are not yet trained for microspikes or ice axes. Leaders make the call.</p>
+    </div>
+    <div class="note-block">
+      <strong>&#127869; Food &amp; Water for Summit Day</strong>
+      Carry 2–3 L water minimum from the trailhead — limited reliable sources on the route. Pack all food for the day (snacks + lunch) before leaving camp. High altitude increases calorie burn significantly — eat before you feel hungry.
+    </div>
+  </div>
+</div>
+
+<!-- DAY 3 -->
+<div class="day-section">
+  <div class="day-header d3">
+    <div class="day-num">3</div>
+    <div class="day-meta">
+      <div class="day-title">Break Camp · Return Home</div>
+      <div class="day-sub">Sunday, May 10 &nbsp;·&nbsp; Breakfast, pack out &nbsp;·&nbsp; ETA home: afternoon</div>
+    </div>
+  </div>
+  <div class="day-body">
+    <div class="day-content">
+      <p>Breakfast at camp, then break down and pack out. We aim to be on the road by mid-morning to <strong>ensure everyone is home and rested for the school week.</strong></p>
+      <p>Take stock of how your body responded to the altitude over the weekend. Recovery is part of the training — note any headaches, fatigue, or appetite changes and discuss with a leader. This data matters for planning your 50-Miler crew readiness.</p>
+    </div>
+    <div class="camp-block" style="background:#EDF5E8">
+      <p class="camp-title" style="color:var(--sage)">&#127937; Pack Out</p>
+      <p class="camp-name">Tahoe Valley Campground → Home</p>
+      <div class="camp-features">
+        <span class="feat">Leave no trace — pack out all trash</span>
+        <span class="feat">Deflate sleeping pads, stow bear cans</span>
+      </div>
+      <p class="camp-note">Target departure: mid-morning. ETA back to the shed: afternoon. Confirm pickup arrangements with parents before Saturday night.</p>
+    </div>
+  </div>
+</div>
+
+<!-- HIKE DETAILS -->
+<section class="section">
+  <p class="section-label">The Hike</p>
+  <h2>Mt. Tallac —<br>Desolation Wilderness</h2>
+  <div class="hike-detail">
+    <div class="hike-detail-header">
+      <h3>Mt. Tallac Trail</h3>
+      <p>Spring Valley Trailhead · Desolation Wilderness · El Dorado County</p>
+    </div>
+    <div class="hike-detail-body">
+      <div class="hike-detail-row">
+        <span class="hd-label">Distance</span>
+        <span class="hd-val">10 miles round-trip (5 miles out, 5 miles back)</span>
+      </div>
+      <div class="hike-detail-row">
+        <span class="hd-label">Elevation</span>
+        <span class="hd-val">Start: 6,300 ft → Summit: 9,739 ft (+3,700 ft gain)</span>
+      </div>
+      <div class="hike-detail-row">
+        <span class="hd-label">Difficulty</span>
+        <span class="hd-val">Strenuous — continuous steep ascent, no significant flat sections</span>
+      </div>
+      <div class="hike-detail-row">
+        <span class="hd-label">Snow</span>
+        <span class="hd-val">Possible on upper sections in May. Leaders assess on day of — turn back if significant</span>
+      </div>
+      <div class="hike-detail-row">
+        <span class="hd-label">Permits</span>
+        <span class="hd-val">Day use — Desolation Wilderness day permit required (self-issue at trailhead)</span>
+      </div>
+      <div class="hike-detail-row">
+        <span class="hd-label">AllTrails</span>
+        <span class="hd-val">Link TBD</span>
+      </div>
+      <div class="hike-detail-row">
+        <span class="hd-label">Weather</span>
+        <span class="hd-val">NOAA Forecast — link TBD. Check night before and morning of</span>
+      </div>
+      <div class="hike-detail-row">
+        <span class="hd-label">CalTopo</span>
+        <span class="hd-val">Route map — link TBD</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<section class="section">
+  <p class="section-label">Safety &amp; Conditions</p>
+  <h2>Know Before<br>You Go</h2>
+  <div class="safety-grid">
+    <div class="safety-card priority">
+      <div class="safety-icon">&#9968;</div>
+      <p class="safety-title">Altitude sickness</p>
+      <p class="safety-desc">Headache, nausea, dizziness, or shortness of breath beyond normal exertion = descend immediately. Do not push through AMS symptoms. Tell a leader.</p>
+    </div>
+    <div class="safety-card priority">
+      <div class="safety-icon">&#10052;</div>
+      <p class="safety-title">Snow &amp; turn-back policy</p>
+      <p class="safety-desc">If significant snow on upper mountain, we turn back. We are not trained for microspikes or ice axes. Leaders make the call — no pressure to summit.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#9728;</div>
+      <p class="safety-title">Sun &amp; UV exposure</p>
+      <p class="safety-desc">UV intensity increases with elevation. Sunscreen, sun hat, and sun shirt are mandatory. Reapply every 2 hours — you will burn faster than at sea level.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#128167;</div>
+      <p class="safety-title">Hydration</p>
+      <p class="safety-desc">Altitude and exertion both accelerate dehydration. Carry 2–3 L from the trailhead. Drink before you feel thirsty. Electrolytes recommended.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#9928;</div>
+      <p class="safety-title">Afternoon thunderstorms</p>
+      <p class="safety-desc">Common in Tahoe in late spring. Early alpine start avoids exposure. If lightning develops above treeline, descend immediately — do not wait.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#128246;</div>
+      <p class="safety-title">Cell coverage</p>
+      <p class="safety-desc">Unreliable above treeline. Move to lower elevation or ridgeline to improve signal. Note GPS coordinates at key waypoints before losing coverage.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#128209;</div>
+      <p class="safety-title">Wilderness permit</p>
+      <p class="safety-desc">Desolation Wilderness day permit required — self-issue at trailhead register. Each person signs in. Keep your copy.</p>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">&#129412;</div>
+      <p class="safety-title">Ticks &amp; wildlife</p>
+      <p class="safety-desc">Ticks present in lower forested sections. Full-body check at camp each evening. Black bears present in Tahoe — use bear boxes at campground.</p>
+    </div>
+  </div>
+
+  <div class="contacts">
+    <h3>Emergency Contacts</h3>
+    <div class="contact-row">
+      <span class="contact-name">El Dorado County Sheriff SAR</span>
+      <span class="contact-num">530-621-5655</span>
+    </div>
+    <div class="contact-row">
+      <span class="contact-name">Lake Tahoe Basin Mgmt Unit (USFS)</span>
+      <span class="contact-num">530-543-2600</span>
+    </div>
+    <div class="contact-row">
+      <span class="contact-name">Barton Memorial Hospital — South Lake Tahoe</span>
+      <span class="contact-num">530-541-3420</span>
+    </div>
+    <div style="font-size:.72rem;opacity:.55;margin-top:.7rem;line-height:1.7">
+      When calling: provide trail name, nearest landmark, GPS coordinates, group size, and nature of emergency.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-brand">Troop 222</span>
+  <span class="footer-note">Hike 3 · Mt. Tallac · Desolation Wilderness · May 8–10, 2026 · Itinerary</span>
+</footer>
+
+</div>
+</body>
+</html>
