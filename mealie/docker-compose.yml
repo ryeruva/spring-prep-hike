@@ -9,8 +9,7 @@ services:
     environment:
       - ALLOW_SIGNUP=false
       - TZ=America/Los_Angeles
-      - BASE_URL=https://spring-prep-hike-production.up.railway.app
-      - CORS_ORIGINS=*
+      - BASE_URL=https://mealie-deployment-production.up.railway.app/
     volumes:
       - mealie-data:/app/data
 
