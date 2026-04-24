@@ -1,0 +1,5 @@
+[build]
+builder = "dockerfile"
+
+[deploy]
+startCommand = "docker run -p $PORT:$PORT ghcr.io/mealie-recipes/mealie:latest"
