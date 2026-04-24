@@ -9,8 +9,8 @@ services:
     environment:
       - ALLOW_SIGNUP=false
       - TZ=America/Los_Angeles
-      - BASE_URL=http://localhost:9000
-      - CORS_ORIGINS=http://localhost:8080
+      - BASE_URL=https://spring-prep-hike-production.up.railway.app
+      - CORS_ORIGINS=*
     volumes:
       - mealie-data:/app/data
 
