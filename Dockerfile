@@ -13,4 +13,4 @@ EXPOSE 9000
 VOLUME /app/data
 
 # Run the application
-CMD ["uvicorn", "mealie.app:app", "--host", "0.0.0.0", "--port", "9000"]
+CMD ["sh", "-c", "uvicorn mealie.app:app --host 0.0.0.0 --port ${PORT:-9000}"]
