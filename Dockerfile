@@ -10,7 +10,7 @@ ENV CORS_ORIGINS=*
 EXPOSE 9000
 
 # Create volume mount point
-VOLUME /app/data
+# VOLUME /app/data
 
 # Run the application
 CMD ["sh", "-c", "uvicorn mealie.app:app --host 0.0.0.0 --port ${PORT:-9000}"]
