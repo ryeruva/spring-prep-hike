@@ -2,8 +2,8 @@
 """Import meals from TheMealDB into Mealie, skipping fried recipes."""
 import json, time, urllib.request, urllib.error
 
-MEALIE   = "http://localhost:9000"
-TOKEN    = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb25nX3Rva2VuIjp0cnVlLCJpZCI6ImE2MjU5YWQwLTc5YWYtNDhhYi1iY2UwLWFlOGFlMjY5ZmU0YSIsIm5hbWUiOiJUMjIyIFJlYWQtT25seVwiIiwiaW50ZWdyYXRpb25faWQiOiJnZW5lcmljIiwiZXhwIjoxOTM0NjU4MDg1fQ.gjOyWJCXTM3uBNxELNLZ3_dTYCPucKV5CDUj8S2_Pvw"
+MEALIE   = "https://mealie-deployment-production.up.railway.app"
+TOKEN    = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb25nX3Rva2VuIjp0cnVlLCJpZCI6IjY3NmNlYTk2LWZkMjMtNGM0Ni05ZDdkLTNkY2UxZDk0ZDBkOCIsIm5hbWUiOiJ0MjIyIiwiaW50ZWdyYXRpb25faWQiOiJnZW5lcmljIiwiZXhwIjoxOTM0NzM1Mzg3fQ.VHI-2IGAbNRleNiYNIFpX9XrzcC9xK_MEXoQvyDXqLQ"
 MEALDB   = "https://www.themealdb.com/api/json/v1/1"
 FRY_WORDS = {"fry","fried","frying","stir-fry","stir fry","deep-fry","pan-fry","pan fry"}
 

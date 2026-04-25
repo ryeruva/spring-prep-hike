@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Troop 222 — Grubmaster Hub</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Spectral:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --ink: #1A1410;
+      --stone: #3D332A;
+      --bark: #6B5040;
+      --sand: #C4A882;
+      --cream: #F5EDD8;
+      --sage: #7C9070;
+      --sky: #4A7C9A;
+      --gold: #C8A028;
+      --ember: #C84820;
+      --bg: #F0E8D5;
+      --border: rgba(100, 80, 50, .18);
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Spectral', Georgia, serif;
+      overflow-x: hidden;
+      font-size: 15px;
+      line-height: 1.7
+    }
+
+    nav.breadcrumb {
+      background: #1A1410;
+      padding: .55rem 1.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: .68rem;
+      letter-spacing: .1em;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      margin: 0 -1.5rem
+    }
+
+    nav.breadcrumb a {
+      color: #C4A882;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color .15s
+    }
+
+    nav.breadcrumb a:hover {
+      color: #C8A028
+    }
+
+    nav.breadcrumb a.home {
+      color: #C8A028;
+      font-weight: 500
+    }
+
+    nav.breadcrumb .sep {
+      color: #3D332A;
+      font-size: .5rem
+    }
+
+    nav.breadcrumb .current {
+      color: #6B5040;
+      text-transform: uppercase
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(100, 80, 50, .06) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(100, 80, 50, .04) 40px);
+      background-size: 40px 40px;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 45vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 4rem 0 3rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 2px solid var(--border);
+      border-radius: 0 0 8px 8px;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image: url('grubmaster_hub_hero_1777059068965.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26, 20, 16, 0.9) 0%, rgba(26, 20, 16, 0.4) 100%);
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--sand);
+      margin-bottom: 1.2rem;
+      opacity: .9;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 10vw, 7rem);
+      line-height: .9;
+      color: #fff;
+      text-shadow: 3px 4px 0 rgba(0, 0, 0, .25);
+      margin-bottom: .8rem;
+    }
+
+    .hero h1 span {
+      color: var(--gold)
+    }
+
+    .hero-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: clamp(.8rem, 2vw, .9rem);
+      color: var(--sand);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: .9;
+      border-left: 2px solid var(--gold);
+      padding-left: 1rem;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--bark);
+      margin-bottom: .5rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+
+    .section-label::before {
+      content: '';
+      flex: none;
+      width: 32px;
+      height: 1px;
+      background: var(--bark)
+    }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 6vw, 3rem);
+      color: var(--stone);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── SEARCH & FILTERS ── */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 300px;
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: .85rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--gold);
+    }
+
+    .filter-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .8rem 1.2rem;
+      border: none;
+      background: var(--cream);
+      color: var(--bark);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: all .15s;
+    }
+
+    .filter-btn:hover {
+      background: var(--stone);
+      color: var(--cream);
+    }
+
+    .filter-btn.active {
+      background: var(--gold);
+      color: #fff;
+      border-color: var(--gold);
+    }
+
+    /* ── RECIPE GRID ── */
+    .recipe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .recipe-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+      cursor: pointer;
+    }
+
+    .recipe-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
+    }
+
+    .recipe-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #ddd;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .recipe-content {
+      padding: 1.2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .recipe-cat {
+      font-family: 'DM Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--bark);
+      margin-bottom: .5rem;
+    }
+
+    .recipe-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: var(--stone);
+      line-height: 1.1;
+      margin-bottom: .8rem;
+    }
+
+    .recipe-tags {
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: .55rem;
+      padding: .2rem .5rem;
+      border-radius: 2px;
+      background: rgba(100, 80, 50, .08);
+      color: var(--bark);
+    }
+
+    .tag.allergy {
+      background: rgba(200, 72, 32, 0.1);
+      color: var(--ember);
+      border: 1px solid rgba(200, 72, 32, 0.2);
+    }
+
+    /* ── MEAL PLAN SECTION ── */
+    .plan-section {
+      margin-bottom: 4rem;
+      background: rgba(255, 255, 255, 0.4);
+      padding: 2rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .plan-controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .plan-date-input {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: .8rem;
+      color: var(--ink);
+    }
+
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .plan-day {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem;
+    }
+
+    .plan-day-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: var(--stone);
+      margin-bottom: .5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: .3rem;
+    }
+
+    .plan-meal {
+      margin-bottom: .8rem;
+    }
+
+    .plan-meal-type {
+      font-family: 'DM Mono', monospace;
+      font-size: .55rem;
+      text-transform: uppercase;
+      color: var(--bark);
+      opacity: .7;
+    }
+
+    .plan-meal-name {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* ── LOADING ── */
+    .loading {
+      text-align: center;
+      padding: 4rem;
+      font-family: 'DM Mono', monospace;
+      color: var(--bark);
+      font-size: .9rem;
+      letter-spacing: .1em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--bark);
+      letter-spacing: .05em
+    }
+
+    .footer-note {
+      font-family: 'DM Mono', monospace;
+      font-size: .62rem;
+      color: var(--bark);
+      opacity: .6;
+      letter-spacing: .08em
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="breadcrumb">
+    <a href="index.html" class="home">&#8962; Troop 222</a>
+    <span class="sep">&#9679;</span>
+    <span class="current">Grubmaster Hub</span>
+  </nav>
+
+  <div class="page">
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <p class="hero-eyebrow">Logistics Module</p>
+      <h1>GRUBMASTER<br><span>HUB</span></h1>
+      <p class="hero-sub">Recipe Management & Meal Planning</p>
+    </section>
+
+    <div style="margin-top: 3rem;">
+      <!-- ══ MEAL PLAN ══ -->
+      <section class="plan-section">
+        <p class="section-label">Active Trip Workflow</p>
+        <h2>Upcoming Meal Plan</h2>
+        <div class="plan-controls">
+          <div>
+            <label
+              style="font-family:'DM Mono',monospace; font-size:.65rem; color:var(--bark); display:block; margin-bottom:4px;">START
+              DATE</label>
+            <input type="date" id="plan-start" class="plan-date-input" value="2026-05-08">
+          </div>
+          <div>
+            <label
+              style="font-family:'DM Mono',monospace; font-size:.65rem; color:var(--bark); display:block; margin-bottom:4px;">END
+              DATE</label>
+            <input type="date" id="plan-end" class="plan-date-input" value="2026-05-10">
+          </div>
+          <button class="filter-btn active" onclick="loadMealPlan()" style="margin-top:1.2rem">Refresh Plan</button>
+          <a id="export-link" href="Mt_Tallac_Menu.html" class="filter-btn"
+            style="margin-top:1.2rem; text-decoration:none;">View Crew Menu →</a>
+        </div>
+        <div id="plan-grid" class="plan-grid">
+          <p class="loading">Loading meal plan...</p>
+        </div>
+      </section>
+
+      <!-- ══ RECIPES ══ -->
+      <p class="section-label">Institutional Knowledge</p>
+      <h2>Recipe Catalog</h2>
+
+      <div class="controls">
+        <div class="search-wrap">
+          <input type="text" id="recipe-search" placeholder="Search recipes, ingredients, tags...">
+        </div>
+        <div id="category-filters" style="display:flex; gap:.5rem; flex-wrap:wrap;">
+          <button class="filter-btn active" data-cat="all">All</button>
+        </div>
+      </div>
+
+      <div id="recipe-grid" class="recipe-grid">
+        <p class="loading">Loading recipes from Mealie...</p>
+      </div>
+    </div>
+
+    <footer>
+      <span class="footer-brand">Troop 222</span>
+      <span class="footer-note">BSA · Pacific Skyline Council · Menlo Park · Mealie Integrated</span>
+    </footer>
+
+  </div><!-- .page -->
+
+  <script>
+    const MEALIE_BASE = 'https://mealie-deployment-production.up.railway.app';
+    const MEALIE_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb25nX3Rva2VuIjp0cnVlLCJpZCI6IjRiMjEwOTg4LWY3ZDAtNGNmMi1hODQ2LTUwMDk4YTdkYmMzNiIsIm5hbWUiOiIyMjIiLCJpbnRlZ3JhdGlvbl9pZCI6ImdlbmVyaWMiLCJleHAiOjE5MzQ3NTU4NDV9.FIqDDSRaGlEZf9aUfPyxiTbWkANBqFi0hgB2dLvU9Xg'
+    let ALL_RECIPES = [];
+    let ALL_CATEGORIES = [];
+
+    async function apiGet(path) {
+      const res = await fetch(`${MEALIE_BASE}${path}`, {
+        headers: { 'Authorization': `Bearer ${MEALIE_TOKEN}`, 'Accept': 'application/json' }
+      });
+      if (!res.ok) throw new Error(`Mealie error: ${res.status}`);
+      return res.json();
+    }
+
+    async function loadRecipes() {
+      try {
+        const data = await apiGet('/api/recipes?perPage=100');
+        ALL_RECIPES = data.items || [];
+        renderRecipes();
+        loadCategories();
+      } catch (err) {
+        document.getElementById('recipe-grid').innerHTML = `<p class="loading" style="color:var(--ember)">Error loading recipes: ${err.message}</p>`;
+      }
+    }
+
+    async function loadCategories() {
+      try {
+        ALL_CATEGORIES = await apiGet('/api/categories');
+        const filterRow = document.getElementById('category-filters');
+        ALL_CATEGORIES.forEach(cat => {
+          const btn = document.createElement('button');
+          btn.className = 'filter-btn';
+          btn.textContent = cat.name;
+          btn.dataset.cat = cat.name;
+          btn.onclick = () => {
+            document.querySelectorAll('#category-filters .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderRecipes(cat.name);
+          };
+          filterRow.appendChild(btn);
+        });
+      } catch (err) { console.error("Categories failed", err); }
+    }
+
+    function renderRecipes(filterCat = 'all') {
+      const grid = document.getElementById('recipe-grid');
+      const search = document.getElementById('recipe-search').value.toLowerCase();
+      grid.innerHTML = '';
+
+      const filtered = ALL_RECIPES.filter(r => {
+        const matchCat = filterCat === 'all' || (r.category && r.category.name === filterCat);
+        const matchSearch = !search || r.name.toLowerCase().includes(search) || (r.tags && r.tags.some(t => t.name.toLowerCase().includes(search)));
+        return matchCat && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<p class="loading">No recipes found.</p>';
+        return;
+      }
+
+      filtered.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'recipe-card';
+        card.onclick = () => window.open(`${MEALIE_BASE}/recipe/${r.slug}`, '_blank');
+
+        const imgUrl = r.image ? `${MEALIE_BASE}/api/media/recipes/${r.id}/images/original.webp` : '';
+        const tags = (r.tags || []).map(t => `<span class="tag ${['nut-free', 'gluten-free', 'dairy-free'].includes(t.name.toLowerCase()) ? 'allergy' : ''}">${t.name}</span>`).join('');
+
+        card.innerHTML = `
+      <div class="recipe-img" style="background-image: url('${imgUrl}')"></div>
+      <div class="recipe-content">
+        <div class="recipe-cat">${r.category ? r.category.name : 'Uncategorized'}</div>
+        <div class="recipe-title">${r.name}</div>
+        <div class="recipe-tags">${tags}</div>
+      </div>
+    `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function loadMealPlan() {
+      const start = document.getElementById('plan-start').value;
+      const end = document.getElementById('plan-end').value;
+      const grid = document.getElementById('plan-grid');
+      grid.innerHTML = '<p class="loading">Fetching plan...</p>';
+
+      try {
+        const data = await apiGet(`/api/households/mealplans?startDate=${start}&endDate=${end}`);
+        const items = data.items || [];
+
+        if (items.length === 0) {
+          grid.innerHTML = '<p class="loading">No meals planned for these dates.</p>';
+          return;
+        }
+
+        // Group by date
+        const byDay = {};
+        items.forEach(i => {
+          if (!byDay[i.date]) byDay[i.date] = [];
+          byDay[i.date].push(i);
+        });
+
+        grid.innerHTML = '';
+        Object.keys(byDay).sort().forEach(date => {
+          const dayDiv = document.createElement('div');
+          dayDiv.className = 'plan-day';
+          const d = new Date(date + 'T12:00:00');
+          const dStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+          let mealsHtml = byDay[date].map(m => `
+        <div class="plan-meal">
+          <div class="plan-meal-type">${m.entryType}</div>
+          <div class="plan-meal-name">${m.recipe ? m.recipe.name : m.title}</div>
+        </div>
+      `).join('');
+
+          dayDiv.innerHTML = `
+        <div class="plan-day-title">${dStr}</div>
+        ${mealsHtml}
+      `;
+          grid.appendChild(dayDiv);
+        });
+
+      } catch (err) {
+        grid.innerHTML = `<p class="loading" style="color:var(--ember)">Failed to load meal plan.</p>`;
+      }
+    }
+
+    document.getElementById('recipe-search').oninput = () => {
+      const activeBtn = document.querySelector('#category-filters .filter-btn.active');
+      renderRecipes(activeBtn ? activeBtn.dataset.cat : 'all');
+    };
+
+    // Initial load
+    loadRecipes();
+    loadMealPlan();
+
+  </script>
+</body>
+
+</html>
