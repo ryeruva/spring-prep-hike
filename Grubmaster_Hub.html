@@ -170,6 +170,30 @@
       padding-left: 1rem;
     }
 
+    .hero-cta {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: var(--ember);
+      color: #fff;
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      font-size: .85rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(200, 72, 32, 0.4);
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      background: #b03a15;
+      box-shadow: 0 6px 20px rgba(200, 72, 32, 0.6);
+      color: #fff;
+    }
+
     /* ── SECTION LABEL ── */
     .section-label {
       font-family: 'DM Mono', monospace;
@@ -454,6 +478,10 @@
       <p class="hero-eyebrow">Logistics Module</p>
       <h1>GRUBMASTER<br><span>HUB</span></h1>
       <p class="hero-sub">Recipe Management & Meal Planning</p>
+      <div>
+        <a href="https://mealie-deployment-production.up.railway.app/g/home" target="_blank" class="hero-cta">Open
+          Mealie Planner ↗</a>
+      </div>
     </section>
 
     <div style="margin-top: 3rem;">
