@@ -1,5 +1,5 @@
 {
-  "fetched": "2026-05-03T18:41:46.714168+00:00",
+  "fetched": "2026-05-04T01:48:28.453927+00:00",
   "events": [
     {
       "uid": "TROOPTRACK_1691731",
@@ -1011,11 +1011,19 @@
     },
     {
       "uid": "TROOPTRACK_1770597",
-      "summary": "Troop Meeting: TEMPLATE",
+      "summary": "Troop Meeting: Orienteering at Bedwell Bayfront",
       "start": "2026-05-14T19:00:00",
       "end": "2026-05-14T20:30:00",
       "location": "Bedwell Bayfront Park",
-      "description": "Orienteering at Bedwell Bayfront!- First Class Requirement 4a will be covered\\; \u201cUsing a map and compass, complete an orienteering course that covers at least one mile and requires measuring the height and/or width of designated items (tree, tower, canyon, ditch, etc.)\u201d- We will complete a one mile orienteering course at Bedwell BayfrontBe Prepared:\u00a0- Please wear warm clothes such as outerwear (eg. a jacket or sweater)- Please bring a compass if you have one- Please bring a head lamp, a water bottle, and a whistleWho: Silvi Karpati and Adrian FedrovExtra info: Please arrive in a timely manner, preferably 5-10 minutes early at the park so we can send scouts off to start the orienteering course and end on time!"
+      "description": "Orienteering at Bedwell Bayfront!- First Class Requirement 4a will be covered\\; \u201cUsing a map and compass, complete an orienteering course that covers at least one mile and requires measuring the height and/or width of designated items (tree, tower, canyon, ditch, etc.)\u201d- We will complete at least one one-mile orienteering course at Bedwell BayfrontBe Prepared:\u00a0- Please wear warm clothes such as outerwear (eg. a jacket or sweater)- Please bring a compass if you have one- Please bring a head lamp, a water bottle, and a whistleWho: Silvi Karpati and Adrian FedrovExtra info: Please arrive in a timely manner, preferably 5-10 minutes early at the park so we can send scouts off to start the orienteering course and end on time!"
+    },
+    {
+      "uid": "TROOPTRACK_1811562",
+      "summary": "Crystal Springs Dam Hike",
+      "start": "2026-05-17T09:45:00",
+      "end": "2026-05-17T13:30:00",
+      "location": "Crystal Springs Dam trailhead (will provide detailed driving directions separately)",
+      "description": "This fun day outing will include around 7 miles of hiking with mostly flat and paved terrain. Our route will go out about 3 miles before stopping for lunch and returning to our starting point. On the hike, we will have the opportunity to get to see the Crystal Springs Reservoir and cross the Dam. In fact, this is the only Bay Area Dam you can access and cross!Be prepared!Please bring:Layers! (Prepare for warm to cool conditions)Comfortable ShoesWaterLunchSnacksSunscreenHatDay packCompassPlease arrive at 9:45am, so we can start on time.Scouts can achieve Second Class Req. 3b! \u201cUsing a compass and map together, take a 5-mile hike (or 10 miles bybike) approved by your adult leader and your parent or guardian\u201d If scouts bring a compass, we will bring copies of the topographical map.Cub Scouts from Packs 222 and 565 are welcome to join us on this hike!Please RSVP in TT, but also on this planning sheet, so we have an estimate of people and can plan for drivers.\u00a0Use this sheet: https://docs.google.com/spreadsheets/d/1x6-UyuHa7pcYBDASexZMrgGyWqObEifQ_o4wVK-5dtw/edit?usp=sharingQuestions? Please contact Maribel (through TroopTrack or at Maribel.matsi@gmail.com) or Ms. De Lisle at krisdelisle@gmail.com."
     },
     {
       "uid": "TROOPTRACK_1752324",
@@ -1040,6 +1048,14 @@
       "end": "2026-05-28T20:30:00",
       "location": "Troop Meetings,Menlo Church Fellowship Hall,Santa Cruz Ave,Menlo Park,CA",
       "description": "Scout leaders should plan to attend the PLC. We plan meetings for the next two months, outings, and service events. We consider other decisions that the PLC should be involved in.The PLC is the troop\u2019s elected and duly appointed governing body. Resting on their shoulders is the planning, preparation, and presentation of the troop\u2019s Scouting program. It\u2019s up to them to see that the promise of Scouting is delivered. Though this might appear to be a daunting proposition, with the proper training, they can gain the required tools and skills needed to run things in a fashion that results in a thriving program benefitting all the members of their troop."
+    },
+    {
+      "uid": "TROOPTRACK_1811564",
+      "summary": "Troop Meeting: Swimming",
+      "start": "2026-06-04T19:00:00",
+      "end": "2026-06-04T20:30:00",
+      "location": "TBD",
+      "description": "Swimming and BBQ-Second Class Requirements 5a -5d will be covered\\; (basic swim test, and rescue methods, safe swim trip planning) Scouts may also complete 2C req.\u00a06a - the Scouting Swim Test.- We plan to have a BBQ - details to comeBe Prepared:\u00a0- Please wear swim suit- Please bring a towel- Please a water bottleWho:\u00a0Reminder: Please arrive on time!"
     },
     {
       "uid": "TROOPTRACK_1775946",
