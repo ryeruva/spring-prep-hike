@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(python3 -c \"import openpyxl; print\\('available'\\)\")",
+      "Bash(python3 -)",
+      "Bash(git -C /home/ubuntu/T222-Outings add Mt_Tallac_Expenses.html T222_Trip_Financials.xlsx)",
+      "Bash(git -C /home/ubuntu/T222-Outings commit -m \"feat: wire Mt Tallac Expenses to Google Sheets \\(deposits, expenses, reimbursements\\)\")",
+      "Bash(git -C /home/ubuntu/T222-Outings add Mt_Tallac_Expenses.html)"
+    ]
+  }
+}
