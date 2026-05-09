@@ -484,10 +484,10 @@
         "rating": null,
         "orgURL": "https://www.themealdb.com/meal/53379-dutch-poffertjes-(mini-pancakes)",
         "dateAdded": "2026-04-24",
-        "dateUpdated": "2026-04-29T14:33:53.050511Z",
+        "dateUpdated": "2026-05-09T06:45:00.309556Z",
         "createdAt": "2026-04-24T01:46:39.985268Z",
-        "updatedAt": "2026-04-29T14:33:53.051461Z",
-        "lastMade": null
+        "updatedAt": "2026-05-09T06:45:00.310908Z",
+        "lastMade": "2026-05-09T06:45:00.186602Z"
       },
       "_recipe": {
         "id": "a05a0755-4889-4ff6-83ba-a5c831a668d3",
@@ -511,10 +511,10 @@
         "rating": null,
         "orgURL": "https://www.themealdb.com/meal/53379-dutch-poffertjes-(mini-pancakes)",
         "dateAdded": "2026-04-24",
-        "dateUpdated": "2026-04-29T14:33:53.050511Z",
+        "dateUpdated": "2026-05-09T06:45:00.309556Z",
         "createdAt": "2026-04-24T01:46:39.985268Z",
-        "updatedAt": "2026-04-29T14:33:53.051461Z",
-        "lastMade": null,
+        "updatedAt": "2026-05-09T06:45:00.310908Z",
+        "lastMade": "2026-05-09T06:45:00.186602Z",
         "recipeIngredient": [
           {
             "quantity": 0.0,
@@ -530,7 +530,7 @@
         ],
         "recipeInstructions": [
           {
-            "id": "75a342a2-bd7e-49d9-85d3-480437c7944b",
+            "id": "dccb5b36-8b46-455e-9f6f-85409e732547",
             "title": "",
             "summary": "",
             "text": "Could not detect instructions",
