@@ -36,10 +36,10 @@
         "rating": null,
         "orgURL": "https://www.themealdb.com/meal/53114-ugali-\u2013-kenyan-cornmeal",
         "dateAdded": "2026-04-24",
-        "dateUpdated": "2026-04-29T14:33:52.909617Z",
+        "dateUpdated": "2026-05-11T06:45:00.661322Z",
         "createdAt": "2026-04-24T01:46:51.991752Z",
-        "updatedAt": "2026-04-29T14:33:52.911448Z",
-        "lastMade": null
+        "updatedAt": "2026-05-11T06:45:00.662372Z",
+        "lastMade": "2026-05-11T06:45:00.593883Z"
       },
       "_recipe": {
         "id": "e2cc6c56-749e-4557-8917-ee7987e95dba",
@@ -63,10 +63,10 @@
         "rating": null,
         "orgURL": "https://www.themealdb.com/meal/53114-ugali-\u2013-kenyan-cornmeal",
         "dateAdded": "2026-04-24",
-        "dateUpdated": "2026-04-29T14:33:52.909617Z",
+        "dateUpdated": "2026-05-11T06:45:00.661322Z",
         "createdAt": "2026-04-24T01:46:51.991752Z",
-        "updatedAt": "2026-04-29T14:33:52.911448Z",
-        "lastMade": null,
+        "updatedAt": "2026-05-11T06:45:00.662372Z",
+        "lastMade": "2026-05-11T06:45:00.593883Z",
         "recipeIngredient": [
           {
             "quantity": 0.0,
@@ -82,7 +82,7 @@
         ],
         "recipeInstructions": [
           {
-            "id": "04468d2d-105c-46e4-af15-7fe3b82cad47",
+            "id": "e3e40fa8-7b24-4252-9ec3-6247d5bdcf4d",
             "title": "",
             "summary": "",
             "text": "Could not detect instructions",
